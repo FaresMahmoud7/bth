@@ -218,7 +218,7 @@ export default function AdminLayout({
           </div>
 
           <button
-            onClick={() => signOut({ callbackUrl: "/login" })}
+            onClick={() => signOut({ callbackUrl: "/admin/login" })}
             className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-red-400 hover:bg-red-400/10 transition-all duration-200"
           >
             <LogOut size={20} />

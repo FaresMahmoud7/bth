@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Eye, EyeOff } from "lucide-react";
+import { Loader2, Eye, EyeOff, Lock, User as UserIcon, ShieldCheck } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { Logo } from "@/components/ui/Logo";
 
 export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,104 +35,117 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-(--background) flex items-center justify-center p-4 relative overflow-hidden" dir="rtl">
-      {/* Background decoration matching website */}
+    <div className="min-h-screen bg-(--background) flex items-center justify-center p-4 relative overflow-hidden font-cairo" dir="rtl">
+      {/* Background decoration matching website Hero */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-(--background)" />
         <Image
-          src="/image2.jpeg?v=2" 
+          src="/image2.jpeg" 
           alt="Background"
           fill
           priority
-          className="object-cover opacity-50 scale-105"
+          className="object-cover opacity-20 scale-105"
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).style.display = 'none';
           }}
         />
         {/* Dynamic Gradient Overlays */}
-        <div className="absolute inset-0 bg-black opacity-60" />
-        <div className="absolute inset-0 bg-linear-to-b from-black via-transparent to-black opacity-90" />
+        <div className="absolute inset-0 bg-linear-to-b from-(--background) via-transparent to-(--background) opacity-95" />
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
         
-        {/* Orange accent line */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-[#F58220]" />
+        {/* Orange accent line at top */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#F58220]/60 to-transparent" />
         
-        {/* Animated Radial Highlight - STRENGTHENED */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(245,130,32,0.5),transparent_70%)]" />
+        {/* Animated Radial Highlight */}
+        <motion.div 
+          animate={{ 
+            opacity: [0.05, 0.1, 0.05],
+            scale: [1, 1.1, 1]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(245,130,32,0.1),transparent_70%)]" 
+        />
       </div>
-      
-      <div className="w-full max-w-md bg-[#001F3F]/80 border-2 border-[#F58220] rounded-3xl p-10 shadow-[0_0_80px_rgba(245,130,32,0.4)] relative z-10 backdrop-blur-xl">
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-24 h-24 mb-4">
-            <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-              <defs>
-                <radialGradient id="adminSphereGradient" cx="35%" cy="35%" r="65%" fx="35%" fy="35%">
-                  <stop offset="0%" stopColor="#FFB380" />
-                  <stop offset="70%" stopColor="#FF8C42" />
-                  <stop offset="100%" stopColor="#E66A1F" />
-                </radialGradient>
-                <linearGradient id="adminGlossHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="white" stopOpacity="0.6" />
-                  <stop offset="50%" stopColor="white" stopOpacity="0" />
-                </linearGradient>
-                <filter id="adminGlow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="3" result="blur" />
-                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                </filter>
-              </defs>
-              <circle cx="256" cy="256" r="240" fill="white" />
-              <ellipse cx="256" cy="256" rx="180" ry="80" stroke="#FF8C42" strokeWidth="4" fill="none" transform="rotate(-30 256 256)" opacity="0.6" />
-              <ellipse cx="256" cy="256" rx="190" ry="60" stroke="#FF8C42" strokeWidth="3" fill="none" transform="rotate(45 256 256)" opacity="0.5" />
-              <circle cx="256" cy="256" r="120" fill="url(#adminSphereGradient)" />
-              <circle cx="256" cy="256" r="120" fill="url(#adminGlossHighlight)" />
-              <text x="50%" y="53%" textAnchor="middle" fontFamily="Arial, sans-serif" fontWeight="900" fontSize="72" fill="#001F3F" letterSpacing="-2">BTH</text>
-              <g filter="url(#adminGlow)">
-                <path d="M 100 280 A 180 80 -30 0 1 412 232" stroke="#FF8C42" strokeWidth="5" fill="none" strokeLinecap="round" />
-                <path d="M 120 180 A 190 60 45 0 0 392 332" stroke="#FF8C42" strokeWidth="4" fill="none" strokeLinecap="round" />
-              </g>
-              <ellipse cx="256" cy="400" rx="80" ry="20" fill="black" fillOpacity="0.05" />
-            </svg>
+
+      {/* Login Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="w-full max-w-md glass-card p-10 relative z-10 border border-white/10 shadow-[0_32px_64px_rgba(0,0,0,0.5)] overflow-hidden"
+      >
+        {/* Premium Glow effect behind logo */}
+        <div className="absolute -top-24 -left-24 w-48 h-48 bg-[#F58220]/10 blur-[80px] pointer-events-none" />
+        
+        <div className="flex flex-col items-center mb-10 relative">
+          <motion.div 
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+            className="w-20 h-20 mb-6 drop-shadow-[0_0_15px_rgba(245,130,32,0.3)]"
+          >
+            <Logo />
+          </motion.div>
+          
+          <h1 className="text-3xl font-black text-white uppercase tracking-tight mb-2">لوحة الإدارة</h1>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-px bg-[#F58220]/30" />
+            <span className="text-[#F58220] text-[10px] font-black uppercase tracking-[0.2em]">BTH Agency Access</span>
+            <div className="w-8 h-px bg-[#F58220]/30" />
           </div>
-          <h1 className="text-2xl font-black text-white uppercase tracking-wider">لوحة الإدارة</h1>
-          <p className="text-white/40 text-sm mt-2 font-bold">سجل دخولك لإدارة عمليات وكالة BTH.</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          {error && (
-            <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl text-center font-bold">
-              {error}
-            </div>
-          )}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <AnimatePresence mode="wait">
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl text-center font-bold flex items-center justify-center gap-2 overflow-hidden"
+              >
+                <Lock className="w-3 h-3" />
+                {error}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-          <div className="text-start">
-            <label className="block text-sm font-bold text-white/40 mb-2 uppercase tracking-widest text-[10px]">اسم المستخدم</label>
-            <input 
-              type="text" 
-              name="username" 
-              required 
-              title="اسم المستخدم"
-              className="w-full h-14 px-5 rounded-xl bg-white/5 border border-white/10 outline-none focus:border-[#F58220] transition-all text-white placeholder:text-white/10" 
-              placeholder="أدخل اسم المستخدم" 
-            />
+          <div className="space-y-2">
+            <label className="block text-[10px] font-black text-white/40 uppercase tracking-[0.2em] px-1">اسم المستخدم</label>
+            <div className="relative group">
+              <div className="absolute inset-y-0 right-5 flex items-center text-white/20 group-focus-within:text-[#F58220] transition-colors">
+                <UserIcon size={18} />
+              </div>
+              <input 
+                type="text" 
+                name="username" 
+                required 
+                className="w-full h-14 pr-12 pl-5 rounded-2xl bg-white/5 border border-white/10 outline-none focus:border-[#F58220] focus:bg-[#F58220]/5 transition-all text-white placeholder:text-white/10 font-bold" 
+                placeholder="أدخل اسم المستخدم" 
+              />
+            </div>
           </div>
 
-          <div className="text-start">
-            <label className="block text-sm font-bold text-white/40 mb-2 uppercase tracking-widest text-[10px]">كلمة المرور</label>
-            <div className="relative">
+          <div className="space-y-2">
+            <label className="block text-[10px] font-black text-white/40 uppercase tracking-[0.2em] px-1">كلمة المرور</label>
+            <div className="relative group">
+              <div className="absolute inset-y-0 right-5 flex items-center text-white/20 group-focus-within:text-[#F58220] transition-colors">
+                <Lock size={18} />
+              </div>
               <input 
                 type={showPassword ? "text" : "password"} 
                 name="password" 
                 required 
-                title="كلمة المرور"
-                className="w-full h-14 px-5 rounded-xl bg-white/5 border border-white/10 outline-none focus:border-[#F58220] transition-all text-white placeholder:text-white/10 text-start" 
+                className="w-full h-14 pr-12 pl-12 rounded-2xl bg-white/5 border border-white/10 outline-none focus:border-[#F58220] focus:bg-[#F58220]/5 transition-all text-white placeholder:text-white/10 text-start font-bold" 
                 placeholder="••••••••" 
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 left-5 flex items-center text-[#F58220] hover:text-white transition-colors z-20"
+                className="absolute inset-y-0 left-5 flex items-center text-white/20 hover:text-[#F58220] transition-colors z-20"
                 title={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
               >
-                {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
@@ -139,16 +153,29 @@ export default function AdminLoginPage() {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full h-16 rounded-full glow-button-primary font-bold uppercase tracking-widest text-sm mt-6 flex items-center justify-center gap-2 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full h-16 rounded-full glow-button-primary font-black uppercase tracking-widest text-sm mt-4 flex items-center justify-center gap-3 transition-all disabled:opacity-70 disabled:cursor-not-allowed group"
           >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "تسجيل الدخول"}
+            {loading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <>
+                <span>دخول النظام</span>
+                <ShieldCheck className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              </>
+            )}
           </button>
         </form>
 
-        <p className="text-center text-[10px] text-white/20 mt-8 uppercase tracking-widest font-bold">
-          دخول مقيد. للموظفين المصرح لهم فقط.
-        </p>
-      </div>
+        <div className="mt-10 flex flex-col items-center gap-4">
+          <div className="h-px w-12 bg-white/10" />
+          <p className="text-center text-[9px] text-white/30 uppercase tracking-[0.3em] font-black max-w-[200px] leading-relaxed">
+            دخول مقيد • موظفين مصرح لهم فقط • نظام BTH الآمن
+          </p>
+        </div>
+      </motion.div>
+
+      {/* Decorative accent for the corner */}
+      <div className="fixed bottom-0 left-0 w-64 h-64 bg-[#F58220]/5 blur-[120px] -z-10 pointer-events-none" />
     </div>
   );
 }
