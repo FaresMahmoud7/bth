@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 
 export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
@@ -37,8 +38,25 @@ export default function AdminLoginPage() {
       {/* Background decoration matching website */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-(--background)" />
+        <Image
+          src="/image2.jpeg" 
+          alt="Background"
+          fill
+          priority
+          className="object-cover opacity-15 scale-110"
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).style.display = 'none';
+          }}
+        />
+        {/* Dynamic Gradient Overlays */}
+        <div className="absolute inset-0 bg-linear-to-b from-(--background) via-transparent to-(--background) opacity-80" />
+        <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px]" />
+        
         {/* Orange accent line */}
         <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#F58220]/60 to-transparent" />
+        
+        {/* Animated Radial Highlight */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(245,130,32,0.1),transparent_70%)]" />
       </div>
       
       <div className="w-full max-w-md bg-(--surface) border border-(--border) rounded-3xl p-10 shadow-2xl relative z-10">
