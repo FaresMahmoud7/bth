@@ -3,6 +3,20 @@ export const arabicRegex = /^[\u0600-\u06FF\s0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>
 export const englishRegex = /^[a-zA-Z\s0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
 export const phoneDigitsRegex = /^[0-9]+$/;
 
+export interface CountryCode { code: string; flag: string; }
+
+export const COUNTRY_CODES: CountryCode[] = [
+  { code: "+966", flag: "🇸🇦" },
+  { code: "+971", flag: "🇦🇪" },
+  { code: "+965", flag: "🇰🇼" },
+  { code: "+974", flag: "🇶🇦" },
+  { code: "+973", flag: "🇧🇭" },
+  { code: "+968", flag: "🇴🇲" },
+  { code: "+20", flag: "🇪🇬" },
+  { code: "+1", flag: "🇺🇸" },
+  { code: "+44", flag: "🇬🇧" },
+];
+
 export const validateTextLanguage = (text: string, lang: 'ar' | 'en'): { isValid: boolean; error?: string } => {
   if (!text) return { isValid: true }; // Allow empty strings if handled by required attribute
   
