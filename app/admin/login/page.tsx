@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { loginAdmin } from "@/actions/auth";
 import { Loader2, Eye, EyeOff } from "lucide-react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
@@ -17,12 +17,20 @@ export default function AdminLoginPage() {
     setError("");
 
     const formData = new FormData(e.currentTarget);
-    const result = await loginAdmin(formData);
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
 
-    if (result.success) {
-      window.location.href = "/admin";
+    const result = await signIn("credentials", {
+      username,
+      password,
+      redirect: false,
+    });
+
+    if (result?.ok) {
+      // Use window.location.replace for the fastest, most reliable redirection
+      window.location.replace("/admin");
     } else {
-      setError(result.error === "Invalid credentials" ? "بيانات الدخول غير صحيحة" : (result.error || "فشل تسجيل الدخول"));
+      setError(result?.error === "CredentialsSignin" || result?.error === "Invalid credentials" ? "بيانات الدخول غير صحيحة" : "فشل تسجيل الدخول");
       setLoading(false);
     }
   };
@@ -105,10 +113,10 @@ export default function AdminLoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 left-4 flex items-center text-white/20 hover:text-white transition-colors"
+                className="absolute inset-y-0 left-5 flex items-center text-[#F58220] hover:text-white transition-colors z-20"
                 title={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
               >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
               </button>
             </div>
           </div>
