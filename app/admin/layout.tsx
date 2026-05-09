@@ -2,7 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { 
   LayoutDashboard, 
   Package, 
@@ -26,6 +26,7 @@ export default function AdminLayout({
 }) {
   const { data: session, status, update } = useSession();
   const pathname = usePathname();
+  const router = useRouter();
   const { locale, toggleLanguage } = useLanguage();
   const isAr = locale === "ar";
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -44,16 +45,27 @@ export default function AdminLayout({
     }, 0);
     
     window.addEventListener('resize', checkWidth);
+
+    // Redirect to login if not authenticated (except on the login page itself)
+    if (status === "unauthenticated" && pathname !== "/admin/login") {
+      router.push("/admin/login");
+    }
+
     return () => {
       clearTimeout(timer);
       window.removeEventListener('resize', checkWidth);
     };
-  }, []);
-  
+  }, [status, pathname, router]);
+
   // Name editing states
   const [isEditingName, setIsEditingName] = useState(false);
   const [newName, setNewName] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+
+  // If we are on the login page, just render the content without sidebar
+  if (pathname === "/admin/login") {
+    return <div className="min-h-screen bg-(--background)" dir={isAr ? "rtl" : "ltr"}>{children}</div>;
+  }
 
   const navigation = [
     { name: isAr ? "لوحة التحكم" : "Dashboard", href: "/admin", icon: LayoutDashboard },
