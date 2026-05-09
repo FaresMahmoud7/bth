@@ -30,8 +30,8 @@ export const FeedbackForm = () => {
     
     if (nameError || phoneError) {
       setValidationErrors({
-        name: nameError ? (isAr ? "الرجاء استخدام أحرف عربية" : "Please use English letters") : undefined,
-        phone: phoneError ? (isAr ? "رقم جوال غير صحيح" : "Invalid phone number") : undefined
+        name: nameError,
+        phone: phoneError
       });
       return;
     }
@@ -97,13 +97,15 @@ export const FeedbackForm = () => {
             required 
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
               const err = validateTextLanguage(e.target.value, isAr ? 'ar' : 'en').error;
-              setValidationErrors(prev => ({ ...prev, name: err ? (isAr ? "الرجاء استخدام أحرف عربية" : "Please use English letters") : undefined }));
+              setValidationErrors(prev => ({ ...prev, name: err }));
             }}
             className={`w-full h-14 px-5 rounded-xl border ${validationErrors.name ? 'border-red-500 bg-red-500/5' : 'border-zinc-800 bg-zinc-900 focus:border-zinc-700 focus:ring-1 focus:ring-zinc-700'} text-white outline-none transition-all placeholder:text-zinc-600`}
             placeholder={isAr ? "الاسم" : "Jane Doe"} 
           />
           {validationErrors.name && (
-            <p className="text-red-500 text-xs mt-1">{validationErrors.name}</p>
+            <p className="text-red-500 text-xs mt-1">
+              {validationErrors.name.includes(' / ') ? validationErrors.name.split(' / ')[isAr ? 0 : 1] : validationErrors.name}
+            </p>
           )}
         </div>
         
@@ -133,16 +135,24 @@ export const FeedbackForm = () => {
               id="phone" 
               name="phone" 
               required 
+              pattern={countryCode === '+966' ? "(05|5)[0-9]{8}" : "[0-9]{7,15}"}
+              title={
+                countryCode === '+966' 
+                  ? (isAr ? "يرجى إدخال رقم جوال سعودي صحيح (9 أو 10 أرقام)" : "Please enter a valid Saudi mobile number (9 or 10 digits)")
+                  : (isAr ? "يرجى إدخال رقم هاتف صحيح" : "Please enter a valid phone number")
+              }
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 const err = validatePhoneNumber(e.target.value, countryCode).error;
-                setValidationErrors(prev => ({ ...prev, phone: err ? (isAr ? "رقم جوال غير صحيح" : "Invalid phone number") : undefined }));
+                setValidationErrors(prev => ({ ...prev, phone: err }));
               }}
               className={`flex-1 h-14 px-5 rounded-xl border ${validationErrors.phone ? 'border-red-500 bg-red-500/5' : 'border-zinc-800 bg-zinc-900 focus:border-zinc-700 focus:ring-1 focus:ring-zinc-700'} text-white outline-none transition-all placeholder:text-zinc-600`}
-              placeholder="05xxxxxxx" 
+              placeholder={countryCode === '+966' ? "05xxxxxxx" : "xxxxxxx"} 
             />
           </div>
           {validationErrors.phone && (
-            <p className="text-red-500 text-xs mt-1">{validationErrors.phone}</p>
+            <p className="text-red-500 text-xs mt-1">
+              {validationErrors.phone.includes(' / ') ? validationErrors.phone.split(' / ')[isAr ? 0 : 1] : validationErrors.phone}
+            </p>
           )}
         </div>
       </div>
