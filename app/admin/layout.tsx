@@ -29,18 +29,25 @@ export default function AdminLayout({
   const { locale, toggleLanguage } = useLanguage();
   const isAr = locale === "ar";
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Avoid synchronous setState to prevent cascading render warning
     const checkWidth = () => {
       if (window.innerWidth >= 1024) {
         setIsSidebarOpen(true);
       }
     };
+
+    const timer = setTimeout(() => {
+      setMounted(true);
+      checkWidth();
+    }, 0);
     
-    checkWidth();
     window.addEventListener('resize', checkWidth);
-    return () => window.removeEventListener('resize', checkWidth);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', checkWidth);
+    };
   }, []);
   
   // Name editing states
@@ -85,9 +92,9 @@ export default function AdminLayout({
       <aside 
         className={`${
           isSidebarOpen ? "translate-x-0" : (isAr ? "translate-x-full" : "-translate-x-full")
-        } lg:translate-x-0 transition-transform duration-300 ${
+        } lg:translate-x-0 transition-all duration-300 ${
           isSidebarOpen ? "w-64" : "w-20"
-        } lg:block flex flex-col fixed h-full z-50 inset-s-0 border-e border-white/10 glass-card rounded-none bg-(--background)`}
+        } flex flex-col fixed h-full z-50 inset-s-0 border-e border-white/10 glass-card rounded-none bg-(--background)`}
       >
         <div className="p-6 flex items-center justify-between">
           {isSidebarOpen && <span className="font-bold text-xl tracking-tight">{isAr ? "لوحة تحكم BTH" : "BTH Admin"}</span>}
@@ -210,8 +217,8 @@ export default function AdminLayout({
 
       {/* Main Content */}
       <main className={`flex-1 transition-all duration-300 ${
-        isSidebarOpen && window.innerWidth >= 1024 ? "ps-64" : "ps-0 lg:ps-20"
-      } p-4 md:p-8 pt-20 lg:pt-8`}>
+        mounted && isSidebarOpen ? "lg:ps-64" : "lg:ps-20"
+      } ps-0 p-4 md:p-8 pt-20 lg:pt-8 w-full min-w-0`}>
         {/* Mobile Toggle */}
         <button 
           onClick={() => setIsSidebarOpen(true)}
@@ -220,7 +227,7 @@ export default function AdminLayout({
         >
           <Menu size={24} />
         </button>
-        <div className="max-w-6xl mx-auto">
+        <div className="w-full max-w-5xl">
           {children}
         </div>
       </main>
