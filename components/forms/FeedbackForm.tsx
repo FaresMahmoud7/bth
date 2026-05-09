@@ -56,7 +56,7 @@ export const FeedbackForm = () => {
         setError(result.error || "Failed to submit. Please try again.");
         setLoading(false);
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.");
       setLoading(false);
     }
