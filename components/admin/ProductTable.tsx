@@ -163,9 +163,17 @@ export const ProductTable = ({ products, categories }: { products: Product[], ca
                   <label className="block text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">{isAr ? "الصور" : "Images"}</label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
                     {editingProduct?.images.filter(img => img.trim() !== "").map((img, i) => (
-                      <div key={`ex-${i}`} className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 group">
+                      <div key={`ex-${i}`} className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 group cursor-pointer transition-all active:scale-95">
                         <Image src={img} alt="img" fill className="object-cover" unoptimized={true} />
-                        <button type="button" onClick={() => removeExistingImage(i)} title={isAr ? "حذف الصورة" : "Remove Image"} aria-label={isAr ? "حذف الصورة" : "Remove Image"} className="absolute inset-0 bg-red-600/80 text-white lg:opacity-0 lg:group-hover:opacity-100 transition-opacity flex items-center justify-center"><Trash2 size={20} /></button>
+                        <button 
+                          type="button" 
+                          onClick={() => removeExistingImage(i)} 
+                          title={isAr ? "حذف الصورة" : "Remove Image"} 
+                          aria-label={isAr ? "حذف الصورة" : "Remove Image"} 
+                          className="absolute inset-0 bg-red-600/80 text-white opacity-0 lg:group-hover:opacity-100 group-active:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]"
+                        >
+                          <Trash2 size={24} className="scale-0 group-hover:scale-100 group-active:scale-100 transition-transform duration-300" />
+                        </button>
                       </div>
                     ))}
                     {previews.map((img, i) => (

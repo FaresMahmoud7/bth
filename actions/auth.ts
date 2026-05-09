@@ -12,16 +12,6 @@ export async function loginAdmin(formData: FormData) {
   try {
     await connectToDatabase();
 
-    // Auto-seed 2 default admins if the database is empty
-    const adminCount = await AdminUser.countDocuments();
-    if (adminCount === 0) {
-      const defaultPassword = await bcrypt.hash("admin123", 10);
-      await AdminUser.insertMany([
-        { username: "admin1", password: defaultPassword, role: "admin" },
-        { username: "admin2", password: defaultPassword, role: "admin" },
-      ]);
-    }
-
     const username = formData.get("username") as string;
     const password = formData.get("password") as string;
 

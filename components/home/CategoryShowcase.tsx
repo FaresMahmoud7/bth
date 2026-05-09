@@ -77,7 +77,7 @@ export const CategoryShowcase = ({ categories }: { categories: Category[] }) => 
               <div className="flex flex-col text-start items-start gap-4 mb-6 h-[120px] shrink-0 px-2 justify-center border-b border-white/5">
                 <div className="flex items-center gap-4 w-full">
                   <div className="w-1.5 h-10 bg-[#F58220] rounded-full shadow-[0_0_15px_rgba(245,130,32,0.5)] shrink-0" />
-                  <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter uppercase leading-tight wrap-break-word">
+                  <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter uppercase leading-tight wrap-break-word hyphens-auto">
                     {isAr ? category.nameAr : category.nameEn}
                   </h3>
                 </div>
@@ -136,10 +136,18 @@ export const CategoryShowcase = ({ categories }: { categories: Category[] }) => 
 
                         <div className="absolute bottom-8 left-6 right-6 lg:bottom-10 lg:left-8 lg:right-8">
                           <button 
-                            onClick={() => setSelectedItem(item)}
+                            onClick={() => {
+                              // On mobile, open inquiry directly. On desktop, show details modal.
+                              if (window.innerWidth < 1024) {
+                                openInquiry(category, item);
+                              } else {
+                                setSelectedItem(item);
+                              }
+                            }}
                             className="w-full py-5 bg-white/5 hover:bg-[#F58220] border border-white/10 hover:border-[#F58220] rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white transition-all duration-500 flex items-center justify-center gap-3 group/btn"
                           >
-                            {isAr ? "عرض التفاصيل" : "View Details"}
+                            <span className="lg:hidden">{isAr ? "طلب تسعيرة" : "Request Quote"}</span>
+                            <span className="hidden lg:inline">{isAr ? "عرض التفاصيل" : "View Details"}</span>
                             <ChevronRight size={14} className={`${isAr ? "rotate-180" : ""} group-hover/btn:translate-x-1 transition-transform`} />
                           </button>
                         </div>

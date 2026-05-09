@@ -51,7 +51,7 @@ export const Hero = () => {
             transition={{ duration: 0.6 }}
             className="mb-4 text-start"
           >
-            <span className="text-white text-lg md:text-2xl font-black block leading-tight">
+            <span className="text-white text-lg md:text-2xl font-black block leading-tight wrap-break-word">
               {isAr ? "بث الخليجية للدعاية والإعلان" : "BTH Al-khalejeah Advertising Agency"}
             </span>
           </motion.div>
@@ -63,7 +63,7 @@ export const Hero = () => {
             transition={{ duration: 0.6 }}
             className="inline-flex items-center gap-6 mb-10"
           >
-            <span className="text-[#F58220] text-3xl md:text-5xl font-black uppercase tracking-tight">
+            <span className="text-[#F58220] text-2xl md:text-5xl font-black uppercase tracking-tight wrap-break-word">
               {isAr ? "وكالة BTH للدعاية والإعلان" : "BTH Advertising Agency — Est. 1432H"}
             </span>
           </motion.div>
@@ -75,11 +75,11 @@ export const Hero = () => {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="text-5xl md:text-7xl lg:text-8xl font-black leading-none tracking-tight mb-6"
           >
-            <span className="text-white">
+            <span className="text-white wrap-break-word">
               {isAr ? "نصنع" : "We Craft"}
             </span>
             <br />
-            <span className="text-shimmer">
+            <span className="text-shimmer wrap-break-word">
               {isAr ? "علامات تجارية خالدة" : "Brands That Endure"}
             </span>
           </motion.h1>

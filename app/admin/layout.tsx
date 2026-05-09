@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, 
   Package, 
-  Briefcase, 
   Tags, 
   LogOut, 
   Menu, 
@@ -16,7 +15,7 @@ import {
   Check,
   Edit2
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { updateAdminName } from "@/actions/auth";
 
@@ -29,7 +28,20 @@ export default function AdminLayout({
   const pathname = usePathname();
   const { locale, toggleLanguage } = useLanguage();
   const isAr = locale === "ar";
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    // Avoid synchronous setState to prevent cascading render warning
+    const checkWidth = () => {
+      if (window.innerWidth >= 1024) {
+        setIsSidebarOpen(true);
+      }
+    };
+    
+    checkWidth();
+    window.addEventListener('resize', checkWidth);
+    return () => window.removeEventListener('resize', checkWidth);
+  }, []);
   
   // Name editing states
   const [isEditingName, setIsEditingName] = useState(false);
@@ -198,7 +210,7 @@ export default function AdminLayout({
 
       {/* Main Content */}
       <main className={`flex-1 transition-all duration-300 ${
-        isSidebarOpen ? "ps-64" : "ps-20"
+        isSidebarOpen && window.innerWidth >= 1024 ? "ps-64" : "ps-0 lg:ps-20"
       } p-4 md:p-8 pt-20 lg:pt-8`}>
         {/* Mobile Toggle */}
         <button 

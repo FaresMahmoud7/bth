@@ -161,13 +161,13 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass-card w-full max-w-2xl overflow-hidden relative shadow-2xl"
+        className="glass-card w-full max-w-2xl overflow-y-auto max-h-[95vh] relative shadow-2xl m-2"
       >
         {/* Header */}
-        <div className="p-8 border-b border-zinc-800 flex items-center justify-between">
+        <div className="p-6 md:p-8 border-b border-zinc-800 flex items-center justify-between">
           <div>
-            <h3 className="text-2xl font-black text-white">{isAr ? "طلب استفسار" : "Price Inquiry"}</h3>
-            <p className="text-zinc-500 text-sm mt-1">{isAr ? "خطوات بسيطة للحصول على تسعيرة" : "Easy steps to get your quote"}</p>
+            <h3 className="text-xl md:text-2xl font-black text-white">{isAr ? "طلب استفسار" : "Price Inquiry"}</h3>
+            <p className="text-zinc-500 text-[10px] md:text-sm mt-1">{isAr ? "خطوات بسيطة للحصول على تسعيرة" : "Easy steps to get your quote"}</p>
           </div>
           <button 
             onClick={handleClose} 
@@ -179,19 +179,19 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
         </div>
 
         {/* Stepper Progress */}
-        <div className="px-8 pt-8 flex items-center justify-between">
+        <div className="px-6 md:px-8 pt-6 md:pt-8 flex items-center justify-between">
           {[1, 2, 3, 4, 5].map((s) => (
             <div key={s} className="flex items-center flex-1 last:flex-none">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all ${step >= s ? "bg-[#F58220] text-white" : "bg-zinc-800 text-zinc-500"}`}>
-                {step > s ? <Check size={14} /> : s}
+              <div className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center font-bold text-[10px] md:text-xs transition-all ${step >= s ? "bg-[#F58220] text-white" : "bg-zinc-800 text-zinc-500"}`}>
+                {step > s ? <Check size={12} /> : s}
               </div>
-              {s < 5 && <div className={`h-0.5 flex-1 mx-2 ${step > s ? "bg-[#F58220]" : "bg-zinc-800"}`} />}
+              {s < 5 && <div className={`h-0.5 flex-1 mx-1 md:mx-2 ${step > s ? "bg-[#F58220]" : "bg-zinc-800"}`} />}
             </div>
           ))}
         </div>
 
         {/* Content */}
-        <div className="p-8 min-h-[400px]">
+        <div className="p-6 md:p-8 min-h-[350px]">
           <AnimatePresence mode="wait">
             {step === 1 && (
               <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">

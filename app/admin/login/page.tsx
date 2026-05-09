@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { loginAdmin } from "@/actions/auth";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -92,14 +93,24 @@ export default function AdminLoginPage() {
 
           <div className="text-start">
             <label className="block text-sm font-bold text-white/40 mb-2 uppercase tracking-widest text-[10px]">كلمة المرور</label>
-            <input 
-              type="password" 
-              name="password" 
-              required 
-              title="كلمة المرور"
-              className="w-full h-14 px-5 rounded-xl bg-white/5 border border-white/10 outline-none focus:border-[#F58220] transition-all text-white placeholder:text-white/10 text-start" 
-              placeholder="••••••••" 
-            />
+            <div className="relative">
+              <input 
+                type={showPassword ? "text" : "password"} 
+                name="password" 
+                required 
+                title="كلمة المرور"
+                className="w-full h-14 px-5 rounded-xl bg-white/5 border border-white/10 outline-none focus:border-[#F58220] transition-all text-white placeholder:text-white/10 text-start" 
+                placeholder="••••••••" 
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 left-4 flex items-center text-white/20 hover:text-white transition-colors"
+                title={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
 
           <button 

@@ -82,15 +82,15 @@ const FormFields = ({ project, categories, onRemoveImage, isAr }: FormFieldsProp
       {project?.images && project.images.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 mb-4">
           {project.images.map((img, i) => (
-            <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 group">
+            <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 group cursor-pointer transition-all active:scale-95">
               <Image src={img} alt={`Preview ${i + 1}`} fill className="object-cover transition-transform group-hover:scale-110" />
               <button 
                 type="button"
                 onClick={() => onRemoveImage(i)}
                 title={isAr ? "حذف الصورة" : "Remove image"}
-                className="absolute inset-0 bg-red-600/80 text-white lg:opacity-0 lg:group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm"
+                className="absolute inset-0 bg-red-600/80 text-white opacity-0 lg:group-hover:opacity-100 group-active:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]"
               >
-                <Trash2 size={20} />
+                <Trash2 size={24} className="scale-0 group-hover:scale-100 group-active:scale-100 transition-transform duration-300" />
               </button>
             </div>
           ))}
