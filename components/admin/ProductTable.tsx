@@ -237,7 +237,8 @@ export const ProductTable = ({ products, categories }: { products: Product[], ca
       </AnimatePresence>
 
       <div className="glass-card overflow-hidden border-white/5">
-        <div className="overflow-x-auto">
+        {/* Desktop Table View */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-start border-collapse">
             <thead>
               <tr className="border-b border-white/10 text-[10px] text-white/30 uppercase tracking-[0.2em]">
@@ -283,6 +284,46 @@ export const ProductTable = ({ products, categories }: { products: Product[], ca
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="md:hidden divide-y divide-white/5">
+          {products.map((prod) => (
+            <div key={prod._id} className="p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4 text-start">
+                  <div className="w-14 h-14 rounded-2xl overflow-hidden border border-white/10 shrink-0">
+                    {prod.images?.[0] ? <Image src={prod.images[0]} alt={prod.name} width={56} height={56} className="object-cover w-full h-full" unoptimized={true} /> : <div className="w-full h-full bg-white/5 flex items-center justify-center text-white/10"><ImageIcon size={24} /></div>}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-lg">{prod.name}</h4>
+                    <span className="text-[10px] text-[#F58220] font-black uppercase tracking-widest">{isAr ? (categories.find(c => c._id === prod.category)?.nameAr || 'غير محدد') : (categories.find(c => c._id === prod.category)?.nameEn || 'N/A')}</span>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => { 
+                    setEditingProduct(prod); 
+                    setIsAdding(false); 
+                    setPreviews([]);
+                    setErrors({});
+                    window.scrollTo({ top: 0, behavior: "smooth" }); 
+                  }} className="p-3 text-[#F58220] bg-[#F58220]/10 rounded-xl" title={isAr ? "تعديل" : "Edit"}><Edit2 size={18} /></button>
+                  <button onClick={() => handleDelete(prod._id)} disabled={loading === prod._id} className="p-3 text-red-500 bg-red-500/10 rounded-xl" title={isAr ? "حذف" : "Delete"}>{loading === prod._id ? <Loader2 className="w-5 h-5 animate-spin" /> : <Trash2 size={18} />}</button>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between bg-white/5 p-4 rounded-2xl">
+                <div className="flex -space-x-3 rtl:space-x-reverse">
+                  {prod.images?.slice(0, 5).map((img, idx) => (
+                    <div key={idx} className="w-8 h-8 rounded-full border-2 border-zinc-900 overflow-hidden">
+                      <Image src={img} alt="img" width={32} height={32} className="object-cover w-full h-full" unoptimized={true} />
+                    </div>
+                  ))}
+                </div>
+                <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{prod.images?.length || 0} {isAr ? "صور" : "Images"}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

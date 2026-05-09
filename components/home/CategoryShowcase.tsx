@@ -144,7 +144,7 @@ export const CategoryShowcase = ({ categories }: { categories: Category[] }) => 
                                 setSelectedItem(item);
                               }
                             }}
-                            className="w-full py-5 bg-white/5 hover:bg-[#F58220] border border-white/10 hover:border-[#F58220] rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white transition-all duration-500 flex items-center justify-center gap-3 group/btn"
+                            className="w-full py-5 bg-white/5 hover:bg-[#F58220] active:bg-[#F58220] active:scale-95 active:shadow-[0_0_30px_rgba(245,130,32,0.6)] border border-white/10 hover:border-[#F58220] rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white transition-all duration-300 flex items-center justify-center gap-3 group/btn"
                           >
                             <span className="lg:hidden">{isAr ? "طلب تسعيرة" : "Request Quote"}</span>
                             <span className="hidden lg:inline">{isAr ? "عرض التفاصيل" : "View Details"}</span>

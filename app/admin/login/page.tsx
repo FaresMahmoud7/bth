@@ -20,7 +20,7 @@ export default function AdminLoginPage() {
     const result = await loginAdmin(formData);
 
     if (result.success) {
-      router.push("/admin");
+      window.location.href = "/admin";
     } else {
       setError(result.error === "Invalid credentials" ? "بيانات الدخول غير صحيحة" : (result.error || "فشل تسجيل الدخول"));
       setLoading(false);
