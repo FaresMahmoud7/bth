@@ -3,13 +3,13 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { content } from "@/constants/content";
-import { Mail, Phone, MapPin, ArrowRight, ArrowLeft, MessageSquare, UserCircle2, Sparkles } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowRight, ArrowLeft, MessageSquare, UserCircle2, Sparkles, LucideIcon } from "lucide-react";
 import Link from "next/link";
 
 interface ContactDetail {
   title: string;
   value: string;
-  icon: any;
+  icon: LucideIcon;
   type: 'whatsapp' | 'call' | 'link' | 'text';
   number?: string;
   link?: string;
@@ -91,7 +91,7 @@ export const Contact = () => {
             className="flex items-center justify-center gap-4"
           >
             <div className="w-12 h-px bg-[#F58220]" />
-            <span className="text-[#F58220] text-lg md:text-xl font-bold uppercase tracking-[0.3em]">
+            <span className={`text-[#F58220] text-lg md:text-xl font-bold uppercase ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>
               {isAr ? "قم بزيارتنا أو تواصل معنا عبر أي من قنواتنا" : "Visit Us or Reach Out via Our Channels"}
             </span>
             <div className="w-12 h-px bg-[#F58220]" />
@@ -114,7 +114,7 @@ export const Contact = () => {
             >
               {/* Ladies Badge */}
               {detail.isFemale && (
-                <div className="absolute top-0 right-0 bg-[#F58220] px-4 py-1 text-[8px] font-black text-white uppercase tracking-widest flex items-center gap-2">
+                <div className={`absolute top-0 right-0 bg-[#F58220] px-4 py-1 text-[8px] font-black text-white uppercase flex items-center gap-2 ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
                   <Sparkles size={10} />
                   {isAr ? "خاص بالسيدات فقط" : "Ladies Only"}
                 </div>
@@ -128,9 +128,9 @@ export const Contact = () => {
                 <detail.icon className="w-6 h-6" />
               </div>
 
-              <h3 className={`text-[10px] font-black uppercase tracking-[0.2em] mb-2 ${
+              <h3 className={`text-[10px] font-black uppercase mb-2 ${
                 detail.isFemale ? 'text-[#F58220]' : 'text-white/30'
-              }`}>{detail.title}</h3>
+              } ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>{detail.title}</h3>
               
               <p className="text-white font-bold text-xl mb-8 grow" dir="ltr">{detail.value}</p>
               
@@ -138,9 +138,9 @@ export const Contact = () => {
                 <Link 
                   href={`https://wa.me/${detail.number}`}
                   target="_blank"
-                  className={`inline-flex items-center gap-3 font-bold text-[10px] uppercase tracking-widest hover:gap-5 transition-all group/link ${
+                  className={`inline-flex items-center gap-3 font-bold text-[10px] uppercase hover:gap-5 transition-all group/link ${
                     detail.isFemale ? 'text-white' : 'text-[#F58220]'
-                  }`}
+                  } ${isAr ? 'tracking-normal' : 'tracking-widest'}`}
                 >
                   <MessageSquare className="w-4 h-4" />
                   {isAr ? "تواصل الآن (واتساب)" : "Message Now (WhatsApp)"}
@@ -149,7 +149,7 @@ export const Contact = () => {
               ) : detail.type === 'call' ? (
                 <Link 
                   href={`tel:${detail.number}`}
-                  className="inline-flex items-center gap-3 text-[#F58220] font-bold text-[10px] uppercase tracking-widest hover:gap-5 transition-all group/link"
+                  className={`inline-flex items-center gap-3 text-[#F58220] font-bold text-[10px] uppercase hover:gap-5 transition-all group/link ${isAr ? 'tracking-normal' : 'tracking-widest'}`}
                 >
                   <Phone className="w-4 h-4" />
                   {isAr ? "اتصل الآن" : "Call Now"}
@@ -159,13 +159,13 @@ export const Contact = () => {
                 <Link 
                   href={detail.link || "#"}
                   target={detail.link?.startsWith('http') ? "_blank" : undefined}
-                  className="inline-flex items-center gap-3 text-[#F58220] font-bold text-[10px] uppercase tracking-widest hover:gap-5 transition-all group/link"
+                  className={`inline-flex items-center gap-3 text-[#F58220] font-bold text-[10px] uppercase hover:gap-5 transition-all group/link ${isAr ? 'tracking-normal' : 'tracking-widest'}`}
                 >
                   {isAr ? "استعراض" : "View Details"}
                   <Arrow className="w-4 h-4" />
                 </Link>
               ) : (
-                <div className="flex items-center gap-2 text-white/20 text-[10px] font-black uppercase tracking-widest">
+                <div className={`flex items-center gap-2 text-white/20 text-[10px] font-black uppercase ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
                   <MapPin size={12} />
                   {isAr ? "المقر الرئيسي" : "Headquarters"}
                 </div>

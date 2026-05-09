@@ -105,7 +105,7 @@ export const Hero = () => {
           >
             <Link
               href="#expertise"
-              className="group inline-flex items-center justify-center gap-3 px-8 py-4 glow-button-primary font-bold text-sm uppercase tracking-widest"
+              className={`group inline-flex items-center justify-center gap-3 px-8 py-4 glow-button-primary font-bold text-sm uppercase ${isAr ? 'tracking-normal' : 'tracking-widest'}`}
             >
               {isAr ? "استعرض خدماتنا" : "View Our Services"}
               {isAr ? <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> : <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}

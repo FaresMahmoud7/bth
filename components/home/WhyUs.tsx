@@ -56,7 +56,7 @@ export const WhyUs = () => {
             className="flex items-center justify-center gap-4"
           >
             <div className="w-12 h-px bg-[#F58220]" />
-            <span className="text-[#F58220] text-lg md:text-xl font-bold uppercase tracking-[0.3em]">
+            <span className={`text-[#F58220] text-lg md:text-xl font-bold uppercase ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>
               {isAr ? "التميز هو معيارنا الوحيد" : "Excellence is Our Only Standard"}
             </span>
             <div className="w-12 h-px bg-[#F58220]" />

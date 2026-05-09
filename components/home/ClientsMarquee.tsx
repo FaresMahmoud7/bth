@@ -69,7 +69,7 @@ export const ClientsMarquee = () => {
             className="flex items-center justify-center gap-4"
           >
             <div className="w-12 h-px bg-[#F58220]" />
-            <span className="text-[#F58220] text-lg md:text-xl font-bold uppercase tracking-[0.3em]">
+            <span className={`text-[#F58220] text-lg md:text-xl font-bold uppercase ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>
               {isAr ? "يثق بنا كبار الشركات" : "Trusted by Industry Leaders"}
             </span>
             <div className="w-12 h-px bg-[#F58220]" />
@@ -106,7 +106,7 @@ export const ClientsMarquee = () => {
                 key={`row1-${i}`}
                 className="shrink-0 flex items-center px-10 border-r border-white/5 group cursor-default"
               >
-                <span className="text-white text-sm font-black uppercase tracking-[0.2em] whitespace-nowrap group-hover:text-[#F58220] transition-colors duration-300">
+                <span className={`text-white text-sm font-black uppercase whitespace-nowrap group-hover:text-[#F58220] transition-colors duration-300 ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>
                   {isAr ? client.ar : client.en}
                 </span>
               </div>
@@ -120,7 +120,7 @@ export const ClientsMarquee = () => {
                 key={`row2-${i}`}
                 className="shrink-0 flex items-center px-10 border-r border-white/5 group cursor-default"
               >
-                <span className="text-white text-sm font-black uppercase tracking-[0.2em] whitespace-nowrap group-hover:text-[#F58220] transition-colors duration-300">
+                <span className={`text-white text-sm font-black uppercase whitespace-nowrap group-hover:text-[#F58220] transition-colors duration-300 ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>
                   {isAr ? client.ar : client.en}
                 </span>
               </div>

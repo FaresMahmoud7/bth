@@ -40,7 +40,7 @@ export const CtaBanner = () => {
           viewport={{ once: true }}
           className="max-w-3xl mx-auto"
         >
-          <p className="text-[#F58220] text-xs font-bold uppercase tracking-[0.4em] mb-6">
+          <p className={`text-[#F58220] text-xs font-bold uppercase mb-6 ${isAr ? 'tracking-normal' : 'tracking-[0.4em]'}`}>
             {isAr ? "ابدأ مشروعك اليوم" : "Start Your Project Today"}
           </p>
           <h2 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">
@@ -57,14 +57,14 @@ export const CtaBanner = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="#contact"
-              className="group inline-flex items-center justify-center gap-3 px-10 py-5 glow-button-primary font-bold text-sm uppercase tracking-widest"
+              className={`group inline-flex items-center justify-center gap-3 px-10 py-5 glow-button-primary font-bold text-sm uppercase ${isAr ? 'tracking-normal' : 'tracking-widest'}`}
             >
               {isAr ? "تواصل معنا الآن" : "Contact Us Now"}
               <Arrow className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <button
               onClick={() => setIsPhoneOpen(true)}
-              className="inline-flex items-center justify-center gap-3 px-10 py-5 border border-white/20 text-white font-bold text-sm uppercase tracking-widest hover:border-[#F58220]/60 hover:text-[#F58220] transition-colors cursor-pointer"
+              className={`inline-flex items-center justify-center gap-3 px-10 py-5 border border-white/20 text-white font-bold text-sm uppercase hover:border-[#F58220]/60 hover:text-[#F58220] transition-colors cursor-pointer ${isAr ? 'tracking-normal' : 'tracking-widest'}`}
             >
               {isAr ? "اتصل بنا مباشرة" : "Call Us Directly"}
             </button>

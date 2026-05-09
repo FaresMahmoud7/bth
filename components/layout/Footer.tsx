@@ -48,7 +48,7 @@ export const Footer = () => {
         {/* Main Branding Slogan */}
         <div className="flex items-center gap-6 mb-20 overflow-hidden">
           <div className="h-px bg-[#F58220]/30 flex-1 hidden md:block" />
-          <span className="text-shimmer text-4xl md:text-8xl font-black uppercase tracking-[0.2em] whitespace-nowrap drop-shadow-2xl py-4">
+          <span className={`text-shimmer text-4xl md:text-8xl font-black uppercase whitespace-nowrap drop-shadow-2xl py-4 ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>
             {isAr ? "نصنع التميز" : "Crafting Excellence"}
           </span>
           <div className="h-px bg-[#F58220]/30 flex-1" />
@@ -93,17 +93,17 @@ export const Footer = () => {
           </div>
           
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-[0.3em] text-[#F58220] mb-10">{t.quick_links}</h4>
+            <h4 className={`text-xs font-bold uppercase text-[#F58220] mb-10 ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>{t.quick_links}</h4>
             <ul className="space-y-5">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   {link.href ? (
-                    <Link href={link.href} className="text-(--foreground)/90 hover:text-[#F58220] transition-colors flex items-center gap-3 group text-sm font-bold uppercase tracking-widest">
+                    <Link href={link.href} className={`text-(--foreground)/90 hover:text-[#F58220] transition-colors flex items-center gap-3 group text-sm font-bold uppercase ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
                       <span className="w-0 h-px bg-[#F58220] group-hover:w-4 transition-all" />
                       {link.name}
                     </Link>
                   ) : (
-                    <button onClick={link.action} className="text-(--foreground)/90 hover:text-[#F58220] transition-colors flex items-center gap-3 group text-sm font-bold uppercase tracking-widest cursor-pointer">
+                    <button onClick={link.action} className={`text-(--foreground)/90 hover:text-[#F58220] transition-colors flex items-center gap-3 group text-sm font-bold uppercase cursor-pointer ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
                       <span className="w-0 h-px bg-[#F58220] group-hover:w-4 transition-all" />
                       {link.name}
                     </button>
@@ -114,7 +114,7 @@ export const Footer = () => {
           </div>
 
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-[0.3em] text-[#F58220] mb-10">{content[locale].contact.address_title}</h4>
+            <h4 className={`text-xs font-bold uppercase text-[#F58220] mb-10 ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>{content[locale].contact.address_title}</h4>
             <ul className="space-y-6 text-(--foreground)/90">
               <li className="leading-relaxed text-sm">
                 {content[locale].contact.address}
@@ -123,7 +123,7 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="pt-12 border-t border-(--border) flex flex-col md:flex-row items-center justify-between gap-8 text-xs font-bold uppercase tracking-[0.2em] text-(--foreground)/60">
+        <div className={`pt-12 border-t border-(--border) flex flex-col md:flex-row items-center justify-between gap-8 text-xs font-bold uppercase text-(--foreground)/60 ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>
           <p>{t.copyright}</p>
           <div className="flex gap-10">
             <button onClick={() => setActivePolicy("privacy")} className="hover:text-[#F58220] transition-colors">

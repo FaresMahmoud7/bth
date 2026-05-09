@@ -115,7 +115,7 @@ export const CategoryShowcase = ({ categories }: { categories: Category[] }) => 
                       <div className="p-6 md:p-8 flex flex-col flex-1 bg-zinc-900/50 backdrop-blur-sm pb-28">
                         <div className="flex-1 overflow-hidden">
                           <div className="flex items-center gap-2 mb-3">
-                            <span className="text-[#F58220] text-[10px] font-black uppercase tracking-widest">{isAr ? category.nameAr : category.nameEn}</span>
+                            <span className={`text-[#F58220] text-[10px] font-black uppercase ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>{isAr ? category.nameAr : category.nameEn}</span>
                           </div>
                           <h4 className="text-xl font-bold text-white mb-3 text-start line-clamp-1">{item.name}</h4>
                           <p className="text-zinc-400 text-sm line-clamp-3 mb-6 text-start h-[60px] leading-relaxed shrink-0">
@@ -126,7 +126,7 @@ export const CategoryShowcase = ({ categories }: { categories: Category[] }) => 
                             {item.options.map((opt, i) => (
                               <span 
                                 key={i} 
-                                className="text-[9px] font-black border px-3 py-1.5 rounded-lg uppercase tracking-widest text-white/40 border-white/10 bg-white/5"
+                                className={`text-[9px] font-black border px-3 py-1.5 rounded-lg uppercase text-white/40 border-white/10 bg-white/5 ${isAr ? 'tracking-normal' : 'tracking-widest'}`}
                               >
                                 {opt}
                               </span>
@@ -144,7 +144,7 @@ export const CategoryShowcase = ({ categories }: { categories: Category[] }) => 
                                 setSelectedItem(item);
                               }
                             }}
-                            className="w-full py-5 bg-white/5 hover:bg-[#F58220] active:bg-[#F58220] active:scale-95 active:shadow-[0_0_30px_rgba(245,130,32,0.6)] border border-white/10 hover:border-[#F58220] rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white transition-all duration-300 flex items-center justify-center gap-3 group/btn"
+                            className={`w-full py-5 bg-white/5 hover:bg-[#F58220] active:bg-[#F58220] active:scale-95 active:shadow-[0_0_30px_rgba(245,130,32,0.6)] border border-white/10 hover:border-[#F58220] rounded-2xl text-[10px] font-black uppercase text-white transition-all duration-300 flex items-center justify-center gap-3 group/btn ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}
                           >
                             <span className="lg:hidden">{isAr ? "طلب تسعيرة" : "Request Quote"}</span>
                             <span className="hidden lg:inline">{isAr ? "عرض التفاصيل" : "View Details"}</span>
@@ -357,7 +357,7 @@ const ItemDetailsModal = ({
 
           <div className="space-y-8">
             <div>
-              <h5 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] mb-4 text-start">
+              <h5 className={`text-[10px] font-black text-zinc-500 uppercase mb-4 text-start ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>
                 {isAr ? "خيارات متوفرة" : "Available Options"}
               </h5>
               <div className="flex flex-wrap gap-3">
@@ -371,7 +371,7 @@ const ItemDetailsModal = ({
 
             <button 
               onClick={onInquire}
-              className="w-full py-6 glow-button-primary font-black text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 mt-8"
+              className={`w-full py-6 glow-button-primary font-black text-xs uppercase flex items-center justify-center gap-4 mt-8 ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}
             >
               <MessageSquare size={20} />
               {isAr ? "استفسار عن السعر" : "Inquire Price"}
