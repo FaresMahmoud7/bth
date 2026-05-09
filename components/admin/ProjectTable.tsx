@@ -88,7 +88,7 @@ const FormFields = ({ project, categories, onRemoveImage, isAr }: FormFieldsProp
                 type="button"
                 onClick={() => onRemoveImage(i)}
                 title={isAr ? "حذف الصورة" : "Remove image"}
-                className="absolute inset-0 bg-red-600/80 text-white opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm"
+                className="absolute inset-0 bg-red-600/80 text-white lg:opacity-0 lg:group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm"
               >
                 <Trash2 size={20} />
               </button>

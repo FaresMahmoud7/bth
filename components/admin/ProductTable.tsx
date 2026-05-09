@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Loader2, Trash2, Plus, Edit2, X, ImageIcon, Layers, Check } from "lucide-react";
+import { useState, useRef } from "react";
+import { Loader2, Trash2, Plus, Edit2, X, ImageIcon, Check } from "lucide-react";
 import { createProduct, deleteProduct, updateProduct } from "@/actions/admin/products";
 import { validateTextLanguage } from "@/lib/validation";
 import Image from "next/image";
@@ -25,7 +25,7 @@ interface Product {
   options: string[];
 }
 
-const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800";
+
 
 export const ProductTable = ({ products, categories }: { products: Product[], categories: Category[] }) => {
   const { locale } = useLanguage();
@@ -40,14 +40,7 @@ export const ProductTable = ({ products, categories }: { products: Product[], ca
   const [previews, setPreviews] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (editingProduct) {
-      setPreviews([]);
-      setErrors({});
-    } else {
-      setErrors({});
-    }
-  }, [editingProduct]);
+
 
   const handleValidation = (name: string, value: string, lang: 'ar' | 'en') => {
     const { isValid, error } = validateTextLanguage(value, lang);
@@ -131,7 +124,12 @@ export const ProductTable = ({ products, categories }: { products: Product[], ca
           {isAr ? "قائمة الخدمات الحالية" : "Current Services List"}
           <span className="bg-[#F58220]/20 text-[#F58220] px-3 py-1 rounded-full text-[10px] tracking-widest">{products.length}</span>
         </h2>
-        <button onClick={() => { setIsAdding(!isAdding); setEditingProduct(null); setPreviews([]); }} className="flex items-center gap-3 glow-button-primary font-black uppercase tracking-widest text-[10px] px-8 py-4 rounded-2xl transition-all">
+        <button onClick={() => { 
+          setIsAdding(!isAdding); 
+          setEditingProduct(null); 
+          setPreviews([]); 
+          setErrors({});
+        }} className="flex items-center gap-3 glow-button-primary font-black uppercase tracking-widest text-[10px] px-8 py-4 rounded-2xl transition-all">
           {isAdding ? <X size={16} /> : <Plus size={16} />}
           {isAdding ? (isAr ? "إلغاء" : "Cancel") : (isAr ? "إضافة خدمة جديدة" : "Add Service")}
         </button>
@@ -167,7 +165,7 @@ export const ProductTable = ({ products, categories }: { products: Product[], ca
                     {editingProduct?.images.filter(img => img.trim() !== "").map((img, i) => (
                       <div key={`ex-${i}`} className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 group">
                         <Image src={img} alt="img" fill className="object-cover" unoptimized={true} />
-                        <button type="button" onClick={() => removeExistingImage(i)} title={isAr ? "حذف الصورة" : "Remove Image"} aria-label={isAr ? "حذف الصورة" : "Remove Image"} className="absolute inset-0 bg-red-600/80 text-white opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><Trash2 size={20} /></button>
+                        <button type="button" onClick={() => removeExistingImage(i)} title={isAr ? "حذف الصورة" : "Remove Image"} aria-label={isAr ? "حذف الصورة" : "Remove Image"} className="absolute inset-0 bg-red-600/80 text-white lg:opacity-0 lg:group-hover:opacity-100 transition-opacity flex items-center justify-center"><Trash2 size={20} /></button>
                       </div>
                     ))}
                     {previews.map((img, i) => (
@@ -263,7 +261,13 @@ export const ProductTable = ({ products, categories }: { products: Product[], ca
                   </td>
                   <td className={`px-8 py-6 ${isAr ? 'text-start' : 'text-right'}`}>
                     <div className={`flex items-center gap-3 ${isAr ? 'justify-start' : 'justify-end'}`}>
-                      <button onClick={() => { setEditingProduct(prod); setIsAdding(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="p-3 text-white/20 hover:text-[#F58220] hover:bg-[#F58220]/10 rounded-xl transition-all" title={isAr ? "تعديل" : "Edit"} aria-label={isAr ? "تعديل" : "Edit"}><Edit2 size={18} /></button>
+                      <button onClick={() => { 
+                        setEditingProduct(prod); 
+                        setIsAdding(false); 
+                        setPreviews([]);
+                        setErrors({});
+                        window.scrollTo({ top: 0, behavior: "smooth" }); 
+                      }} className="p-3 text-white/20 hover:text-[#F58220] hover:bg-[#F58220]/10 rounded-xl transition-all" title={isAr ? "تعديل" : "Edit"} aria-label={isAr ? "تعديل" : "Edit"}><Edit2 size={18} /></button>
                       <button onClick={() => handleDelete(prod._id)} disabled={loading === prod._id} className="p-3 text-white/20 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all disabled:opacity-50" title={isAr ? "حذف" : "Delete"} aria-label={isAr ? "حذف" : "Delete"}>{loading === prod._id ? <Loader2 className="w-5 h-5 animate-spin text-[#F58220]" /> : <Trash2 size={18} />}</button>
                     </div>
                   </td>

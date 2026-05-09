@@ -260,7 +260,7 @@ const ImageCarousel = ({
       <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
 
       {images.length > 1 && (
-        <div className="absolute inset-0 flex items-center justify-between px-4 opacity-0 group-hover/controls:opacity-100 transition-opacity duration-300">
+        <div className="absolute inset-0 flex items-center justify-between px-4 lg:opacity-0 lg:group-hover/controls:opacity-100 transition-opacity duration-300">
           <button 
             onClick={isAr ? next : prev}
             className="w-10 h-10 rounded-full bg-black/40 backdrop-blur-md text-white flex items-center justify-center hover:bg-[#F58220] transition-all border border-white/10"
