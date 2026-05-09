@@ -115,7 +115,19 @@ export async function getShowcaseData(): Promise<FormattedCategory[]> {
         nameAr: "التصميم و الطباعة", nameEn: "Design & Printing", type: 'product' as const,
         descriptionAr: "تصميم و طباعه و تنفيذ جميع انواع المطبوعات",
         descriptionEn: "Design, printing, and implementation of all types of publications.",
-        options: ["البرشورات (Flyers)", "قوائم الطعام (Menu)", "الكتيبات (Booklets)", "البطاقات (Cards)", "المجلدات (Folders)"]
+        options: [
+          "البرشورات والفلاير (Brochures & Flyers)",
+          "قوائم الطعام (Menu)",
+          "الكتيبات والمجلات (Booklets & Magazines)",
+          "البطاقات الشخصية (Business Cards)",
+          "المجلدات والملفات (Folders & Files)",
+          "الأظرف والقرطاسية (Envelopes & Stationery)",
+          "الفواتير والسندات (Invoices & Vouchers)",
+          "الملصقات والبوسترات (Posters & Stickers)",
+          "الكتب والتقارير (Books & Reports)",
+          "المفكرات والنوتبوك (Notebooks & Planners)",
+          "كروت المناسبات (Event Cards)"
+        ]
       }
     ];
     

@@ -34,13 +34,13 @@ export const Feedback = () => {
       setIsSuccess(true);
       
       // WhatsApp redirect
-      const whatsappNumber = content[locale].contact.phone; // Using the main office number
+      const whatsappNumber = content[locale].contact.female_contact; // Using the complaints number
       const text = `*${type === 'complaint' ? t.complaint : t.suggestion}*\n\n` +
                    `*${t.name}:* ${data.name}\n` +
                    `*${t.phone}:* ${data.phone}\n` +
                    `*${t.message}:*\n${data.message}`;
       
-      const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\s+/g, '')}?text=${encodeURIComponent(text)}`;
+      const whatsappUrl = `https://wa.me/966${whatsappNumber.replace(/\s+/g, '').replace(/^0/, '')}?text=${encodeURIComponent(text)}`;
       
       setTimeout(() => {
         window.open(whatsappUrl, "_blank");

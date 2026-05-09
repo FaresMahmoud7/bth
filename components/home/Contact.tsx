@@ -23,33 +23,33 @@ export const Contact = () => {
 
   const contactDetails: ContactDetail[] = [
     {
-      title: isAr ? "قسم السيدات" : "Ladies Section",
-      value: "050 064 4733",
-      icon: UserCircle2,
+      title: isAr ? "رقم الشكاوي" : "Complaints Number",
+      value: "054 846 6466",
+      icon: MessageSquare,
       type: 'whatsapp',
-      number: "966500644733",
-      isFemale: true,
+      number: "966548466466",
+      isFemale: false, // Changed from true
     },
     {
       title: isAr ? "الجوال (1)" : "Mobile (1)",
-      value: "053 522 5592",
+      value: "056 629 6262",
       icon: Phone,
       type: 'whatsapp',
-      number: "966535225592",
+      number: "966566296262",
     },
     {
       title: isAr ? "الجوال (2)" : "Mobile (2)",
-      value: "053 358 4880",
+      value: "050 591 2477",
       icon: Phone,
       type: 'whatsapp',
-      number: "966533584880",
+      number: "966505912477",
     },
     {
       title: isAr ? "هاتف المكتب" : "Office Phone",
-      value: "013 361 7027",
+      value: "013 344 9288",
       icon: Phone,
       type: 'call',
-      number: "0133617027",
+      number: "0133449288",
     },
     {
       title: isAr ? "الموقع" : "Location",
@@ -113,10 +113,10 @@ export const Contact = () => {
               }`}
             >
               {/* Ladies Badge */}
-              {detail.isFemale && (
+              {detail.title === (isAr ? "رقم الشكاوي" : "Complaints Number") && (
                 <div className={`absolute top-0 right-0 bg-[#F58220] px-4 py-1 text-[8px] font-black text-white uppercase flex items-center gap-2 ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
                   <Sparkles size={10} />
-                  {isAr ? "خاص بالسيدات فقط" : "Ladies Only"}
+                  {isAr ? "خدمة العملاء" : "Customer Service"}
                 </div>
               )}
 
@@ -171,8 +171,8 @@ export const Contact = () => {
                 </div>
               )}
 
-              {/* Special Ladies Glow Effect */}
-              {detail.isFemale && (
+              {/* Special Glow Effect */}
+              {detail.title === (isAr ? "رقم الشكاوي" : "Complaints Number") && (
                 <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-[#F58220]/20 blur-[100px] pointer-events-none" />
               )}
             </motion.div>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
-import { X, ChevronRight, ChevronLeft, Check, Send, Loader2 } from "lucide-react";
+import { X, ChevronRight, ChevronLeft, Check, Send, Loader2, MessageSquare } from "lucide-react";
 import { submitFeedback } from "@/actions/feedback"; // Reuse feedback action for inquiry
 import { validatePhoneNumber } from "@/lib/validation";
 
@@ -36,7 +36,7 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [selectedType, setSelectedType] = useState<Type | null>(null);
   const [selectedOption, setSelectedOption] = useState<string>("");
-  const [gender, setGender] = useState<'male' | 'female' | null>(null);
+  const [commPreference, setCommPreference] = useState<'whatsapp' | 'email' | null>(null);
   
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -45,8 +45,7 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
   const [phone, setPhone] = useState('');
   const [phoneError, setPhoneError] = useState('');
 
-  const generalNumbers = ["0566296262", "0559424446"];
-  const femaleNumber = "0500644733";
+  const generalNumbers = ["966566296262", "966505912477"];
 
   useEffect(() => {
     if (isOpen) {
@@ -83,7 +82,7 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
       setSelectedType(null);
     }
     setSelectedOption("");
-    setGender(null);
+    setCommPreference(null);
     setSuccess(false);
     setPhone('');
     setPhoneError('');
@@ -100,6 +99,7 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
     
     const formData = new FormData(e.currentTarget);
     const userName = formData.get("name") as string;
+    const userEmail = formData.get("email") as string;
     
     const val = validatePhoneNumber(phone, countryCode);
     if (!val.isValid) {
@@ -108,7 +108,7 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
       return;
     }
     
-    // Clean phone number: remove non-digits and leading zeros (if Saudi, usually users enter leading 0 despite being told not to)
+    // Clean phone number
     const cleanedPhone = phone.replace(/\D/g, '').replace(/^0+/, '');
     const userPhone = `${countryCode}${cleanedPhone}`;
     
@@ -117,36 +117,32 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
     const data = {
       name: userName,
       phone: userPhone,
-      message: inquiryDetails,
+      message: `${inquiryDetails}${userEmail ? ` | Email: ${userEmail}` : ''}`,
       type: 'suggestion' as const,
     };
 
     const result = await submitFeedback(data);
     
     if (result.success) {
-      // WhatsApp Logic
-      let targetPhone = "";
-      if (gender === 'female') {
-        targetPhone = femaleNumber;
-      } else {
-        targetPhone = generalNumbers[Math.floor(Math.random() * generalNumbers.length)];
+      if (commPreference === 'whatsapp') {
+        const targetPhone = generalNumbers[Math.floor(Math.random() * generalNumbers.length)];
+
+        // Format WhatsApp Message
+        const waMessage = encodeURIComponent(
+          `*New Quote Request from BTH Website*\n\n` +
+          `*Name:* ${userName}\n` +
+          `*Phone:* ${userPhone}\n` +
+          `*Service:* ${selectedCategory?.nameEn} / ${selectedCategory?.nameAr}\n` +
+          `*Type:* ${selectedType?.name}\n` +
+          `*Option:* ${selectedOption || 'General'}\n\n` +
+          `_Sent via BTH Inquiry Wizard_`
+        );
+
+        const waUrl = `https://wa.me/${targetPhone}?text=${waMessage}`;
+        window.open(waUrl, '_blank');
       }
-
-      // Format WhatsApp Message
-      const waMessage = encodeURIComponent(
-        `*New Inquiry from BTH Website*\n\n` +
-        `*Name:* ${userName}\n` +
-        `*Phone:* ${userPhone}\n` +
-        `*Service:* ${selectedCategory?.nameEn} / ${selectedCategory?.nameAr}\n` +
-        `*Type:* ${selectedType?.name}\n` +
-        `*Option:* ${selectedOption || 'General'}\n\n` +
-        `_Sent via BTH Inquiry Wizard_`
-      );
-
-      const waUrl = `https://wa.me/966${targetPhone.startsWith('0') ? targetPhone.slice(1) : targetPhone}?text=${waMessage}`;
       
       setSuccess(true);
-      window.open(waUrl, '_blank');
       setTimeout(handleClose, 2000);
     } else {
       alert("Error sending inquiry. Please try again.");
@@ -166,8 +162,8 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
         {/* Header */}
         <div className="p-6 md:p-8 border-b border-zinc-800 flex items-center justify-between">
           <div>
-            <h3 className="text-xl md:text-2xl font-black text-white">{isAr ? "طلب استفسار" : "Price Inquiry"}</h3>
-            <p className="text-zinc-500 text-[10px] md:text-sm mt-1">{isAr ? "خطوات بسيطة للحصول على تسعيرة" : "Easy steps to get your quote"}</p>
+            <h3 className="text-xl md:text-2xl font-black text-white">{isAr ? "طلب تسعيرة" : "Request a Quote"}</h3>
+            <p className="text-zinc-500 text-[10px] md:text-sm mt-1">{isAr ? "خطوات بسيطة للحصول على تسعيرة احترافية" : "Easy steps to get your professional quote"}</p>
           </div>
           <button 
             onClick={handleClose} 
@@ -275,7 +271,7 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
             )}
 
             {step === 4 && (
-              <motion.div key="stepGender" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+              <motion.div key="stepPreference" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                 <div className="flex items-center gap-4 mb-2">
                   <button 
                     onClick={() => setStep(3)} 
@@ -284,26 +280,26 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
                   >
                     <ChevronLeft size={20} className={isAr ? "rotate-180" : ""} />
                   </button>
-                  <h4 className={`text-lg font-bold text-white ${isAr ? "text-right" : ""}`}>{isAr ? "الجنس" : "Gender"}</h4>
+                  <h4 className={`text-lg font-bold text-white ${isAr ? "text-right" : ""}`}>{isAr ? "وسيلة التواصل المفضلة" : "Preferred Contact Method"}</h4>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <button
-                    onClick={() => { setGender('male'); setStep(5); }}
-                    className={`p-8 bg-zinc-800/50 border rounded-2xl text-white font-bold flex flex-col items-center gap-4 transition-all ${gender === 'male' ? 'border-[#F58220] bg-[#F58220]/10' : 'border-zinc-700 hover:border-zinc-500'}`}
+                    onClick={() => { setCommPreference('whatsapp'); setStep(5); }}
+                    className={`p-8 bg-zinc-800/50 border rounded-2xl text-white font-bold flex flex-col items-center gap-4 transition-all ${commPreference === 'whatsapp' ? 'border-[#F58220] bg-[#F58220]/10' : 'border-zinc-700 hover:border-zinc-500'}`}
                   >
-                    <div className="w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center">
-                      <span className="text-2xl">👨</span>
+                    <div className="w-12 h-12 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center">
+                      <MessageSquare size={24} />
                     </div>
-                    {isAr ? "ذكر" : "Male"}
+                    {isAr ? "واتساب" : "WhatsApp"}
                   </button>
                   <button
-                    onClick={() => { setGender('female'); setStep(5); }}
-                    className={`p-8 bg-zinc-800/50 border rounded-2xl text-white font-bold flex flex-col items-center gap-4 transition-all ${gender === 'female' ? 'border-[#F58220] bg-[#F58220]/10' : 'border-zinc-700 hover:border-zinc-500'}`}
+                    onClick={() => { setCommPreference('email'); setStep(5); }}
+                    className={`p-8 bg-zinc-800/50 border rounded-2xl text-white font-bold flex flex-col items-center gap-4 transition-all ${commPreference === 'email' ? 'border-[#F58220] bg-[#F58220]/10' : 'border-zinc-700 hover:border-zinc-500'}`}
                   >
-                    <div className="w-12 h-12 rounded-full bg-pink-500/20 text-pink-400 flex items-center justify-center">
-                      <span className="text-2xl">👩</span>
+                    <div className="w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center">
+                      <Send size={24} />
                     </div>
-                    {isAr ? "أنثى" : "Female"}
+                    {isAr ? "البريد الإلكتروني" : "Email"}
                   </button>
                 </div>
               </motion.div>
@@ -328,7 +324,11 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
                       <Check size={40} />
                     </div>
                     <h5 className="text-xl font-bold text-white">{isAr ? "تم الإرسال بنجاح" : "Sent Successfully"}</h5>
-                    <p className="text-zinc-500">{isAr ? "جاري تحويلك إلى واتساب..." : "Redirecting to WhatsApp..."}</p>
+                    <p className="text-zinc-500">
+                      {commPreference === 'whatsapp' 
+                        ? (isAr ? "جاري تحويلك إلى واتساب..." : "Redirecting to WhatsApp...")
+                        : (isAr ? "سنتواصل معك عبر البريد الإلكتروني قريباً" : "We will contact you via email shortly")}
+                    </p>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
@@ -338,16 +338,23 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
                     </div>
                     
                     <input 
-                      name="name" required placeholder={isAr ? "الاسم" : "Full Name"} 
-                      className="w-full p-5 bg-zinc-800/50 border border-zinc-700 rounded-2xl text-white outline-none focus:border-[#F58220] transition-all"
+                      name="name" required placeholder={isAr ? "الاسم الكامل" : "Full Name"} 
+                      className="w-full p-5 bg-zinc-800/50 border border-zinc-700 rounded-2xl text-white outline-none focus:border-[#F58220] transition-all font-bold"
                     />
+
+                    {commPreference === 'email' && (
+                      <input 
+                        name="email" type="email" required placeholder={isAr ? "البريد الإلكتروني" : "Email Address"} 
+                        className="w-full p-5 bg-zinc-800/50 border border-zinc-700 rounded-2xl text-white outline-none focus:border-[#F58220] transition-all font-bold"
+                      />
+                    )}
                     
                     <div className="space-y-2">
                       <div className="flex gap-2">
                         <select 
                           value={countryCode}
                           onChange={(e) => { setCountryCode(e.target.value); setPhoneError(''); }}
-                          className="w-1/3 p-5 bg-zinc-800/50 border border-zinc-700 rounded-2xl text-white outline-none focus:border-[#F58220] transition-all appearance-none text-center"
+                          className="w-1/3 p-5 bg-zinc-800/50 border border-zinc-700 rounded-2xl text-white outline-none focus:border-[#F58220] transition-all appearance-none text-center font-bold"
                           dir="ltr"
                           title={isAr ? "مفتاح الدولة" : "Country Code"}
                           aria-label={isAr ? "مفتاح الدولة" : "Country Code"}
@@ -370,7 +377,7 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
                             setPhoneError(val.isValid ? '' : val.error || '');
                           }}
                           placeholder={isAr ? "رقم الجوال" : "Phone Number"} 
-                          className={`w-2/3 p-5 bg-zinc-800/50 border ${phoneError ? 'border-red-500' : 'border-zinc-700'} rounded-2xl text-white outline-none focus:border-[#F58220] transition-all`}
+                          className={`w-2/3 p-5 bg-zinc-800/50 border ${phoneError ? 'border-red-500' : 'border-zinc-700'} rounded-2xl text-white outline-none focus:border-[#F58220] transition-all font-bold`}
                           dir="ltr"
                         />
                       </div>
@@ -381,7 +388,7 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
                       type="submit" disabled={loading}
                       className="w-full py-6 glow-button-primary font-black text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3"
                     >
-                      {loading ? <Loader2 className="animate-spin" size={20} /> : <><Send size={18} /> {isAr ? "إرسال الطلب" : "Send Inquiry"}</>}
+                      {loading ? <Loader2 className="animate-spin" size={20} /> : <><Send size={18} /> {isAr ? "إرسال طلب التسعيرة" : "Request Quote"}</>}
                     </button>
                   </form>
                 )}

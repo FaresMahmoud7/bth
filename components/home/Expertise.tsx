@@ -295,7 +295,7 @@ export const Expertise = () => {
                       className="flex-1 flex flex-col justify-center text-start"
                     >
                       <div className="mb-8">
-                        <h3 className="text-2xl font-black text-white mb-2">{isAr ? "طلب استفسار" : "Send Inquiry"}</h3>
+                        <h3 className="text-2xl font-black text-white mb-2">{isAr ? "طلب تسعيره" : "Request a Quote"}</h3>
                         <p className="text-white/30 text-sm">{isAr ? "يرجى ملء البيانات للتواصل معك عبر واتساب" : "Please fill in your details to connect via WhatsApp"}</p>
                       </div>
 

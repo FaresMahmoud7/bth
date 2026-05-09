@@ -71,6 +71,7 @@ export default function AdminLayout({
     { name: isAr ? "لوحة التحكم" : "Dashboard", href: "/admin", icon: LayoutDashboard },
     { name: isAr ? "الخدمات" : "Services", href: "/admin/products", icon: Package },
     { name: isAr ? "الأقسام" : "Categories", href: "/admin/categories", icon: Tags },
+    { name: isAr ? "الشركاء" : "Partners", href: "/admin/partners", icon: Globe },
   ];
 
   const handleNameUpdate = async () => {
