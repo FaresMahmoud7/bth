@@ -3,13 +3,12 @@
 import { useState } from "react";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const router = useRouter();
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,14 +22,12 @@ export default function AdminLoginPage() {
     const result = await signIn("credentials", {
       username,
       password,
-      redirect: false,
+      callbackUrl: "/admin",
+      redirect: true,
     });
 
-    if (result?.ok) {
-      // Use window.location.replace for the fastest, most reliable redirection
-      window.location.replace("/admin");
-    } else {
-      setError(result?.error === "CredentialsSignin" || result?.error === "Invalid credentials" ? "بيانات الدخول غير صحيحة" : "فشل تسجيل الدخول");
+    if (result?.error) {
+      setError(result.error === "CredentialsSignin" || result.error === "Invalid credentials" ? "بيانات الدخول غير صحيحة" : "فشل تسجيل الدخول");
       setLoading(false);
     }
   };
