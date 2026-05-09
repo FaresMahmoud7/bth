@@ -62,9 +62,9 @@ export default function AdminLayout({
   const [newName, setNewName] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // If we are on the login page, just render the content without sidebar
+  // If we are on the login page, just render the content without sidebar or restricted background
   if (pathname === "/admin/login") {
-    return <div className="min-h-screen bg-(--background)" dir={isAr ? "rtl" : "ltr"}>{children}</div>;
+    return <div className="min-h-screen" dir={isAr ? "rtl" : "ltr"}>{children}</div>;
   }
 
   const navigation = [

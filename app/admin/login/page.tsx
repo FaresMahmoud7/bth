@@ -39,27 +39,27 @@ export default function AdminLoginPage() {
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-(--background)" />
         <Image
-          src="/image2.jpeg" 
+          src="/image2.jpeg?v=2" 
           alt="Background"
           fill
           priority
-          className="object-cover opacity-15 scale-110"
+          className="object-cover opacity-50 scale-105"
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).style.display = 'none';
           }}
         />
         {/* Dynamic Gradient Overlays */}
-        <div className="absolute inset-0 bg-linear-to-b from-(--background) via-transparent to-(--background) opacity-80" />
-        <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-black opacity-60" />
+        <div className="absolute inset-0 bg-linear-to-b from-black via-transparent to-black opacity-90" />
         
         {/* Orange accent line */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#F58220]/60 to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-[#F58220]" />
         
-        {/* Animated Radial Highlight */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(245,130,32,0.1),transparent_70%)]" />
+        {/* Animated Radial Highlight - STRENGTHENED */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(245,130,32,0.5),transparent_70%)]" />
       </div>
       
-      <div className="w-full max-w-md bg-(--surface) border border-(--border) rounded-3xl p-10 shadow-2xl relative z-10">
+      <div className="w-full max-w-md bg-[#001F3F]/80 border-2 border-[#F58220] rounded-3xl p-10 shadow-[0_0_80px_rgba(245,130,32,0.4)] relative z-10 backdrop-blur-xl">
         <div className="flex flex-col items-center mb-8">
           <div className="w-24 h-24 mb-4">
             <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
