@@ -17,6 +17,7 @@ import {
 import Image from "next/image";
 
 interface Partner {
+  _id: string;
   nameAr: string;
   nameEn: string;
   row: number;
@@ -240,6 +241,7 @@ export default function PartnersAdminPage() {
                         type="button"
                         onClick={() => setFormData({ ...formData, logoUrl: "", logoScale: 1 })}
                         className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                        title={isAr ? "إزالة الشعار" : "Remove Logo"}
                       >
                         <Trash2 size={12} />
                       </button>
@@ -264,6 +266,8 @@ export default function PartnersAdminPage() {
                           value={formData.logoScale}
                           onChange={(e) => setFormData({ ...formData, logoScale: parseFloat(e.target.value) })}
                           className="w-full accent-[#F58220] bg-white/10 h-1 rounded-full appearance-none cursor-pointer"
+                          title={isAr ? "ضبط حجم الشعار" : "Adjust Logo Scale"}
+                          placeholder="1.0"
                         />
                       </div>
                       <p className="text-[10px] text-white/30 italic">
