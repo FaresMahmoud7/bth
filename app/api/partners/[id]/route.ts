@@ -10,9 +10,9 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     const session = await getServerSession(authOptions);
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { nameAr, nameEn, row, logoUrl } = await req.json();
+    const { nameAr, nameEn, row, logoUrl, logoScale } = await req.json();
     await connectToDatabase();
-    const partner = await ClientPartner.findByIdAndUpdate(id, { nameAr, nameEn, row, logoUrl }, { new: true });
+    const partner = await ClientPartner.findByIdAndUpdate(id, { nameAr, nameEn, row, logoUrl, logoScale }, { new: true });
     return NextResponse.json(partner);
   } catch {
     return NextResponse.json({ error: "Failed to update partner" }, { status: 500 });

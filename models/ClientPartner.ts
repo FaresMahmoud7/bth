@@ -17,6 +17,10 @@ const ClientPartnerSchema = new mongoose.Schema({
   logoUrl: {
     type: String,
     required: false,
+  },
+  logoScale: {
+    type: Number,
+    default: 1,
   }
 }, { timestamps: true });
 

@@ -11,16 +11,17 @@ import {
   Loader2, 
   Building2,
   AlertTriangle,
-  Image as ImageIcon,
-  Link2
+  Upload,
+  Maximize2
 } from "lucide-react";
+import Image from "next/image";
 
 interface Partner {
-  _id: string;
   nameAr: string;
   nameEn: string;
   row: number;
   logoUrl?: string;
+  logoScale?: number;
 }
 
 export default function PartnersAdminPage() {
@@ -36,7 +37,8 @@ export default function PartnersAdminPage() {
     nameAr: "",
     nameEn: "",
     row: 1,
-    logoUrl: ""
+    logoUrl: "",
+    logoScale: 1
   });
 
   const fetchPartners = async () => {
@@ -70,7 +72,7 @@ export default function PartnersAdminPage() {
       if (res.ok) {
         fetchPartners();
         setIsAdding(false);
-        setFormData({ nameAr: "", nameEn: "", row: 1, logoUrl: "" });
+        setFormData({ nameAr: "", nameEn: "", row: 1, logoUrl: "", logoScale: 1 });
       }
     } catch (error) {
       console.error("Error adding partner:", error);
@@ -90,7 +92,7 @@ export default function PartnersAdminPage() {
       if (res.ok) {
         fetchPartners();
         setEditingId(null);
-        setFormData({ nameAr: "", nameEn: "", row: 1, logoUrl: "" });
+        setFormData({ nameAr: "", nameEn: "", row: 1, logoUrl: "", logoScale: 1 });
       }
     } catch (error) {
       console.error("Error updating partner:", error);
@@ -122,8 +124,24 @@ export default function PartnersAdminPage() {
       nameAr: partner.nameAr,
       nameEn: partner.nameEn,
       row: partner.row,
-      logoUrl: partner.logoUrl || ""
+      logoUrl: partner.logoUrl || "",
+      logoScale: partner.logoScale || 1
     });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert(isAr ? "حجم الصورة كبير جداً. الحد الأقصى هو 2 ميجا بايت." : "Image size is too large. Maximum is 2MB.");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, logoUrl: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -138,7 +156,7 @@ export default function PartnersAdminPage() {
           onClick={() => {
             setIsAdding(true);
             setEditingId(null);
-            setFormData({ nameAr: "", nameEn: "", row: 1, logoUrl: "" });
+            setFormData({ nameAr: "", nameEn: "", row: 1, logoUrl: "", logoScale: 1 });
           }}
           className="flex items-center gap-2 px-6 py-3 bg-[#F58220] text-black font-bold rounded-xl hover:scale-105 transition-all shadow-lg shadow-[#F58220]/20"
         >
@@ -190,21 +208,67 @@ export default function PartnersAdminPage() {
                 </select>
               </div>
 
-              <div className="md:col-span-2 space-y-2">
-                <label className="text-xs font-black uppercase text-white/40 tracking-widest px-1">{isAr ? "رابط أيقونة الشعار (اختياري)" : "Logo Icon URL (Optional)"}</label>
-                <div className="flex gap-4">
-                  <div className="flex-1 relative">
-                    <input 
-                      value={formData.logoUrl}
-                      onChange={(e) => setFormData({...formData, logoUrl: e.target.value})}
-                      className="w-full h-12 pl-10 pr-4 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-[#F58220] transition-all"
-                      placeholder="https://example.com/logo.png"
-                    />
-                    <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" size={18} />
+              <div className="md:col-span-2 space-y-4">
+                <label className="text-xs font-black uppercase text-white/40 tracking-widest px-1">{isAr ? "أيقونة الشعار" : "Logo Icon"}</label>
+                
+                <div className="flex flex-col md:flex-row gap-6 items-start">
+                  <div className="relative group">
+                    <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-white/10 group-hover:border-[#F58220]/50 transition-all flex items-center justify-center overflow-hidden bg-white/5 relative">
+                      {formData.logoUrl ? (
+                        <div className="relative w-full h-full">
+                          <Image 
+                            src={formData.logoUrl} 
+                            alt="Preview" 
+                            fill
+                            className="object-contain p-2 transition-transform duration-200"
+                            style={{ transform: `scale(${formData.logoScale})` }}
+                          />
+                        </div>
+                      ) : (
+                        <Upload size={32} className="text-white/20 group-hover:text-[#F58220]/50 transition-colors" />
+                      )}
+                      <input 
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        title={isAr ? "تحميل صورة" : "Upload Image"}
+                      />
+                    </div>
+                    {formData.logoUrl && (
+                      <button 
+                        type="button"
+                        onClick={() => setFormData({ ...formData, logoUrl: "", logoScale: 1 })}
+                        className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    )}
                   </div>
+
                   {formData.logoUrl && (
-                    <div className="w-12 h-12 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center overflow-hidden shrink-0">
-                      <img src={formData.logoUrl} alt="Preview" className="w-full h-full object-contain p-1" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                    <div className="flex-1 space-y-4 w-full">
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center px-1">
+                          <label className="text-[10px] font-black uppercase text-white/20 tracking-widest flex items-center gap-2">
+                            <Maximize2 size={12} />
+                            {isAr ? "التحكم في الحجم" : "Zoom Control"}
+                          </label>
+                          <span className="text-[10px] font-mono text-[#F58220]">{Math.round(formData.logoScale * 100)}%</span>
+                        </div>
+                        <input 
+                          type="range"
+                          min="0.5"
+                          max="2"
+                          step="0.1"
+                          value={formData.logoScale}
+                          onChange={(e) => setFormData({ ...formData, logoScale: parseFloat(e.target.value) })}
+                          className="w-full accent-[#F58220] bg-white/10 h-1 rounded-full appearance-none cursor-pointer"
+                        />
+                      </div>
+                      <p className="text-[10px] text-white/30 italic">
+                        {isAr ? "اسحب المؤشر لضبط حجم الصورة داخل الأيقونة الدائرية" : "Drag the slider to adjust image size within the circular icon"}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -213,7 +277,7 @@ export default function PartnersAdminPage() {
               <div className="md:col-span-3 flex justify-end gap-3 pt-4">
                 <button 
                   type="button"
-                  onClick={() => { setIsAdding(false); setEditingId(null); setFormData({ nameAr: "", nameEn: "", row: 1, logoUrl: "" }); }}
+                  onClick={() => { setIsAdding(false); setEditingId(null); setFormData({ nameAr: "", nameEn: "", row: 1, logoUrl: "", logoScale: 1 }); }}
                   className="px-6 py-2 rounded-xl border border-white/10 hover:bg-white/5 transition-all text-sm font-bold"
                 >
                   {isAr ? "إلغاء" : "Cancel"}
@@ -255,9 +319,15 @@ export default function PartnersAdminPage() {
               className="glass-card p-6 border border-white/10 hover:border-[#F58220]/30 transition-all group"
             >
               <div className="flex items-start justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl bg-[#F58220]/10 flex items-center justify-center text-[#F58220] overflow-hidden">
+                <div className="w-10 h-10 rounded-xl bg-[#F58220]/10 flex items-center justify-center text-[#F58220] overflow-hidden relative">
                   {partner.logoUrl ? (
-                    <img src={partner.logoUrl} alt={partner.nameEn} className="w-full h-full object-contain p-1" />
+                    <Image 
+                      src={partner.logoUrl} 
+                      alt={partner.nameEn} 
+                      fill
+                      className="object-contain p-1" 
+                      style={{ transform: `scale(${partner.logoScale || 1})` }}
+                    />
                   ) : (
                     <Building2 size={20} />
                   )}
