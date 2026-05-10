@@ -75,20 +75,27 @@ export const Expertise = () => {
       // WhatsApp Redirection — properly format Saudi number: strip leading zero, add 966
       const rawMobile = contactData.mobiles[0].replace(/\s/g, '');
       const whatsappNumber = rawMobile.startsWith('0') ? '966' + rawMobile.slice(1) : rawMobile;
-      const message = isAr 
-        ? `مرحباً، أود الاستفسار عن خدمة: ${serviceName}\n\nبياناتي:\nالاسم: ${name}\nالجوال: ${phone}\nالبريد: ${email}`
-        : `Hello, I'd like to inquire about: ${serviceName}\n\nMy Details:\nName: ${name}\nPhone: ${phone}\nEmail: ${email}`;
+      const message = `السلام عليكم،
+
+أود الاستفسار عن خدمة: *${serviceName}*
+وأريد معرفة كم سعرها؟
+
+بياناتي:
+• الاسم: ${name}
+• الجوال: ${phone}
+
+شكراً 🙏`;
       
       const encodedMessage = encodeURIComponent(message);
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
       
       setTimeout(() => {
-        window.open(whatsappUrl, '_blank');
+        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
         setIsSuccess(false);
         setSelectedService(null);
         setShowInquiryForm(false);
         setIsSubmitting(false);
-      }, 1500);
+      }, 600);
     } else {
       setIsSubmitting(false);
     }
