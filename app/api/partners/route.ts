@@ -9,7 +9,7 @@ export async function GET() {
     await connectToDatabase();
     const partners = await ClientPartner.find({}).sort({ createdAt: -1 });
     return NextResponse.json(partners);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to fetch partners" }, { status: 500 });
   }
 }
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     await connectToDatabase();
     const partner = await ClientPartner.create({ nameAr, nameEn, row });
     return NextResponse.json(partner);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to create partner" }, { status: 500 });
   }
 }

@@ -68,8 +68,8 @@ export const ClientsMarquee = () => {
         if (res.ok) {
           const data = await res.json();
           if (data && data.length > 0) {
-            const r1 = data.filter((p: any) => p.row === 1).map((p: any) => ({ ar: p.nameAr, en: p.nameEn }));
-            const r2 = data.filter((p: any) => p.row === 2).map((p: any) => ({ ar: p.nameAr, en: p.nameEn }));
+            const r1 = data.filter((p: { row: number; nameAr: string; nameEn: string }) => p.row === 1).map((p: { nameAr: string; nameEn: string }) => ({ ar: p.nameAr, en: p.nameEn }));
+            const r2 = data.filter((p: { row: number; nameAr: string; nameEn: string }) => p.row === 2).map((p: { nameAr: string; nameEn: string }) => ({ ar: p.nameAr, en: p.nameEn }));
             
             if (r1.length > 0) setRow1(r1);
             if (r2.length > 0) setRow2(r2);
@@ -158,11 +158,11 @@ export const ClientsMarquee = () => {
               <p className={`text-white text-xl md:text-3xl leading-relaxed font-bold ${isAr ? 'font-cairo' : ''}`}>
                 {isAr ? (
                   <>
-                    "نحن في بث الخليجية نفخر بشراكتنا مع هذه النخبة من الشركات التي وضعت ثقتها فينا. إن نزاهة التعامل وأصالة الشراكة هي ما يجمعنا بكم، ونعتز بكوننا جزءاً من نجاحاتكم المستمرة. <span className="text-[#F58220]">شراكة تفخر بها الأجيال، وعلاقات بنيت على الصدق والاحترافية.</span> الله يحييكم ويبقيكم شركاء نجاح دايمين."
+                    &quot;نحن في بث الخليجية نفخر بشراكتنا مع هذه النخبة من الشركات التي وضعت ثقتها فينا. إن نزاهة التعامل وأصالة الشراكة هي ما يجمعنا بكم، ونعتز بكوننا جزءاً من نجاحاتكم المستمرة. <span className="text-[#F58220]">شراكة تفخر بها الأجيال، وعلاقات بنيت على الصدق والاحترافية.</span> الله يحييكم ويبقيكم شركاء نجاح دايمين.&quot;
                   </>
                 ) : (
                   <>
-                    "At BTH, we take immense pride in our partnership with these distinguished companies that have placed their trust in us. Integrity and authentic partnership are the foundation of our relationships, and we are honored to be part of your ongoing success. <span className="text-[#F58220]">These are partnerships built on honesty, professionalism, and mutual growth.</span>"
+                    &quot;At BTH, we take immense pride in our partnership with these distinguished companies that have placed their trust in us. Integrity and authentic partnership are the foundation of our relationships, and we are honored to be part of your ongoing success. <span className="text-[#F58220]">These are partnerships built on honesty, professionalism, and mutual growth.</span>&quot;
                   </>
                 )}
               </p>

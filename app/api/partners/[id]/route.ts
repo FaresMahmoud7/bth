@@ -14,7 +14,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     await connectToDatabase();
     const partner = await ClientPartner.findByIdAndUpdate(id, { nameAr, nameEn, row }, { new: true });
     return NextResponse.json(partner);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to update partner" }, { status: 500 });
   }
 }
@@ -28,7 +28,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     await connectToDatabase();
     await ClientPartner.findByIdAndDelete(id);
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to delete partner" }, { status: 500 });
   }
 }

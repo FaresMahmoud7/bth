@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { content } from "@/constants/content";
-import { Mail, Phone, MapPin, ArrowRight, ArrowLeft, MessageSquare, UserCircle2, Sparkles, LucideIcon } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowRight, ArrowLeft, MessageSquare, Sparkles, LucideIcon } from "lucide-react";
 import Link from "next/link";
 
 interface ContactDetail {

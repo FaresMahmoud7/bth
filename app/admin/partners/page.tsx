@@ -8,7 +8,6 @@ import {
   Trash2, 
   Edit3, 
   Save, 
-  X, 
   Loader2, 
   Building2,
   AlertTriangle
@@ -49,7 +48,10 @@ export default function PartnersAdminPage() {
   };
 
   useEffect(() => {
-    fetchPartners();
+    const init = async () => {
+      await fetchPartners();
+    };
+    init();
   }, []);
 
   const handleAdd = async (e: React.FormEvent) => {

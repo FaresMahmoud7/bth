@@ -1,10 +1,10 @@
-const dotenv = require("dotenv");
-const path = require("path");
-dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
+import * as dotenv from "dotenv";
+import * as path from "path";
+import connectToDatabase from "../lib/db";
+import Category from "../models/Category";
+import Product from "../models/Product";
 
-const connectToDatabase = require("../lib/db").default;
-const Category = require("../models/Category").default;
-const Product = require("../models/Product").default;
+dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
 
 async function updateDesignAndPrintingDerivatives() {
     try {
