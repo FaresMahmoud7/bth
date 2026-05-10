@@ -139,7 +139,7 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
         );
 
         const waUrl = `https://wa.me/${targetPhone}?text=${waMessage}`;
-        window.open(waUrl, '_blank');
+        window.location.href = waUrl;
       }
       
       setSuccess(true);

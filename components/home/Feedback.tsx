@@ -42,8 +42,10 @@ export const Feedback = () => {
       
       const whatsappUrl = `https://wa.me/966${whatsappNumber.replace(/\s+/g, '').replace(/^0/, '')}?text=${encodeURIComponent(text)}`;
       
+      // Redirect immediately to prevent mobile browser popup blockers
+      window.location.href = whatsappUrl;
+      
       setTimeout(() => {
-        window.open(whatsappUrl, "_blank");
         setIsSuccess(false);
         (e.target as HTMLFormElement).reset();
         setIsSubmitting(false);
