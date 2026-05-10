@@ -2,6 +2,7 @@ import ProductRequest from "@/models/ProductRequest";
 import connectToDatabase from "@/lib/db";
 import AdminUser from "@/models/AdminUser";
 import PageView from "@/models/PageView";
+import { AnimatedEyes } from "@/components/analytics/AnimatedEyes";
 
 export default async function AdminDashboard() {
   await connectToDatabase();
@@ -21,9 +22,9 @@ export default async function AdminDashboard() {
         {/* Visitor Count Card — first slot */}
         <div className="glass-card p-10 hover:border-[#F58220]/50 transition-all group relative overflow-hidden">
           <div className="absolute inset-0 bg-linear-to-br from-[#F58220]/5 via-transparent to-transparent pointer-events-none" />
-          <div className="flex items-start justify-between mb-6">
+          <div className="flex items-start justify-between mb-4">
             <h3 className="text-white/40 text-[10px] font-black tracking-[0.3em] uppercase group-hover:text-[#F58220] transition-colors">زوار الموقع</h3>
-            <span className="text-2xl select-none" aria-hidden="true">👁️</span>
+            <AnimatedEyes />
           </div>
           <p className="text-6xl font-black text-white">{visitorCount.toLocaleString()}</p>
           <p className="text-[10px] text-[#F58220]/60 mt-4 font-bold uppercase tracking-widest">إجمالي الزيارات · Total Visits</p>
