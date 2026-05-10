@@ -44,9 +44,11 @@ export async function submitFeedback(formData: FormData) {
     }
 
     // Generate WhatsApp Link
-    // In production, this should be the dedicated complaints/suggestions number.
-    const whatsappNumber = "1234567890"; 
-    const waText = `Hello, I am submitting a ${type}.\n\nName: ${name}\nMessage: ${message}`;
+    // Dedicated complaints/suggestions number: 0548466466 → Saudi format 966548466466
+    const rawNumber = "0548466466";
+    const whatsappNumber = "966" + rawNumber.replace(/^0/, "");
+    const typeLabel = type === "complaint" ? ("شكوى / Complaint") : ("مقترح / Suggestion");
+    const waText = `مرحباً BTH، لديّ ${typeLabel}.\n\nالاسم / Name: ${name}\nالجوال / Phone: ${phone}\n\nالرسالة / Message:\n${message}`;
     const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waText)}`;
 
     return { success: true, waLink };
