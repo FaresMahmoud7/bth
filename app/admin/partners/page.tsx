@@ -10,7 +10,9 @@ import {
   Save, 
   Loader2, 
   Building2,
-  AlertTriangle
+  AlertTriangle,
+  Image as ImageIcon,
+  Link2
 } from "lucide-react";
 
 interface Partner {
@@ -18,6 +20,7 @@ interface Partner {
   nameAr: string;
   nameEn: string;
   row: number;
+  logoUrl?: string;
 }
 
 export default function PartnersAdminPage() {
@@ -32,7 +35,8 @@ export default function PartnersAdminPage() {
   const [formData, setFormData] = useState({
     nameAr: "",
     nameEn: "",
-    row: 1
+    row: 1,
+    logoUrl: ""
   });
 
   const fetchPartners = async () => {
@@ -66,7 +70,7 @@ export default function PartnersAdminPage() {
       if (res.ok) {
         fetchPartners();
         setIsAdding(false);
-        setFormData({ nameAr: "", nameEn: "", row: 1 });
+        setFormData({ nameAr: "", nameEn: "", row: 1, logoUrl: "" });
       }
     } catch (error) {
       console.error("Error adding partner:", error);
@@ -86,7 +90,7 @@ export default function PartnersAdminPage() {
       if (res.ok) {
         fetchPartners();
         setEditingId(null);
-        setFormData({ nameAr: "", nameEn: "", row: 1 });
+        setFormData({ nameAr: "", nameEn: "", row: 1, logoUrl: "" });
       }
     } catch (error) {
       console.error("Error updating partner:", error);
@@ -117,7 +121,8 @@ export default function PartnersAdminPage() {
     setFormData({
       nameAr: partner.nameAr,
       nameEn: partner.nameEn,
-      row: partner.row
+      row: partner.row,
+      logoUrl: partner.logoUrl || ""
     });
   };
 
@@ -133,7 +138,7 @@ export default function PartnersAdminPage() {
           onClick={() => {
             setIsAdding(true);
             setEditingId(null);
-            setFormData({ nameAr: "", nameEn: "", row: 1 });
+            setFormData({ nameAr: "", nameEn: "", row: 1, logoUrl: "" });
           }}
           className="flex items-center gap-2 px-6 py-3 bg-[#F58220] text-black font-bold rounded-xl hover:scale-105 transition-all shadow-lg shadow-[#F58220]/20"
         >
@@ -184,11 +189,31 @@ export default function PartnersAdminPage() {
                   <option value={2}>{isAr ? "الصف السفلي" : "Bottom Row"}</option>
                 </select>
               </div>
+
+              <div className="md:col-span-2 space-y-2">
+                <label className="text-xs font-black uppercase text-white/40 tracking-widest px-1">{isAr ? "رابط أيقونة الشعار (اختياري)" : "Logo Icon URL (Optional)"}</label>
+                <div className="flex gap-4">
+                  <div className="flex-1 relative">
+                    <input 
+                      value={formData.logoUrl}
+                      onChange={(e) => setFormData({...formData, logoUrl: e.target.value})}
+                      className="w-full h-12 pl-10 pr-4 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-[#F58220] transition-all"
+                      placeholder="https://example.com/logo.png"
+                    />
+                    <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" size={18} />
+                  </div>
+                  {formData.logoUrl && (
+                    <div className="w-12 h-12 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center overflow-hidden shrink-0">
+                      <img src={formData.logoUrl} alt="Preview" className="w-full h-full object-contain p-1" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                    </div>
+                  )}
+                </div>
+              </div>
               
               <div className="md:col-span-3 flex justify-end gap-3 pt-4">
                 <button 
                   type="button"
-                  onClick={() => { setIsAdding(false); setEditingId(null); }}
+                  onClick={() => { setIsAdding(false); setEditingId(null); setFormData({ nameAr: "", nameEn: "", row: 1, logoUrl: "" }); }}
                   className="px-6 py-2 rounded-xl border border-white/10 hover:bg-white/5 transition-all text-sm font-bold"
                 >
                   {isAr ? "إلغاء" : "Cancel"}
@@ -230,8 +255,12 @@ export default function PartnersAdminPage() {
               className="glass-card p-6 border border-white/10 hover:border-[#F58220]/30 transition-all group"
             >
               <div className="flex items-start justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl bg-[#F58220]/10 flex items-center justify-center text-[#F58220]">
-                  <Building2 size={20} />
+                <div className="w-10 h-10 rounded-xl bg-[#F58220]/10 flex items-center justify-center text-[#F58220] overflow-hidden">
+                  {partner.logoUrl ? (
+                    <img src={partner.logoUrl} alt={partner.nameEn} className="w-full h-full object-contain p-1" />
+                  ) : (
+                    <Building2 size={20} />
+                  )}
                 </div>
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button 

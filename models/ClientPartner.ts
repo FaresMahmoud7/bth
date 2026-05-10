@@ -13,6 +13,10 @@ const ClientPartnerSchema = new mongoose.Schema({
     type: Number,
     enum: [1, 2],
     default: 1,
+  },
+  logoUrl: {
+    type: String,
+    required: false,
   }
 }, { timestamps: true });
 

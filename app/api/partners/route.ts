@@ -19,9 +19,9 @@ export async function POST(req: Request) {
     const session = await getServerSession(authOptions);
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { nameAr, nameEn, row } = await req.json();
+    const { nameAr, nameEn, row, logoUrl } = await req.json();
     await connectToDatabase();
-    const partner = await ClientPartner.create({ nameAr, nameEn, row });
+    const partner = await ClientPartner.create({ nameAr, nameEn, row, logoUrl });
     return NextResponse.json(partner);
   } catch {
     return NextResponse.json({ error: "Failed to create partner" }, { status: 500 });

@@ -49,6 +49,7 @@ const clientsRow2Default = [
 interface ClientData {
   ar: string;
   en: string;
+  logoUrl?: string;
 }
 
 
@@ -68,8 +69,8 @@ export const ClientsMarquee = () => {
         if (res.ok) {
           const data = await res.json();
           if (data && data.length > 0) {
-            const r1 = data.filter((p: { row: number; nameAr: string; nameEn: string }) => p.row === 1).map((p: { nameAr: string; nameEn: string }) => ({ ar: p.nameAr, en: p.nameEn }));
-            const r2 = data.filter((p: { row: number; nameAr: string; nameEn: string }) => p.row === 2).map((p: { nameAr: string; nameEn: string }) => ({ ar: p.nameAr, en: p.nameEn }));
+            const r1 = data.filter((p: { row: number; nameAr: string; nameEn: string; logoUrl?: string }) => p.row === 1).map((p: { nameAr: string; nameEn: string; logoUrl?: string }) => ({ ar: p.nameAr, en: p.nameEn, logoUrl: p.logoUrl }));
+            const r2 = data.filter((p: { row: number; nameAr: string; nameEn: string; logoUrl?: string }) => p.row === 2).map((p: { nameAr: string; nameEn: string; logoUrl?: string }) => ({ ar: p.nameAr, en: p.nameEn, logoUrl: p.logoUrl }));
             
             if (r1.length > 0) setRow1(r1);
             if (r2.length > 0) setRow2(r2);
@@ -96,8 +97,13 @@ export const ClientsMarquee = () => {
             {[...row1, ...row1, ...row1].map((client, i) => (
               <div
                 key={`row1-${i}`}
-                className="shrink-0 flex items-center px-10 border-r border-white/5 group cursor-default"
+                className="shrink-0 flex items-center px-10 border-r border-white/5 group cursor-default gap-4"
               >
+                {client.logoUrl && (
+                  <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center group-hover:border-[#F58220]/50 transition-colors">
+                    <img src={client.logoUrl} alt={client.en} className="w-full h-full object-contain p-1" />
+                  </div>
+                )}
                 <span className={`text-white text-sm font-black uppercase whitespace-nowrap group-hover:text-[#F58220] transition-colors duration-300 ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>
                   {isAr ? client.ar : client.en}
                 </span>
@@ -110,8 +116,13 @@ export const ClientsMarquee = () => {
             {[...row2, ...row2, ...row2].map((client, i) => (
               <div
                 key={`row2-${i}`}
-                className="shrink-0 flex items-center px-10 border-r border-white/5 group cursor-default"
+                className="shrink-0 flex items-center px-10 border-r border-white/5 group cursor-default gap-4"
               >
+                {client.logoUrl && (
+                  <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center group-hover:border-[#F58220]/50 transition-colors">
+                    <img src={client.logoUrl} alt={client.en} className="w-full h-full object-contain p-1" />
+                  </div>
+                )}
                 <span className={`text-white text-sm font-black uppercase whitespace-nowrap group-hover:text-[#F58220] transition-colors duration-300 ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>
                   {isAr ? client.ar : client.en}
                 </span>
