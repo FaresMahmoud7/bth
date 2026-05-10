@@ -48,10 +48,12 @@ export const FeedbackForm = () => {
 
       if (result.success && result.waLink) {
         setSuccess(true);
-        // Add a slight delay before redirecting to show the success state
+        // Short delay to show success, then open WhatsApp
+        // window.open must stay close to the user gesture for mobile browsers
+        const waLink = result.waLink;
         setTimeout(() => {
-          window.location.href = result.waLink!;
-        }, 1500);
+          window.open(waLink, "_blank", "noopener,noreferrer");
+        }, 600);
       } else {
         setError(result.error || "Failed to submit. Please try again.");
         setLoading(false);
