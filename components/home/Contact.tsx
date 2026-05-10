@@ -32,17 +32,17 @@ export const Contact = () => {
     },
     {
       title: isAr ? "الجوال (1)" : "Mobile (1)",
+      value: "055 942 4446",
+      icon: Phone,
+      type: 'whatsapp',
+      number: "966559424446",
+    },
+    {
+      title: isAr ? "الجوال (2)" : "Mobile (2)",
       value: "056 629 6262",
       icon: Phone,
       type: 'whatsapp',
       number: "966566296262",
-    },
-    {
-      title: isAr ? "الجوال (2)" : "Mobile (2)",
-      value: "050 591 2477",
-      icon: Phone,
-      type: 'whatsapp',
-      number: "966505912477",
     },
     {
       title: isAr ? "هاتف المكتب" : "Office Phone",
@@ -53,7 +53,7 @@ export const Contact = () => {
     },
     {
       title: isAr ? "الموقع" : "Location",
-      value: isAr ? "الجبيل، المملكة العربية السعودية" : "Jubail, Saudi Arabia",
+      value: t.address,
       icon: MapPin,
       type: 'text',
     },
@@ -68,6 +68,15 @@ export const Contact = () => {
 
 
   const Arrow = isAr ? ArrowLeft : ArrowRight;
+
+  const handleWhatsApp = (detail: ContactDetail) => {
+    if (!detail.number) return;
+    const greeting = isAr
+      ? `السلام عليكم،\nأتواصل معكم عبر الموقع الإلكتروني لشركة BTH.\n\n*الخدمة:* ${detail.title}\n*الرقم:* ${detail.value}\n\n_أرجو التواصل معي في أقرب وقت._`
+      : `Hello,\nI am reaching out via the BTH website.\n\n*Channel:* ${detail.title}\n*Number:* ${detail.value}\n\n_Please contact me at your earliest convenience._`;
+    const waUrl = `https://wa.me/${detail.number}?text=${encodeURIComponent(greeting)}`;
+    window.open(waUrl, '_blank');
+  };
 
   return (
     <section id="contact" className="py-32 relative overflow-hidden bg-(--background)">
@@ -120,32 +129,33 @@ export const Contact = () => {
                 </div>
               )}
 
-              <div className={`w-14 h-14 border flex items-center justify-center mb-8 transition-all ${
-                detail.isFemale 
-                  ? 'bg-[#F58220] border-[#F58220] text-white' 
-                  : 'border-white/10 group-hover:bg-[#F58220]/10 group-hover:border-[#F58220]/30 text-[#F58220]'
+              <div className={`border flex items-center justify-center mb-8 transition-all ${
+                detail.title === (isAr ? "رقم الشكاوي" : "Complaints Number")
+                  ? 'w-20 h-20 bg-[#F58220]/20 border-[#F58220] text-[#F58220]'
+                  : detail.isFemale 
+                    ? 'w-14 h-14 bg-[#F58220] border-[#F58220] text-white' 
+                    : 'w-14 h-14 border-white/10 group-hover:bg-[#F58220]/10 group-hover:border-[#F58220]/30 text-[#F58220]'
               }`}>
-                <detail.icon className="w-6 h-6" />
+                <detail.icon className={detail.title === (isAr ? "رقم الشكاوي" : "Complaints Number") ? "w-10 h-10" : "w-6 h-6"} />
               </div>
 
               <h3 className={`text-[10px] font-black uppercase mb-2 ${
                 detail.isFemale ? 'text-[#F58220]' : 'text-white/30'
               } ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>{detail.title}</h3>
               
-              <p className="text-white font-bold text-xl mb-8 grow" dir="ltr">{detail.value}</p>
+              <p className={`text-white font-bold mb-8 grow ${detail.title === (isAr ? "رقم الشكاوي" : "Complaints Number") ? "text-3xl md:text-4xl text-[#F58220]" : "text-xl"}`} dir="ltr">{detail.value}</p>
               
               {detail.type === 'whatsapp' ? (
-                <Link 
-                  href={`https://wa.me/${detail.number}`}
-                  target="_blank"
-                  className={`inline-flex items-center gap-3 font-bold text-[10px] uppercase hover:gap-5 transition-all group/link ${
+                <button 
+                  onClick={() => handleWhatsApp(detail)}
+                  className={`inline-flex items-center gap-3 font-bold text-[10px] uppercase hover:gap-5 transition-all group/link cursor-pointer ${
                     detail.isFemale ? 'text-white' : 'text-[#F58220]'
                   } ${isAr ? 'tracking-normal' : 'tracking-widest'}`}
                 >
                   <MessageSquare className="w-4 h-4" />
                   {isAr ? "تواصل الآن (واتساب)" : "Message Now (WhatsApp)"}
                   <Arrow className="w-4 h-4" />
-                </Link>
+                </button>
               ) : detail.type === 'call' ? (
                 <Link 
                   href={`tel:${detail.number}`}

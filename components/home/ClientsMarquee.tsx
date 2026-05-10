@@ -102,7 +102,7 @@ export const ClientsMarquee = () => {
                 className="shrink-0 flex items-center px-10 border-r border-white/5 group cursor-default gap-4"
               >
                 {client.logoUrl && (
-                  <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center group-hover:border-[#F58220]/50 transition-colors relative">
+                  <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center group-hover:border-[#F58220]/50 transition-colors relative shrink-0">
                     <Image 
                       src={client.logoUrl} 
                       alt={client.en} 
@@ -127,7 +127,7 @@ export const ClientsMarquee = () => {
                 className="shrink-0 flex items-center px-10 border-r border-white/5 group cursor-default gap-4"
               >
                 {client.logoUrl && (
-                  <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center group-hover:border-[#F58220]/50 transition-colors relative">
+                  <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center group-hover:border-[#F58220]/50 transition-colors relative shrink-0">
                     <Image 
                       src={client.logoUrl} 
                       alt={client.en} 

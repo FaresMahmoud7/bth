@@ -60,13 +60,13 @@ export const FeedbackModal = ({ isOpen, onClose }: FeedbackModalProps) => {
     if (result.success) {
       setIsSuccess(true);
 
-      const whatsappNumber = content[locale].contact.phone;
+      const whatsappNumber = content[locale].contact.female_contact;
       const text = `*${type === 'complaint' ? t.complaint : t.suggestion}*\n\n` +
                    `*${t.name}:* ${data.name}\n` +
                    `*${t.phone}:* ${data.phone}\n` +
                    `*${t.message}:*\n${data.message}`;
 
-      const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\s+/g, '')}?text=${encodeURIComponent(text)}`;
+      const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\s+/g, '').replace(/^0/, '966')}?text=${encodeURIComponent(text)}`;
 
       setTimeout(() => {
         window.open(whatsappUrl, "_blank");

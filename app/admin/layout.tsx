@@ -47,8 +47,8 @@ export default function AdminLayout({
     window.addEventListener('resize', checkWidth);
 
     // Redirect to login if not authenticated (except on the login page itself)
-    if (status === "unauthenticated" && pathname !== "/admin/login") {
-      router.push("/admin/login");
+    if (status === "unauthenticated" && pathname !== "/login") {
+      router.push("/login");
     }
 
     return () => {
@@ -63,7 +63,7 @@ export default function AdminLayout({
   const [isUpdating, setIsUpdating] = useState(false);
 
   // If we are on the login page, just render the content without sidebar or restricted background
-  if (pathname === "/admin/login") {
+  if (pathname === "/login") {
     return <div className="min-h-screen" dir={isAr ? "rtl" : "ltr"}>{children}</div>;
   }
 
@@ -106,7 +106,7 @@ export default function AdminLayout({
         className={`${
           isSidebarOpen ? "translate-x-0" : (isAr ? "translate-x-full" : "-translate-x-full")
         } lg:translate-x-0 transition-all duration-300 ${
-          isSidebarOpen ? "w-64" : "w-20"
+          isSidebarOpen ? "w-56" : "w-20"
         } flex flex-col fixed h-full z-50 inset-s-0 border-e border-white/10 glass-card rounded-none bg-(--background)`}
       >
         <div className="p-6 flex items-center justify-between">
@@ -219,7 +219,7 @@ export default function AdminLayout({
           </div>
 
           <button
-            onClick={() => signOut({ callbackUrl: "/admin/login" })}
+            onClick={() => signOut({ callbackUrl: "/login" })}
             className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-red-400 hover:bg-red-400/10 transition-all duration-200"
           >
             <LogOut size={20} />
@@ -230,7 +230,7 @@ export default function AdminLayout({
 
       {/* Main Content */}
       <main className={`flex-1 transition-all duration-300 ${
-        mounted && isSidebarOpen ? "lg:ps-64" : "lg:ps-20"
+        mounted && isSidebarOpen ? "lg:ps-56" : "lg:ps-20"
       } ps-0 p-4 md:p-8 pt-20 lg:pt-8 w-full min-w-0`}>
         {/* Mobile Toggle */}
         <button 
@@ -240,7 +240,7 @@ export default function AdminLayout({
         >
           <Menu size={24} />
         </button>
-        <div className="w-full max-w-5xl">
+        <div className="w-full max-w-5xl mx-auto">
           {children}
         </div>
       </main>
