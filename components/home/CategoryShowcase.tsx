@@ -240,7 +240,7 @@ const ImageCarousel = ({
 
   return (
     <div className="relative w-full h-full group/controls">
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         <motion.div
           key={currentImage}
           initial={{ opacity: 0, scale: 1.05 }}

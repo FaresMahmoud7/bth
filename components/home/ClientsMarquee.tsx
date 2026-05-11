@@ -86,7 +86,9 @@ export const ClientsMarquee = () => {
 
   return (
     <section id="clients" ref={containerRef} className="pt-12 pb-24 bg-(--surface) border-y border-(--border) overflow-hidden">
+      
       {/* Marquee display removed */}
+
 
       <div className="container mx-auto px-6">
         <div className="mb-12 text-center flex flex-col items-center">
