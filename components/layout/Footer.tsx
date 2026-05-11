@@ -58,8 +58,8 @@ export const Footer = () => {
               <div className="w-20 h-20 mb-6 p-1 rounded-full border border-(--primary)/30 group-hover:border-(--primary) transition-all duration-500 overflow-hidden">
                 <Logo />
               </div>
-              <span className="text-3xl font-extrabold tracking-tighter text-(--on-surface) group-hover:text-(--primary) transition-colors font-lexend">
-                {isAr ? "بث الخليجية" : "BTH EST"}
+              <span className="text-xl md:text-2xl font-extrabold tracking-tighter text-(--on-surface) group-hover:text-(--primary) transition-colors font-lexend whitespace-nowrap">
+                {isAr ? "بث الخليجية للدعاية والإعلان" : "BTH Gulf Advertising & Marketing"}
               </span>
             </Link>
             <p className="text-(--on-surface)/70 max-w-sm mb-8 text-lg leading-relaxed font-inter">

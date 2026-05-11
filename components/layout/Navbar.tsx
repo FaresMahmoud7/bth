@@ -94,11 +94,8 @@ export const Navbar = () => {
               <Logo />
             </div>
             <div className="flex flex-col">
-              <span className="font-black text-(--foreground) text-sm md:text-lg tracking-tight leading-none mb-1 text-start">
-                {isAr ? "بث الخليجية" : "BTH Gulf"}
-              </span>
-              <span className="text-[9px] font-bold text-[#F58220] uppercase tracking-widest leading-none text-start">
-                {isAr ? "للدعايا و الاعلان" : "Advertising & Marketing"}
+              <span className="font-black text-(--foreground) text-xs md:text-lg tracking-tight leading-none text-start whitespace-nowrap">
+                {isAr ? "بث الخليجية للدعاية والإعلان" : "BTH Gulf Advertising & Marketing"}
               </span>
             </div>
           </Link>
