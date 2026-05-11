@@ -50,6 +50,14 @@ interface ClientData {
   logoScale?: number;
 }
 
+interface ApiPartner {
+  nameAr: string;
+  nameEn: string;
+  logoUrl?: string;
+  logoScale?: number;
+  row?: number;
+}
+
 export const ClientsMarquee = () => {
   const { locale } = useLanguage();
   const isAr = locale === "ar";
@@ -67,7 +75,7 @@ export const ClientsMarquee = () => {
         if (res.ok) {
           const data = await res.json();
           if (data && data.length > 0) {
-            allData = data.map((p: any) => ({ 
+            allData = data.map((p: ApiPartner) => ({ 
               ar: p.nameAr, 
               en: p.nameEn, 
               logoUrl: p.logoUrl, 
@@ -120,7 +128,7 @@ export const ClientsMarquee = () => {
                   />
                 </div>
               ) : (
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#F58220] to-[#e1730a] flex items-center justify-center shadow-md shrink-0">
+                <div className="w-14 h-14 rounded-full bg-linear-to-br from-[#F58220] to-[#e1730a] flex items-center justify-center shadow-md shrink-0">
                   <span className="text-white font-bold text-xl">
                     {(isAr ? client.ar : client.en).charAt(0)}
                   </span>
@@ -176,8 +184,8 @@ export const ClientsMarquee = () => {
         {renderMarqueeRow(row2, "right")}
         
         {/* Left and Right fade edges */}
-        <div className="absolute left-0 top-0 z-20 h-full w-[150px] bg-gradient-to-r from-(--surface) to-transparent pointer-events-none" />
-        <div className="absolute right-0 top-0 z-20 h-full w-[150px] bg-gradient-to-l from-(--surface) to-transparent pointer-events-none" />
+        <div className="absolute left-0 top-0 z-20 h-full w-[150px] bg-linear-to-r from-(--surface) to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 z-20 h-full w-[150px] bg-linear-to-l from-(--surface) to-transparent pointer-events-none" />
       </div>
 
       <div className="container mx-auto px-6 mt-24">
