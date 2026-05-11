@@ -14,7 +14,7 @@ export const Logo = ({ className = "", size }: LogoProps) => {
     return (
       <div className={`relative flex items-center justify-center ${className}`}>
         <Image
-          src="/images/logo.jpeg"
+          src="/images/logo1.jpeg"
           alt="BTH Logo"
           width={numSize}
           height={numSize}
@@ -28,7 +28,7 @@ export const Logo = ({ className = "", size }: LogoProps) => {
   return (
     <div className={`relative w-full h-full rounded-full overflow-hidden ${className}`}>
       <Image
-        src="/images/logo.jpeg"
+        src="/images/logo1.jpeg"
         alt="BTH Logo"
         fill
         className="object-cover"
