@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-require('dotenv').config({ path: '.env.local' });
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
 const CategorySchema = new mongoose.Schema({ nameAr: String, nameEn: String });
 const ProductSchema = new mongoose.Schema({ name: String, category: mongoose.Schema.Types.ObjectId, options: [String] });

@@ -153,20 +153,22 @@ export const ClientsMarquee = () => {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
 
-      {/* Marquees Container - NOW WITH 3 ROWS */}
-      <div className="flex flex-col gap-10 relative z-10 w-full overflow-hidden mb-24">
-        {/* Row 1 - Moves Right to Left (Left) */}
-        {renderMarqueeRow(row1, "left")}
+      {/* Marquees Container - NOW CONSTRAINED TO 1440px */}
+      <div className="max-w-[1440px] mx-auto relative z-10 mb-24 px-6">
+        <div className="flex flex-col gap-10 relative w-full overflow-hidden rounded-[2rem] border border-(--border) bg-black/20 py-10">
+          {/* Row 1 - Moves Right to Left (Left) */}
+          {renderMarqueeRow(row1, "left")}
 
-        {/* Row 2 - Moves Left to Right (Right) */}
-        {renderMarqueeRow(row2, "right")}
+          {/* Row 2 - Moves Left to Right (Right) */}
+          {renderMarqueeRow(row2, "right")}
 
-        {/* Row 3 - Moves Right to Left (Left) */}
-        {renderMarqueeRow(row3, "left")}
-        
-        {/* Left and Right fade edges */}
-        <div className="absolute left-0 top-0 z-20 h-full w-[150px] bg-linear-to-r from-(--surface) to-transparent pointer-events-none" />
-        <div className="absolute right-0 top-0 z-20 h-full w-[150px] bg-linear-to-l from-(--surface) to-transparent pointer-events-none" />
+          {/* Row 3 - Moves Right to Left (Left) */}
+          {renderMarqueeRow(row3, "left")}
+          
+          {/* Left and Right fade edges - Internal to the 1440px frame */}
+          <div className="absolute left-0 top-0 z-20 h-full w-[120px] bg-linear-to-r from-[#0d1c2d] to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 z-20 h-full w-[120px] bg-linear-to-l from-[#0d1c2d] to-transparent pointer-events-none" />
+        </div>
       </div>
 
       <div className="container mx-auto px-6 mb-20">
