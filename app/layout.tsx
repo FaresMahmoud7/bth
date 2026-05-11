@@ -7,6 +7,7 @@ const geist = Geist({ subsets: ["latin"], weight: ['400', '500', '600', '700'], 
 const cairo = Cairo({ subsets: ["arabic", "latin"], weight: ['400', '600', '700', '900'], variable: '--font-cairo' });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://bth.com.sa"),
   title: "BTH | Corporate Advertising",
   description: "Elevate your brand with premium advertising solutions.",
 };

@@ -90,7 +90,7 @@ export const Navbar = () => {
       >
         <div className="container mx-auto px-6 flex items-center justify-between">
           <Link href="/" onClick={(e) => { e.preventDefault(); scrollToSection("home"); }} className="flex items-center gap-4 group">
-            <div className="w-12 h-12 shrink-0">
+            <div className="w-16 h-16 shrink-0">
               <Logo />
             </div>
             <div className="flex flex-col">

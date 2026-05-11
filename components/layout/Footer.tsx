@@ -57,7 +57,7 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-20 mb-24">
           <div className="lg:col-span-2">
             <Link href="/" className="group mb-8 inline-block">
-              <div className="w-20 h-20 mb-4">
+              <div className="w-24 h-24 mb-4">
                 <Logo />
               </div>
               <span className="text-2xl font-black tracking-tighter text-(--foreground) group-hover:text-[#F58220] transition-colors">BTH</span>
