@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
-:root {
+@theme {
   --font-montserrat: var(--font-montserrat);
   --font-manrope: var(--font-manrope);
   --font-geist: var(--font-geist);
   --font-cairo: var(--font-cairo);
-  
+}
+
+:root {
   /* Majestic Lumina Colors */
   --background: #051424;
   --foreground: #d4e4fa;

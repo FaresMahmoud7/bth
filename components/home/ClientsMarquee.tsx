@@ -104,7 +104,7 @@ export const ClientsMarquee = () => {
           {/* Row 1: Moves Left + Scroll Parallax */}
           <motion.div style={{ x: x1 }} className="flex">
             <div className="flex animate-marquee gap-0 min-w-max">
-              {[...row1, ...row1, ...row1, ...row1, ...row1, ...row1, ...row1, ...row1, ...row1, ...row1].map((client, i) => (
+              {[...row1, ...row1, ...row1, ...row1].map((client, i) => (
                 <div
                   key={`row1-${i}`}
                   className="shrink-0 flex items-center px-12 border-r border-white/5 group cursor-default gap-6"
@@ -131,7 +131,7 @@ export const ClientsMarquee = () => {
           {/* Row 2: Moves Right + Scroll Parallax */}
           <motion.div style={{ x: x2 }} className="flex">
             <div className="flex animate-marquee-reverse gap-0 min-w-max">
-              {[...row2, ...row2, ...row2, ...row2, ...row2, ...row2, ...row2, ...row2, ...row2, ...row2].map((client, i) => (
+              {[...row2, ...row2, ...row2, ...row2].map((client, i) => (
                 <div
                   key={`row2-${i}`}
                   className="shrink-0 flex items-center px-12 border-r border-white/5 group cursor-default gap-6"
