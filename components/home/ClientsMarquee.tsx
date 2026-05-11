@@ -5,7 +5,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
-const clientsRow1Default = [
+const allClientsDefault = [
   { ar: "الصين لإنشاءات السكك الحديدية (TIEJUN)", en: "China Railway TIEJUN" },
   { ar: "سيبكو 3 (SEPCOIII)", en: "SEPCOIII" },
   { ar: "ميناء الملك فهد الصناعي بالجبيل", en: "King Fahad Industrial Port in Jubail" },
@@ -23,10 +23,7 @@ const clientsRow1Default = [
   { ar: "برنامج الخدمات الصحية للهيئة الملكية (RCH)", en: "Royal Commission Health Services Program" },
   { ar: "مجموعة زيد الحسين وإخوانه", en: "Zaid Al Hussain & Brothers Group" },
   { ar: "بلانت-تيك العربية", en: "Plant-Tech Arabia" },
-  { ar: "شركة داز السعودية المحدودة", en: "Saudi Daz Company Limited" }
-];
-
-const clientsRow2Default = [
+  { ar: "شركة داز السعودية المحدودة", en: "Saudi Daz Company Limited" },
   { ar: "إم آي إس العربية", en: "MIS Arabia" },
   { ar: "المراكز العربية", en: "Arabian Centres" },
   { ar: "كيكسا (KEKSA)", en: "KEKSA" },
@@ -58,113 +55,108 @@ export const ClientsMarquee = () => {
   const isAr = locale === "ar";
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [row1, setRow1] = useState<ClientData[]>(clientsRow1Default);
-  const [row2, setRow2] = useState<ClientData[]>(clientsRow2Default);
+  const [row1, setRow1] = useState<ClientData[]>([]);
+  const [row2, setRow2] = useState<ClientData[]>([]);
 
   useEffect(() => {
     const fetchPartners = async () => {
       try {
         const res = await fetch("/api/partners");
+        let allData = [...allClientsDefault];
+        
         if (res.ok) {
           const data = await res.json();
           if (data && data.length > 0) {
-            const r1 = data.filter((p: any) => p.row === 1).map((p: any) => ({ ar: p.nameAr, en: p.nameEn, logoUrl: p.logoUrl, logoScale: p.logoScale }));
-            const r2 = data.filter((p: any) => p.row === 2).map((p: any) => ({ ar: p.nameAr, en: p.nameEn, logoUrl: p.logoUrl, logoScale: p.logoScale }));
-            
-            if (r1.length > 0) setRow1(r1);
-            if (r2.length > 0) setRow2(r2);
+            allData = data.map((p: any) => ({ 
+              ar: p.nameAr, 
+              en: p.nameEn, 
+              logoUrl: p.logoUrl, 
+              logoScale: p.logoScale 
+            }));
           }
         }
+
+        // Split total data into two equal halves
+        const half = Math.ceil(allData.length / 2);
+        setRow1(allData.slice(0, half));
+        setRow2(allData.slice(half));
+
       } catch (error) {
         console.error("Error fetching partners:", error);
+        const half = Math.ceil(allClientsDefault.length / 2);
+        setRow1(allClientsDefault.slice(0, half));
+        setRow2(allClientsDefault.slice(half));
       }
     };
     fetchPartners();
   }, []);
 
-  return (
-    <section id="clients" ref={containerRef} className="pt-12 pb-24 bg-(--surface) border-y border-(--border) overflow-hidden">
-      
-      {/* Marquees */}
-      <div className="mb-20 flex flex-col gap-6 relative z-10 w-full" style={{ maxWidth: '100vw' }}>
-        {/* Left and Right fade edges */}
-        <div className="absolute left-0 top-0 z-20 h-full w-[100px] bg-gradient-to-r from-(--surface) to-transparent pointer-events-none" />
-        <div className="absolute right-0 top-0 z-20 h-full w-[100px] bg-gradient-to-l from-(--surface) to-transparent pointer-events-none" />
-        
-        {/* Row 1 - Moves Right to Left */}
-        <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
-          {[...row1, ...row1, ...row1, ...row1].map((client, idx) => (
-            <div key={`r1-${idx}`} className="flex items-center gap-4 mx-4 glass-card px-6 py-3 rounded-full border border-[rgba(245,130,32,0.3)] whitespace-nowrap cursor-default transition-all hover:border-[#F58220] hover:shadow-[0_0_15px_rgba(245,130,32,0.4)]">
-              {client.logoUrl ? (
-                <div className="w-12 h-12 rounded-full overflow-hidden bg-white flex items-center justify-center border border-(--border) shadow-md shrink-0">
-                  <Image 
-                    src={client.logoUrl} 
-                    alt={isAr ? client.ar : client.en} 
-                    width={40} 
-                    height={40} 
-                    className="object-contain" 
-                    style={{ transform: `scale(${client.logoScale || 1})` }}
-                  />
-                </div>
-              ) : (
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#F58220] to-[#e1730a] flex items-center justify-center shadow-md shrink-0">
-                  <span className="text-white font-bold text-lg">
-                    {(isAr ? client.ar : client.en).charAt(0)}
-                  </span>
-                </div>
-              )}
-              <span className={`text-white font-bold text-lg ${isAr ? 'font-cairo' : 'font-manrope'}`}>
-                {isAr ? client.ar : client.en}
-              </span>
-            </div>
-          ))}
-        </div>
+  // Repeat items to ensure smooth infinite scroll
+  const renderMarqueeRow = (items: ClientData[], direction: "left" | "right") => {
+    if (items.length === 0) return null;
+    
+    // Double the items to ensure the gap is never visible and seamless loop works with -50%
+    const doubledItems = [...items, ...items];
+    
+    const animationClass = direction === "left" ? "animate-marquee" : "animate-marquee-reverse";
 
-        {/* Row 2 - Moves Left to Right */}
-        <div className="flex w-max animate-marquee-reverse hover:[animation-play-state:paused]">
-          {[...row2, ...row2, ...row2, ...row2].map((client, idx) => (
-            <div key={`r2-${idx}`} className="flex items-center gap-4 mx-4 glass-card px-6 py-3 rounded-full border border-[rgba(245,130,32,0.3)] whitespace-nowrap cursor-default transition-all hover:border-[#F58220] hover:shadow-[0_0_15px_rgba(245,130,32,0.4)]">
+    return (
+      <div className="flex w-max relative">
+        <div className={`flex ${animationClass} hover:[animation-play-state:paused] gap-8 py-2`}>
+          {doubledItems.map((client, idx) => (
+            <div 
+              key={`${direction}-${idx}`} 
+              className="flex items-center gap-4 px-8 py-4 glass-card rounded-full border border-[rgba(245,130,32,0.3)] whitespace-nowrap cursor-default transition-all hover:border-[#F58220] hover:shadow-[0_0_20px_rgba(245,130,32,0.4)] hover:scale-105"
+            >
               {client.logoUrl ? (
-                <div className="w-12 h-12 rounded-full overflow-hidden bg-white flex items-center justify-center border border-(--border) shadow-md shrink-0">
+                <div className="w-14 h-14 rounded-full overflow-hidden bg-white flex items-center justify-center border border-(--border) shadow-md shrink-0">
                   <Image 
                     src={client.logoUrl} 
                     alt={isAr ? client.ar : client.en} 
-                    width={40} 
-                    height={40} 
+                    width={45} 
+                    height={45} 
                     className="object-contain" 
                     style={{ transform: `scale(${client.logoScale || 1})` }}
                   />
                 </div>
               ) : (
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#F58220] to-[#e1730a] flex items-center justify-center shadow-md shrink-0">
-                  <span className="text-white font-bold text-lg">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#F58220] to-[#e1730a] flex items-center justify-center shadow-md shrink-0">
+                  <span className="text-white font-bold text-xl">
                     {(isAr ? client.ar : client.en).charAt(0)}
                   </span>
                 </div>
               )}
-              <span className={`text-white font-bold text-lg ${isAr ? 'font-cairo' : 'font-manrope'}`}>
+              <span className={`text-white font-bold text-xl ${isAr ? 'font-cairo' : 'font-manrope'}`}>
                 {isAr ? client.ar : client.en}
               </span>
             </div>
           ))}
         </div>
       </div>
+    );
+  };
 
-      <div className="container mx-auto px-6">
-        <div className="mb-12 text-center flex flex-col items-center">
+  return (
+    <section id="clients" ref={containerRef} className="pt-20 pb-32 bg-(--surface) border-y border-(--border) overflow-hidden relative">
+      {/* Decorative Background Elements */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="container mx-auto px-6 mb-20">
+        <div className="text-center flex flex-col items-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-5xl md:text-7xl font-black text-white mb-6"
           >
-            {isAr ? "شركاؤنا وعملاؤنا" : "Trusted Partners & Clients"}
+            {isAr ? "شركاؤنا وعملاؤنا" : "Our Trusted Clients"}
           </motion.h2>
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="flex items-center justify-center gap-4 mb-12"
+            className="flex items-center justify-center gap-4"
           >
             <div className="w-12 h-px bg-[#F58220]" />
             <span className={`text-[#F58220] text-lg md:text-xl font-bold uppercase ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>
@@ -172,38 +164,43 @@ export const ClientsMarquee = () => {
             </span>
             <div className="w-12 h-px bg-[#F58220]" />
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto glass-card p-10 md:p-16 border border-[#F58220]/20 bg-[#F58220]/5 relative overflow-hidden"
-          >
-            <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#F58220]/10 blur-[100px] pointer-events-none" />
-            
-            <div className="relative z-10">
-              <p className={`text-white text-xl md:text-3xl leading-relaxed font-bold ${isAr ? 'font-cairo' : ''}`}>
-                {isAr ? (
-                  <>
-                    &quot;نحن في بث الخليجية نفخر بشراكتنا مع هذه النخبة من الشركات التي وضعت ثقتها فينا. إن نزاهة التعامل وأصالة الشراكة هي ما يجمعنا بكم، ونعتز بكوننا جزءاً من نجاحاتكم المستمرة. <span className="text-[#F58220]">شراكة تفخر بها الأجيال، وعلاقات بنيت على الصدق والاحترافية.</span> الله يحييكم ويبقيكم شركاء نجاح دايمين.&quot;
-                  </>
-                ) : (
-                  <>
-                    &quot;At BTH, we take immense pride in our partnership with these distinguished companies that have placed their trust in us. Integrity and authentic partnership are the foundation of our relationships, and we are honored to be part of your ongoing success. <span className="text-[#F58220]">These are partnerships built on honesty, professionalism, and mutual growth.</span>&quot;
-                  </>
-                )}
-              </p>
-              
-              <div className="mt-10 flex items-center justify-center gap-6">
-                <div className="h-px w-12 bg-white/10" />
-                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30">
-                  {isAr ? "مؤسسة BTH" : "BTH EST"}
-                </span>
-                <div className="h-px w-12 bg-white/10" />
-              </div>
-            </div>
-          </motion.div>
         </div>
+      </div>
+
+      {/* Marquees Container */}
+      <div className="flex flex-col gap-10 relative z-10 w-full overflow-hidden">
+        {/* Row 1 - Moves Right to Left */}
+        {renderMarqueeRow(row1, "left")}
+
+        {/* Row 2 - Moves Left to Right */}
+        {renderMarqueeRow(row2, "right")}
+        
+        {/* Left and Right fade edges */}
+        <div className="absolute left-0 top-0 z-20 h-full w-[150px] bg-gradient-to-r from-(--surface) to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 z-20 h-full w-[150px] bg-gradient-to-l from-(--surface) to-transparent pointer-events-none" />
+      </div>
+
+      <div className="container mx-auto px-6 mt-24">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="max-w-4xl mx-auto glass-card p-10 md:p-16 border border-[#F58220]/20 bg-[#F58220]/5 relative overflow-hidden"
+        >
+          <div className="relative z-10">
+            <p className={`text-white text-xl md:text-3xl leading-relaxed font-bold ${isAr ? 'font-cairo text-center' : 'text-center'}`}>
+              {isAr ? (
+                <>
+                  &quot;نحن في بث الخليجية نفخر بشراكتنا مع هذه النخبة من الشركات التي وضعت ثقتها فينا. إن نزاهة التعامل وأصالة الشراكة هي ما يجمعنا بكم، ونعتز بكوننا جزءاً من نجاحاتكم المستمرة.&quot;
+                </>
+              ) : (
+                <>
+                  &quot;At BTH, we take immense pride in our partnership with these distinguished companies that have placed their trust in us. Integrity and authentic partnership are the foundation of our relationships.&quot;
+                </>
+              )}
+            </p>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
