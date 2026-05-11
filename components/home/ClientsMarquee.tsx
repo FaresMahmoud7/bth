@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -58,14 +58,7 @@ export const ClientsMarquee = () => {
   const isAr = locale === "ar";
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
 
-  // Subtle parallax effect based on scroll
-  const x1 = useTransform(scrollYProgress, [0, 1], [0, -150]);
-  const x2 = useTransform(scrollYProgress, [0, 1], [0, 150]);
 
   const [row1, setRow1] = useState<ClientData[]>(clientsRow1Default);
   const [row2, setRow2] = useState<ClientData[]>(clientsRow2Default);
@@ -93,10 +86,10 @@ export const ClientsMarquee = () => {
 
   return (
     <section id="clients" ref={containerRef} className="pt-12 pb-24 bg-(--surface) border-y border-(--border) overflow-hidden">
-      <div className="relative overflow-hidden mb-24 py-20 bg-zinc-950/20">
-        {/* Subtle Edge Fade */}
-        <div className="absolute left-0 top-0 bottom-0 w-48 z-10 bg-linear-to-r from-zinc-950 to-transparent pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-48 z-10 bg-linear-to-l from-zinc-950 to-transparent pointer-events-none" />
+        <div className="relative overflow-hidden mb-24 py-20 bg-white/5">
+          {/* Subtle Edge Fade - Matching Surface Background */}
+          <div className="absolute left-0 top-0 bottom-0 w-20 z-10 bg-linear-to-r from-(--surface) to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-20 z-10 bg-linear-to-l from-(--surface) to-transparent pointer-events-none" />
 
         <div className="flex flex-col gap-16">
           {/* Row 1: Moves Left */}
@@ -118,7 +111,7 @@ export const ClientsMarquee = () => {
                       />
                     </div>
                   )}
-                  <span className={`text-white text-2xl font-black uppercase whitespace-nowrap group-hover:text-[#F58220] transition-colors duration-300 ${isAr ? 'tracking-normal' : 'tracking-[0.1em]'}`}>
+                  <span className={`text-white text-2xl font-black uppercase whitespace-nowrap group-hover:text-[#F58220] transition-colors duration-300 ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
                     {isAr ? client.ar : client.en}
                   </span>
                 </div>
@@ -145,7 +138,7 @@ export const ClientsMarquee = () => {
                       />
                     </div>
                   )}
-                  <span className={`text-white text-2xl font-black uppercase whitespace-nowrap group-hover:text-[#F58220] transition-colors duration-300 ${isAr ? 'tracking-normal' : 'tracking-[0.1em]'}`}>
+                  <span className={`text-white text-2xl font-black uppercase whitespace-nowrap group-hover:text-[#F58220] transition-colors duration-300 ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
                     {isAr ? client.ar : client.en}
                   </span>
                 </div>
