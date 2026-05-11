@@ -12,6 +12,7 @@ import { PageViewTracker } from "@/components/analytics/PageViewTracker";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+// Triggering rebuild for 3-row marquee and 1440px layout updates
 export default async function Home() {
   const showcaseData = await getShowcaseData();
 
