@@ -65,6 +65,7 @@ export const ClientsMarquee = () => {
 
   const [row1, setRow1] = useState<ClientData[]>([]);
   const [row2, setRow2] = useState<ClientData[]>([]);
+  const [row3, setRow3] = useState<ClientData[]>([]);
 
   useEffect(() => {
     const fetchPartners = async () => {
@@ -84,16 +85,18 @@ export const ClientsMarquee = () => {
           }
         }
 
-        // Split total data into two equal halves
-        const half = Math.ceil(allData.length / 2);
-        setRow1(allData.slice(0, half));
-        setRow2(allData.slice(half));
+        // Split total data into three equal parts
+        const third = Math.ceil(allData.length / 3);
+        setRow1(allData.slice(0, third));
+        setRow2(allData.slice(third, third * 2));
+        setRow3(allData.slice(third * 2));
 
       } catch (error) {
         console.error("Error fetching partners:", error);
-        const half = Math.ceil(allClientsDefault.length / 2);
-        setRow1(allClientsDefault.slice(0, half));
-        setRow2(allClientsDefault.slice(half));
+        const third = Math.ceil(allClientsDefault.length / 3);
+        setRow1(allClientsDefault.slice(0, third));
+        setRow2(allClientsDefault.slice(third, third * 2));
+        setRow3(allClientsDefault.slice(third * 2));
       }
     };
     fetchPartners();
@@ -150,13 +153,16 @@ export const ClientsMarquee = () => {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
 
-      {/* Marquees Container - NOW ON TOP */}
+      {/* Marquees Container - NOW WITH 3 ROWS */}
       <div className="flex flex-col gap-10 relative z-10 w-full overflow-hidden mb-24">
-        {/* Row 1 - Moves Right to Left */}
+        {/* Row 1 - Moves Right to Left (Left) */}
         {renderMarqueeRow(row1, "left")}
 
-        {/* Row 2 - Moves Left to Right */}
+        {/* Row 2 - Moves Left to Right (Right) */}
         {renderMarqueeRow(row2, "right")}
+
+        {/* Row 3 - Moves Right to Left (Left) */}
+        {renderMarqueeRow(row3, "left")}
         
         {/* Left and Right fade edges */}
         <div className="absolute left-0 top-0 z-20 h-full w-[150px] bg-linear-to-r from-(--surface) to-transparent pointer-events-none" />
