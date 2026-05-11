@@ -95,65 +95,67 @@ export const ClientsMarquee = () => {
 
   return (
     <section id="clients" ref={containerRef} className="pt-12 pb-24 bg-(--surface) border-y border-(--border) overflow-hidden">
-      <div className="relative overflow-hidden mb-24">
-        {/* Fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-32 z-10 bg-linear-to-r from-(--surface) to-transparent pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-32 z-10 bg-linear-to-l from-(--surface) to-transparent pointer-events-none" />
+      <div className="container mx-auto px-6 mb-24">
+        <div className="relative overflow-hidden rounded-[2rem] bg-black/10 border border-white/5 py-12">
+          {/* Enhanced Fade edges */}
+          <div className="absolute left-0 top-0 bottom-0 w-64 z-10 bg-linear-to-r from-(--surface) via-(--surface)/80 to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-64 z-10 bg-linear-to-l from-(--surface) via-(--surface)/80 to-transparent pointer-events-none" />
 
-        <div className="flex flex-col gap-12">
-          {/* Row 1: Moves Left + Scroll Parallax */}
-          <motion.div style={{ x: x1 }} className="flex">
-            <div className="flex animate-marquee gap-0 min-w-max">
-              {[...row1, ...row1, ...row1, ...row1].map((client, i) => (
-                <div
-                  key={`row1-${i}`}
-                  className="shrink-0 flex items-center px-12 border-r border-white/5 group cursor-default gap-6"
-                >
-                  {client.logoUrl && (
-                    <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center group-hover:border-[#F58220]/50 transition-colors relative shrink-0">
-                      <Image 
-                        src={client.logoUrl} 
-                        alt={client.en} 
-                        fill
-                        className="object-contain p-2" 
-                        style={{ transform: `scale(${client.logoScale || 1})` }}
-                      />
-                    </div>
-                  )}
-                  <span className={`text-white text-base font-black uppercase whitespace-nowrap group-hover:text-[#F58220] transition-colors duration-300 ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>
-                    {isAr ? client.ar : client.en}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+          <div className="flex flex-col gap-16">
+            {/* Row 1: Moves Left + Scroll Parallax */}
+            <motion.div style={{ x: x1 }} className="flex">
+              <div className="flex animate-marquee gap-0 min-w-max">
+                {[...row1, ...row1, ...row1, ...row1].map((client, i) => (
+                  <div
+                    key={`row1-${i}`}
+                    className="shrink-0 flex items-center px-16 border-r border-white/5 group cursor-default gap-8"
+                  >
+                    {client.logoUrl && (
+                      <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center group-hover:border-[#F58220]/50 transition-colors relative shrink-0">
+                        <Image 
+                          src={client.logoUrl} 
+                          alt={client.en} 
+                          fill
+                          className="object-contain p-2" 
+                          style={{ transform: `scale(${client.logoScale || 1})` }}
+                        />
+                      </div>
+                    )}
+                    <span className={`text-white text-lg font-black uppercase whitespace-nowrap group-hover:text-[#F58220] transition-colors duration-300 ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>
+                      {isAr ? client.ar : client.en}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
 
-          {/* Row 2: Moves Right + Scroll Parallax */}
-          <motion.div style={{ x: x2 }} className="flex">
-            <div className="flex animate-marquee-reverse gap-0 min-w-max">
-              {[...row2, ...row2, ...row2, ...row2].map((client, i) => (
-                <div
-                  key={`row2-${i}`}
-                  className="shrink-0 flex items-center px-12 border-r border-white/5 group cursor-default gap-6"
-                >
-                  {client.logoUrl && (
-                    <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center group-hover:border-[#F58220]/50 transition-colors relative shrink-0">
-                      <Image 
-                        src={client.logoUrl} 
-                        alt={client.en} 
-                        fill
-                        className="object-contain p-2" 
-                        style={{ transform: `scale(${client.logoScale || 1})` }}
-                      />
-                    </div>
-                  )}
-                  <span className={`text-white text-base font-black uppercase whitespace-nowrap group-hover:text-[#F58220] transition-colors duration-300 ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>
-                    {isAr ? client.ar : client.en}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+            {/* Row 2: Moves Right + Scroll Parallax */}
+            <motion.div style={{ x: x2 }} className="flex">
+              <div className="flex animate-marquee-reverse gap-0 min-w-max">
+                {[...row2, ...row2, ...row2, ...row2].map((client, i) => (
+                  <div
+                    key={`row2-${i}`}
+                    className="shrink-0 flex items-center px-16 border-r border-white/5 group cursor-default gap-8"
+                  >
+                    {client.logoUrl && (
+                      <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center group-hover:border-[#F58220]/50 transition-colors relative shrink-0">
+                        <Image 
+                          src={client.logoUrl} 
+                          alt={client.en} 
+                          fill
+                          className="object-contain p-2" 
+                          style={{ transform: `scale(${client.logoScale || 1})` }}
+                        />
+                      </div>
+                    )}
+                    <span className={`text-white text-lg font-black uppercase whitespace-nowrap group-hover:text-[#F58220] transition-colors duration-300 ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>
+                      {isAr ? client.ar : client.en}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
         </div>
       </div>
 
