@@ -20,7 +20,7 @@ export default async function Home() {
       <PageViewTracker path="/" />
       <Hero />
       <AboutUs />
-      {/* <ClientsMarquee /> removed as requested */}
+      <ClientsMarquee />
       <CategoryShowcase categories={showcaseData} />
       <WhyUs />
       <CtaBanner />
