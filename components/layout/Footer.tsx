@@ -18,14 +18,14 @@ export const Footer = () => {
     privacy: {
       title: isAr ? "سياسة الخصوصية" : "Privacy Policy",
       content: isAr 
-        ? "نحن في أكاديمية الأبطال نلتزم بحماية خصوصيتك. نقوم بجمع المعلومات اللازمة فقط لتقديم خدماتنا. لا نقوم بمشاركة بياناتك مع أطراف ثالثة دون موافقتك. نستخدم تقنيات تشفير متطورة لضمان أمن معلوماتك."
-        : "At Champions Academy, we are committed to protecting your privacy. We collect only the information necessary to provide our services. We do not share your data with third parties without your consent. We use advanced encryption to ensure the security of your information."
+        ? "نحن في بث الخليجية نلتزم بحماية خصوصيتك. نقوم بجمع المعلومات اللازمة فقط لتقديم خدماتنا. لا نقوم بمشاركة بياناتك مع أطراف ثالثة دون موافقتك. نستخدم تقنيات تشفير متطورة لضمان أمن معلوماتك."
+        : "At BTH, we are committed to protecting your privacy. We collect only the information necessary to provide our services. We do not share your data with third parties without your consent. We use advanced encryption to ensure the security of your information."
     },
     terms: {
       title: isAr ? "الشروط والأحكام" : "Terms & Conditions",
       content: isAr
-        ? "باستخدامك لخدماتنا، فإنك توافق على شروطنا. نلتزم بمواعيد التدريب المتفق عليها. تخضع جميع النزاعات لقوانين المملكة العربية السعودية."
-        : "By using our services, you agree to our terms. We commit to agreed training schedules. All disputes are subject to the laws of the Kingdom of Saudi Arabia."
+        ? "باستخدامك لخدماتنا، فإنك توافق على شروطنا. نلتزم بمواعيد العمل المتفق عليها. تخضع جميع النزاعات لقوانين المملكة العربية السعودية."
+        : "By using our services, you agree to our terms. We commit to agreed work schedules. All disputes are subject to the laws of the Kingdom of Saudi Arabia."
     }
   };
 
@@ -59,7 +59,7 @@ export const Footer = () => {
                 <Logo />
               </div>
               <span className="text-3xl font-extrabold tracking-tighter text-(--on-surface) group-hover:text-(--primary) transition-colors font-lexend">
-                {isAr ? "مؤسسة BTH" : "BTH EST"}
+                {isAr ? "بث الخليجية" : "BTH EST"}
               </span>
             </Link>
             <p className="text-(--on-surface)/70 max-w-sm mb-8 text-lg leading-relaxed font-inter">
@@ -123,7 +123,7 @@ export const Footer = () => {
         </div>
 
         <div className={`pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-[10px] font-bold uppercase text-(--on-surface)/40 font-space ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>
-          <p>© {new Date().getFullYear()} {isAr ? "أكاديمية الأبطال. جميع الحقوق محفوظة" : "Champions Academy. All Rights Reserved"}</p>
+          <p>© {new Date().getFullYear()} {isAr ? "بث الخليجية. جميع الحقوق محفوظة" : "BTH Gulf. All Rights Reserved"}</p>
           <div className="flex gap-10">
             <button onClick={() => setActivePolicy("privacy")} className="hover:text-(--primary) transition-colors">
               {isAr ? "سياسة الخصوصية" : "Privacy Policy"}

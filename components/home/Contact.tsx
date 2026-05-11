@@ -32,7 +32,7 @@ export const Contact = () => {
     },
     {
       title: isAr ? "الجوال (1)" : "Mobile (1)",
-      value: "+966 50 591 2477",
+      value: "050 591 2477",
       icon: Phone,
       type: 'whatsapp',
       number: "966505912477",
