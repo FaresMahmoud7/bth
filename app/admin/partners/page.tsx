@@ -336,7 +336,7 @@ export default function PartnersAdminPage() {
                     <Building2 size={20} />
                   )}
                 </div>
-                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                   <button 
                     onClick={() => startEdit(partner)}
                     className="p-2 hover:bg-blue-500/20 text-blue-400 rounded-lg transition-colors"
