@@ -2,93 +2,17 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
-import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
-
-const clientsRow1Default = [
-  { ar: "الصين لإنشاءات السكك الحديدية (TIEJUN)", en: "China Railway TIEJUN" },
-  { ar: "سيبكو 3 (SEPCOIII)", en: "SEPCOIII" },
-  { ar: "ميناء الملك فهد الصناعي بالجبيل", en: "King Fahad Industrial Port in Jubail" },
-  { ar: "المؤسسة العامة لتحلية المياه المالحة", en: "Saline Water Conversion Corporation (SWCC)" },
-  { ar: "مستشفى المواساة", en: "Mouwasat Hospital" },
-  { ar: "تيكفين للإنشاءات", en: "Tekfen Construction" },
-  { ar: "ألفا لافال", en: "Alfa Laval" },
-  { ar: "سولزر", en: "Sulzer" },
-  { ar: "الجزيرة للمركبات", en: "Al Jazirah Vehicles" },
-  { ar: "شيميدت السعودية", en: "Schmidt Saudi Arabia" },
-  { ar: "إرادة", en: "Eradah" },
-  { ar: "مكتبة جرير", en: "Jarir Bookstore" },
-  { ar: "الجمعية الخيرية لرعاية الأيتام (إنسان)", en: "Ensan Charity" },
-  { ar: "المملكة العربية السعودية", en: "Kingdom of Saudi Arabia" },
-  { ar: "برنامج الخدمات الصحية للهيئة الملكية (RCH)", en: "Royal Commission Health Services Program" },
-  { ar: "مجموعة زيد الحسين وإخوانه", en: "Zaid Al Hussain & Brothers Group" },
-  { ar: "بلانت-تيك العربية", en: "Plant-Tech Arabia" },
-  { ar: "شركة داز السعودية المحدودة", en: "Saudi Daz Company Limited" }
-];
-
-const clientsRow2Default = [
-  { ar: "إم آي إس العربية", en: "MIS Arabia" },
-  { ar: "المراكز العربية", en: "Arabian Centres" },
-  { ar: "كيكسا (KEKSA)", en: "KEKSA" },
-  { ar: "لولو هايبر ماركت", en: "LuLu Hypermarket" },
-  { ar: "سلمان عياد الرمالي للمحاماة", en: "Salman Ayed Al-Remaly Law Firm" },
-  { ar: "عيادات الرازي", en: "Arrazi Clinics" },
-  { ar: "شركة دانة الصحراء الطبية", en: "Danat Al Sahraa Medical Co." },
-  { ar: "فاسكو", en: "Vasco" },
-  { ar: "روستا (جي للتجارة)", en: "Rousta (G Trading)" },
-  { ar: "مختبرات البرج الطبية", en: "Al Borg Medical Laboratories" },
-  { ar: "بايرن لتأجير المعدات", en: "Byrne Equipment Rental" },
-  { ar: "العليان / ديسكون", en: "Olayan / Descon" },
-  { ar: "كوبيريون", en: "Coperion" },
-  { ar: "أبل بيز", en: "Applebee's" },
-  { ar: "عفيفي", en: "Afifi" },
-  { ar: "بابريكا", en: "Paprika" },
-  { ar: "سار (الشركة السعودية للخطوط الحديدية)", en: "SAR (Saudi Arabia Railways)" }
-];
-
-interface ClientData {
-  ar: string;
-  en: string;
-  logoUrl?: string;
-  logoScale?: number;
-}
+import { useRef } from "react";
 
 export const ClientsMarquee = () => {
   const { locale } = useLanguage();
   const isAr = locale === "ar";
   const containerRef = useRef<HTMLDivElement>(null);
 
-
-
-  const [row1, setRow1] = useState<ClientData[]>(clientsRow1Default);
-  const [row2, setRow2] = useState<ClientData[]>(clientsRow2Default);
-
-  useEffect(() => {
-    const fetchPartners = async () => {
-      try {
-        const res = await fetch("/api/partners");
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.length > 0) {
-            const r1 = data.filter((p: { row: number; nameAr: string; nameEn: string; logoUrl?: string; logoScale?: number }) => p.row === 1).map((p: { nameAr: string; nameEn: string; logoUrl?: string; logoScale?: number }) => ({ ar: p.nameAr, en: p.nameEn, logoUrl: p.logoUrl, logoScale: p.logoScale }));
-            const r2 = data.filter((p: { row: number; nameAr: string; nameEn: string; logoUrl?: string; logoScale?: number }) => p.row === 2).map((p: { nameAr: string; nameEn: string; logoUrl?: string; logoScale?: number }) => ({ ar: p.nameAr, en: p.nameEn, logoUrl: p.logoUrl, logoScale: p.logoScale }));
-            
-            if (r1.length > 0) setRow1(r1);
-            if (r2.length > 0) setRow2(r2);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching partners:", error);
-      }
-    };
-    fetchPartners();
-  }, []);
-
   return (
     <section id="clients" ref={containerRef} className="pt-12 pb-24 bg-(--surface) border-y border-(--border) overflow-hidden">
       
       {/* Marquee display removed */}
-
 
       <div className="container mx-auto px-6">
         <div className="mb-12 text-center flex flex-col items-center">
@@ -148,3 +72,4 @@ export const ClientsMarquee = () => {
     </section>
   );
 };
+
