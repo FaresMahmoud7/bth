@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -58,14 +58,7 @@ export const ClientsMarquee = () => {
   const isAr = locale === "ar";
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
 
-  // Subtle parallax effect based on scroll
-  const x1 = useTransform(scrollYProgress, [0, 1], [0, -150]);
-  const x2 = useTransform(scrollYProgress, [0, 1], [0, 150]);
 
 
 
