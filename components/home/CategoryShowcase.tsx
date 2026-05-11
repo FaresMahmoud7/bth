@@ -117,7 +117,7 @@ export const CategoryShowcase = ({ categories }: { categories: Category[] }) => 
                           <div className="flex items-center gap-2 mb-3">
                             <span className={`text-[#F58220] text-[10px] font-black uppercase ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>{isAr ? category.nameAr : category.nameEn}</span>
                           </div>
-                          <h4 className="text-xl font-bold text-white mb-3 text-start">{item.name}</h4>
+                          <h4 className="text-xl font-bold text-white mb-3 text-start line-clamp-1">{item.name}</h4>
                           <p className="text-zinc-400 text-sm line-clamp-3 mb-6 text-start h-[60px] leading-relaxed shrink-0">
                             {isAr ? item.descriptionArabic : item.descriptionEnglish}
                           </p>
@@ -240,7 +240,7 @@ const ImageCarousel = ({
 
   return (
     <div className="relative w-full h-full group/controls">
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         <motion.div
           key={currentImage}
           initial={{ opacity: 0, scale: 1.05 }}
