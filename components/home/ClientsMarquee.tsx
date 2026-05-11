@@ -150,6 +150,19 @@ export const ClientsMarquee = () => {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
 
+      {/* Marquees Container - NOW ON TOP */}
+      <div className="flex flex-col gap-10 relative z-10 w-full overflow-hidden mb-24">
+        {/* Row 1 - Moves Right to Left */}
+        {renderMarqueeRow(row1, "left")}
+
+        {/* Row 2 - Moves Left to Right */}
+        {renderMarqueeRow(row2, "right")}
+        
+        {/* Left and Right fade edges */}
+        <div className="absolute left-0 top-0 z-20 h-full w-[150px] bg-linear-to-r from-(--surface) to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 z-20 h-full w-[150px] bg-linear-to-l from-(--surface) to-transparent pointer-events-none" />
+      </div>
+
       <div className="container mx-auto px-6 mb-20">
         <div className="text-center flex flex-col items-center">
           <motion.h2
@@ -173,19 +186,6 @@ export const ClientsMarquee = () => {
             <div className="w-12 h-px bg-[#F58220]" />
           </motion.div>
         </div>
-      </div>
-
-      {/* Marquees Container */}
-      <div className="flex flex-col gap-10 relative z-10 w-full overflow-hidden">
-        {/* Row 1 - Moves Right to Left */}
-        {renderMarqueeRow(row1, "left")}
-
-        {/* Row 2 - Moves Left to Right */}
-        {renderMarqueeRow(row2, "right")}
-        
-        {/* Left and Right fade edges */}
-        <div className="absolute left-0 top-0 z-20 h-full w-[150px] bg-linear-to-r from-(--surface) to-transparent pointer-events-none" />
-        <div className="absolute right-0 top-0 z-20 h-full w-[150px] bg-linear-to-l from-(--surface) to-transparent pointer-events-none" />
       </div>
 
       <div className="container mx-auto px-6 mt-24">

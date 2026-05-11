@@ -19,8 +19,14 @@
   --surface-2: #122131;
   --surface-3: #1c2b3c;
   
+  --container-max-width: 1440px;
+  
   --border: rgba(255, 255, 255, 0.1);
   --outline: #8f9098;
+}
+
+.container {
+  max-width: var(--container-max-width);
 }
 
 html {
