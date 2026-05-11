@@ -127,9 +127,9 @@ export const ClientsMarquee = () => {
               </div>
             </div>
 
-            {/* Row 2: Also Moves Left */}
+            {/* Row 2: Moves Right */}
             <div className="flex overflow-hidden">
-              <div className="flex animate-marquee gap-0 min-w-max">
+              <div className="flex animate-marquee-reverse gap-0 min-w-max">
                 {[...row2, ...row2, ...row2, ...row2].map((client, i) => (
                   <div
                     key={`row2-${i}`}
