@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -56,6 +56,16 @@ interface ClientData {
 export const ClientsMarquee = () => {
   const { locale } = useLanguage();
   const isAr = locale === "ar";
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Subtle parallax effect based on scroll
+  const x1 = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const x2 = useTransform(scrollYProgress, [0, 1], [0, 150]);
 
 
 
@@ -84,15 +94,15 @@ export const ClientsMarquee = () => {
   }, []);
 
   return (
-    <section id="clients" className="pt-12 pb-24 bg-(--surface) border-y border-(--border) overflow-hidden">
+    <section id="clients" ref={containerRef} className="pt-12 pb-24 bg-(--surface) border-y border-(--border) overflow-hidden">
       <div className="relative overflow-hidden mb-24">
         {/* Fade edges */}
         <div className="absolute left-0 top-0 bottom-0 w-32 z-10 bg-linear-to-r from-(--surface) to-transparent pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-32 z-10 bg-linear-to-l from-(--surface) to-transparent pointer-events-none" />
 
         <div className="flex flex-col gap-12">
-          {/* Row 1: Moves Left */}
-          <div className="flex overflow-hidden">
+          {/* Row 1: Moves Left + Scroll Parallax */}
+          <motion.div style={{ x: x1 }} className="flex">
             <div className="flex animate-marquee gap-0 min-w-max">
               {[...row1, ...row1, ...row1, ...row1, ...row1, ...row1, ...row1, ...row1, ...row1, ...row1].map((client, i) => (
                 <div
@@ -116,10 +126,10 @@ export const ClientsMarquee = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Row 2: Moves Right */}
-          <div className="flex overflow-hidden">
+          {/* Row 2: Moves Right + Scroll Parallax */}
+          <motion.div style={{ x: x2 }} className="flex">
             <div className="flex animate-marquee-reverse gap-0 min-w-max">
               {[...row2, ...row2, ...row2, ...row2, ...row2, ...row2, ...row2, ...row2, ...row2, ...row2].map((client, i) => (
                 <div
@@ -143,7 +153,7 @@ export const ClientsMarquee = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 
