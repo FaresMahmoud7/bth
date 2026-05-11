@@ -32,10 +32,10 @@ export const Contact = () => {
     },
     {
       title: isAr ? "الجوال (1)" : "Mobile (1)",
-      value: "055 942 4446",
+      value: "+966 50 591 2477",
       icon: Phone,
       type: 'whatsapp',
-      number: "966559424446",
+      number: "966505912477",
     },
     {
       title: isAr ? "الجوال (2)" : "Mobile (2)",
@@ -46,10 +46,10 @@ export const Contact = () => {
     },
     {
       title: isAr ? "هاتف المكتب" : "Office Phone",
-      value: "013 344 9288",
+      value: "013 346 3811",
       icon: Phone,
       type: 'call',
-      number: "0133449288",
+      number: "0133463811",
     },
     {
       title: isAr ? "الموقع" : "Location",
