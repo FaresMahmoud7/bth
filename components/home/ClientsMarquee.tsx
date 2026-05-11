@@ -94,7 +94,7 @@ export const ClientsMarquee = () => {
   return (
     <section id="clients" ref={containerRef} className="pt-12 pb-24 bg-(--surface) border-y border-(--border) overflow-hidden">
       <div className="container mx-auto px-6 mb-24">
-        <div className="relative overflow-hidden rounded-[2rem] bg-zinc-900/50 border border-white/5 py-16">
+        <div className="relative overflow-hidden rounded-4xl bg-zinc-900/50 border border-white/5 py-16">
           {/* Edge Fade */}
           <div className="absolute left-0 top-0 bottom-0 w-32 z-10 bg-linear-to-r from-zinc-950 to-transparent pointer-events-none" />
           <div className="absolute right-0 top-0 bottom-0 w-32 z-10 bg-linear-to-l from-zinc-950 to-transparent pointer-events-none" />
