@@ -202,7 +202,7 @@ export const ClientsMarquee = () => {
               <div className="mt-10 flex items-center justify-center gap-6">
                 <div className="h-px w-12 bg-white/10" />
                 <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30">
-                  {isAr ? "بث الخليجية للدعاية والإعلان" : "BTH Advertising Agency"}
+                  {isAr ? "مؤسسة BTH" : "BTH EST"}
                 </span>
                 <div className="h-px w-12 bg-white/10" />
               </div>

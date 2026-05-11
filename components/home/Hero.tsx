@@ -44,18 +44,6 @@ export const Hero = () => {
       {/* Main Content */}
       <div className="relative z-10 flex flex-col justify-center flex-1 container mx-auto px-6 pt-40 pb-24">
         <div className="max-w-4xl text-start">
-          {/* Agency Name Highlight */}
-          <motion.div
-            initial={{ opacity: 0, x: isAr ? 20 : -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-4 text-start"
-          >
-            <span className="text-white text-lg md:text-2xl font-black block leading-tight wrap-break-word">
-              {isAr ? "بث الخليجية للدعاية والإعلان" : "BTH Al-khalejeah Advertising Agency"}
-            </span>
-          </motion.div>
-
           {/* Label */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -64,7 +52,7 @@ export const Hero = () => {
             className="inline-flex items-center gap-6 mb-10"
           >
             <span className="text-[#F58220] text-2xl md:text-5xl font-black uppercase tracking-tight wrap-break-word">
-              {isAr ? "وكالة BTH للدعاية والإعلان" : "BTH Advertising Agency — Est. 1432H"}
+              {isAr ? "مؤسسة BTH للدعاية والإعلان" : "BTH Advertising EST"}
             </span>
           </motion.div>
 

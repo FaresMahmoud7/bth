@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
-import { content } from '@/constants/content';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
@@ -11,7 +10,6 @@ import { Logo } from '@/components/ui/Logo';
 
 export const Footer = () => {
   const { locale } = useLanguage();
-  const t = content[locale].footer;
   const isAr = locale === "ar";
   const [activePolicy, setActivePolicy] = useState<"privacy" | "terms" | null>(null);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
@@ -20,14 +18,14 @@ export const Footer = () => {
     privacy: {
       title: isAr ? "سياسة الخصوصية" : "Privacy Policy",
       content: isAr 
-        ? "نحن في BTH نلتزم بحماية خصوصيتك. نقوم بجمع المعلومات اللازمة فقط لتقديم خدماتنا الإعلانية. لا نقوم بمشاركة بياناتك مع أطراف ثالثة دون موافقتك. نستخدم تقنيات تشفير متطورة لضمان أمن معلوماتك."
-        : "At BTH, we are committed to protecting your privacy. We collect only the information necessary to provide our advertising services. We do not share your data with third parties without your consent. We use advanced encryption to ensure the security of your information."
+        ? "نحن في أكاديمية الأبطال نلتزم بحماية خصوصيتك. نقوم بجمع المعلومات اللازمة فقط لتقديم خدماتنا. لا نقوم بمشاركة بياناتك مع أطراف ثالثة دون موافقتك. نستخدم تقنيات تشفير متطورة لضمان أمن معلوماتك."
+        : "At Champions Academy, we are committed to protecting your privacy. We collect only the information necessary to provide our services. We do not share your data with third parties without your consent. We use advanced encryption to ensure the security of your information."
     },
     terms: {
       title: isAr ? "الشروط والأحكام" : "Terms & Conditions",
       content: isAr
-        ? "باستخدامك لخدماتنا، فإنك توافق على شروطنا. جميع التصاميم والأعمال الفنية هي ملك لشركة BTH حتى يتم سداد كامل المستحقات. نلتزم بمواعيد التسليم المتفق عليها شريطة توفر جميع المتطلبات من العميل. تخضع جميع النزاعات لقوانين المملكة العربية السعودية."
-        : "By using our services, you agree to our terms. All designs and artworks remain the property of BTH until full payment is received. We commit to agreed delivery times provided all client requirements are met. All disputes are subject to the laws of the Kingdom of Saudi Arabia."
+        ? "باستخدامك لخدماتنا، فإنك توافق على شروطنا. نلتزم بمواعيد التدريب المتفق عليها. تخضع جميع النزاعات لقوانين المملكة العربية السعودية."
+        : "By using our services, you agree to our terms. We commit to agreed training schedules. All disputes are subject to the laws of the Kingdom of Saudi Arabia."
     }
   };
 
@@ -40,36 +38,37 @@ export const Footer = () => {
   ];
 
   return (
-    <footer className="bg-(--background) text-(--foreground) pt-32 pb-12 relative overflow-hidden transition-colors border-t border-(--border)">
+    <footer className="bg-(--surface) text-(--on-surface) pt-32 pb-12 relative overflow-hidden transition-colors border-t border-white/5">
       {/* Premium Decorative Divider */}
-      <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-[#F58220]/40 to-transparent" />
+      <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-(--primary)/40 to-transparent" />
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Main Branding Slogan */}
         <div className="flex items-center gap-6 mb-20 overflow-hidden">
-          <div className="h-px bg-[#F58220]/30 flex-1 hidden md:block" />
-          <span className={`text-shimmer text-4xl md:text-8xl font-black uppercase whitespace-nowrap drop-shadow-2xl py-4 ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>
-            {isAr ? "نصنع التميز" : "Crafting Excellence"}
+          <div className="h-px bg-(--primary)/20 flex-1 hidden md:block" />
+          <span className={`text-(--primary) text-4xl md:text-8xl font-black uppercase whitespace-nowrap drop-shadow-2xl py-4 font-lexend ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
+            {isAr ? "نصنع التميز" : "Building Legends"}
           </span>
-          <div className="h-px bg-[#F58220]/30 flex-1" />
+          <div className="h-px bg-(--primary)/20 flex-1" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-20 mb-24">
           <div className="lg:col-span-2">
             <Link href="/" className="group mb-8 inline-block">
-              <div className="w-24 h-24 mb-4">
+              <div className="w-20 h-20 mb-6 p-1 rounded-full border border-(--primary)/30 group-hover:border-(--primary) transition-all duration-500 overflow-hidden">
                 <Logo />
               </div>
-              <span className="text-2xl font-black tracking-tighter text-(--foreground) group-hover:text-[#F58220] transition-colors">BTH</span>
+              <span className="text-3xl font-extrabold tracking-tighter text-(--on-surface) group-hover:text-(--primary) transition-colors font-lexend">
+                {isAr ? "مؤسسة BTH" : "BTH EST"}
+              </span>
             </Link>
-            <p className="text-(--foreground)/90 max-w-sm mb-8 text-lg leading-relaxed font-light">
-              {t.description}
+            <p className="text-(--on-surface)/70 max-w-sm mb-8 text-lg leading-relaxed font-inter">
+              {isAr ? "مؤسسة رائدة متخصصة في الدعاية والإعلان والحلول المتكاملة." : "A leading establishment specialized in advertising and integrated solutions."}
             </p>
             <div className="flex gap-4">
               <Link 
-                href="https://www.instagram.com/bth_adv?igsh=MTVsZHkxbmpmcDFtOQ==" 
-                target="_blank" 
-                className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:text-[#F58220] hover:border-[#F58220]/50 transition-all group"
+                href="#" 
+                className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-(--on-surface) hover:text-(--primary) hover:border-(--primary)/50 transition-all group shadow-lg"
                 title="Instagram"
               >
                 <svg 
@@ -93,18 +92,18 @@ export const Footer = () => {
           </div>
           
           <div>
-            <h4 className={`text-xs font-bold uppercase text-[#F58220] mb-10 ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>{t.quick_links}</h4>
+            <h4 className={`text-[11px] font-bold uppercase text-(--secondary) mb-10 font-space ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>{isAr ? "روابط سريعة" : "Quick Links"}</h4>
             <ul className="space-y-5">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   {link.href ? (
-                    <Link href={link.href} className={`text-(--foreground)/90 hover:text-[#F58220] transition-colors flex items-center gap-3 group text-sm font-bold uppercase ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
-                      <span className="w-0 h-px bg-[#F58220] group-hover:w-4 transition-all" />
+                    <Link href={link.href} className={`text-(--on-surface)/60 hover:text-(--primary) transition-colors flex items-center gap-3 group text-sm font-bold uppercase font-lexend ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
+                      <span className="w-0 h-px bg-(--primary) group-hover:w-4 transition-all" />
                       {link.name}
                     </Link>
                   ) : (
-                    <button onClick={link.action} className={`text-(--foreground)/90 hover:text-[#F58220] transition-colors flex items-center gap-3 group text-sm font-bold uppercase cursor-pointer ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
-                      <span className="w-0 h-px bg-[#F58220] group-hover:w-4 transition-all" />
+                    <button onClick={link.action} className={`text-(--on-surface)/60 hover:text-(--primary) transition-colors flex items-center gap-3 group text-sm font-bold uppercase cursor-pointer font-lexend ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
+                      <span className="w-0 h-px bg-(--primary) group-hover:w-4 transition-all" />
                       {link.name}
                     </button>
                   )}
@@ -114,22 +113,22 @@ export const Footer = () => {
           </div>
 
           <div>
-            <h4 className={`text-xs font-bold uppercase text-[#F58220] mb-10 ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>{content[locale].contact.address_title}</h4>
-            <ul className="space-y-6 text-(--foreground)/90">
+            <h4 className={`text-[11px] font-bold uppercase text-(--secondary) mb-10 font-space ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>{isAr ? "العنوان" : "Address"}</h4>
+            <ul className="space-y-6 text-(--on-surface)/60 font-inter">
               <li className="leading-relaxed text-sm">
-                {content[locale].contact.address}
+                {isAr ? "مدينة الجبيل الصناعية، المنطقة الصناعية الأولى" : "Jubail Industrial City, First Industrial Zone"}
               </li>
             </ul>
           </div>
         </div>
 
-        <div className={`pt-12 border-t border-(--border) flex flex-col md:flex-row items-center justify-between gap-8 text-xs font-bold uppercase text-(--foreground)/60 ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>
-          <p>{t.copyright}</p>
+        <div className={`pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-[10px] font-bold uppercase text-(--on-surface)/40 font-space ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>
+          <p>© {new Date().getFullYear()} {isAr ? "أكاديمية الأبطال. جميع الحقوق محفوظة" : "Champions Academy. All Rights Reserved"}</p>
           <div className="flex gap-10">
-            <button onClick={() => setActivePolicy("privacy")} className="hover:text-[#F58220] transition-colors">
+            <button onClick={() => setActivePolicy("privacy")} className="hover:text-(--primary) transition-colors">
               {isAr ? "سياسة الخصوصية" : "Privacy Policy"}
             </button>
-            <button onClick={() => setActivePolicy("terms")} className="hover:text-[#F58220] transition-colors">
+            <button onClick={() => setActivePolicy("terms")} className="hover:text-(--primary) transition-colors">
               {isAr ? "الشروط والأحكام" : "Terms & Conditions"}
             </button>
           </div>

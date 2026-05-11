@@ -28,8 +28,8 @@ const reasons = [
   },
   {
     icon: Zap,
-    en: { title: "Full-Service Agency", desc: "From concept to execution — design, print, install, all under one roof." },
-    ar: { title: "وكالة متكاملة الخدمات", desc: "من الفكرة إلى التنفيذ — تصميم، طباعة، تركيب — كل شيء تحت سقف واحد." },
+    en: { title: "Full-Service EST", desc: "From concept to execution — design, print, install, all under one roof." },
+    ar: { title: "مؤسسة متكاملة الخدمات", desc: "من الفكرة إلى التنفيذ — تصميم، طباعة، تركيب — كل شيء تحت سقف واحد." },
   },
 ];
 

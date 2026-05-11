@@ -95,10 +95,7 @@ export const Navbar = () => {
             </div>
             <div className="flex flex-col">
               <span className="font-black text-(--foreground) text-sm md:text-base tracking-tight leading-none mb-1 text-start">
-                {isAr ? "بث الخليجية للدعاية والإعلان" : "BTH Al-khalejeah Advertising Agency"}
-              </span>
-              <span className="text-[9px] font-bold text-white/40 uppercase tracking-widest leading-none text-start">
-                {isAr ? "BTH Al-khalejeah Advertising Agency" : "Best To Have"}
+                {isAr ? "مؤسسة BTH" : "BTH EST"}
               </span>
             </div>
           </Link>
