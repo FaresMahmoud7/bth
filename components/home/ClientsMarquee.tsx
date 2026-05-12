@@ -96,10 +96,10 @@ const MarqueeRow = ({
     }
   );
 
-  // Auto-scroll logic
+  // Auto-scroll logic - SLOWER SPEED
   useEffect(() => {
     if (isPaused) return;
-    const speed = rowIndex === 0 ? 0.02 : rowIndex === 1 ? -0.025 : 0.015;
+    const speed = rowIndex === 0 ? 0.01 : -0.012; // Much slower
     const interval = setInterval(() => {
       autoX.set(autoX.get() - speed);
       // Reset autoX when it reaches -100% to keep numbers small
@@ -233,34 +233,8 @@ export const ClientsMarquee = () => {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
 
-      {/* Title Section - Now at the Top */}
-      <div className="container mx-auto px-6 mb-20 relative z-10">
-        <div className="text-center flex flex-col items-center">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-5xl md:text-7xl font-black text-white mb-6"
-          >
-            {isAr ? "شركاؤنا وعملاؤنا" : "Our Trusted Clients"}
-          </motion.h2>
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="flex items-center justify-center gap-4"
-          >
-            <div className="w-12 h-px bg-[#F58220]" />
-            <span className={`text-[#F58220] text-lg md:text-xl font-bold uppercase ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>
-              {isAr ? "نعتز بثقتكم" : "We Value Your Trust"}
-            </span>
-            <div className="w-12 h-px bg-[#F58220]" />
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Marquees Container - Now with 2 rows */}
-      <div className="max-w-[1440px] mx-auto relative z-10 mb-24 px-6 group/carousel">
+      {/* Marquees Container - NOW ON TOP */}
+      <div className="max-w-[1440px] mx-auto relative z-10 mb-20 px-6 group/carousel">
         <div className="flex flex-col gap-10 relative w-full overflow-hidden rounded-4xl border border-(--border) bg-black/20 py-16">
           {/* Row 1 - Moves Right to Left (Left) */}
           {row1.length > 0 && (
@@ -332,6 +306,32 @@ export const ClientsMarquee = () => {
         </div>
       </div>
 
+      {/* Title Section - Now below Marquee */}
+      <div className="container mx-auto px-6 mb-16 relative z-10">
+        <div className="text-center flex flex-col items-center">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-5xl md:text-7xl font-black text-white mb-6"
+          >
+            {isAr ? "شركاؤنا وعملاؤنا" : "Our Trusted Clients"}
+          </motion.h2>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="flex items-center justify-center gap-4"
+          >
+            <div className="w-12 h-px bg-[#F58220]" />
+            <span className={`text-[#F58220] text-lg md:text-xl font-bold uppercase ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>
+              {isAr ? "نعتز بثقتكم" : "We Value Your Trust"}
+            </span>
+            <div className="w-12 h-px bg-[#F58220]" />
+          </motion.div>
+        </div>
+      </div>
+
 
       <div className="container mx-auto px-6 mt-24">
         <motion.div
@@ -344,11 +344,11 @@ export const ClientsMarquee = () => {
             <p className={`text-white text-xl md:text-3xl leading-relaxed font-bold ${isAr ? 'font-cairo text-center' : 'text-center'}`}>
               {isAr ? (
                 <>
-                  &quot;نحن في بث الخليجية نفخر بشراكتنا مع هذه النخبة من الشركات التي وضعت ثقتها فينا. إن نزاهة التعامل وأصالة الشراكة هي ما يجمعنا بكم، ونعتز بكوننا جزءاً من نجاحاتكم المستمرة.&quot;
+                  &quot;نحن في بث الخليجية نفخر بشراكتنا مع هذه النخبة من الشركات التي وضعت ثقتها فينا. إن نزاهة التعامل وأصالة الشراكة هي ما يجمعنا بكم، ونعتز بكوننا جزءاً من نجاحاتكم المستمرة. <span className="text-[#F58220]">شراكة تفخر بها الأجيال، وعلاقات بنيت على الصدق والاحترافية.</span> الله يحييكم ويبقيكم شركاء نجاح دايمين.&quot;
                 </>
               ) : (
                 <>
-                  &quot;At BTH, we take immense pride in our partnership with these distinguished companies that have placed their trust in us. Integrity and authentic partnership are the foundation of our relationships.&quot;
+                  &quot;At BTH, we take immense pride in our partnership with these distinguished companies that have placed their trust in us. Integrity and authentic partnership are the foundation of our relationships, and we are honored to be part of your ongoing success. <span className="text-[#F58220]">These are partnerships built on honesty, professionalism, and mutual growth.</span>&quot;
                 </>
               )}
             </p>
