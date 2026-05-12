@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useAnimationFrame } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -70,13 +70,33 @@ const MarqueeRow = ({
 }: MarqueeRowProps) => {
   const animationClass = direction === "left" ? "animate-marquee" : "animate-marquee-reverse";
 
+  // Ensure we have enough items to fill the screen and create a seamless loop
+  const displayItems = useMemo(() => {
+    if (!items || items.length === 0) return [];
+    
+    // Repeat items until we have at least 15 items to cover wide screens
+    let list = [...items];
+    while (list.length < 15) {
+      list = [...list, ...items];
+    }
+    
+    // Double the final list for a perfectly seamless 0% to -50% CSS loop
+    return [...list, ...list];
+  }, [items]);
+
+  // Calculate duration based on the number of items to maintain a constant speed
+  // (Items in one set * 3.5 seconds per item)
+  const duration = (displayItems.length / 2) * 3.5;
+
+  if (displayItems.length === 0) return null;
+
   return (
     <div className="relative w-full overflow-hidden select-none">
       <div 
         className={`flex w-max gap-8 py-4 ${animationClass} hover:[animation-play-state:paused] touch-pan-x`}
+        style={{ animationDuration: `${duration}s` }}
       >
-        {/* Double the items for a perfectly seamless 0% to -50% CSS loop */}
-        {[...items, ...items].map((client, idx) => (
+        {displayItems.map((client, idx) => (
           <div 
             key={`${direction}-${idx}`} 
             className="flex items-center gap-4 px-8 py-4 glass-card rounded-full border border-[rgba(245,130,32,0.3)] whitespace-nowrap cursor-default transition-all hover:border-[#F58220] hover:shadow-[0_0_20px_rgba(245,130,32,0.4)] hover:scale-105"
@@ -133,15 +153,22 @@ export const ClientsMarquee = () => {
           }
         }
 
-        const half = Math.ceil(allData.length / 2);
-        setRow1(allData.slice(0, half));
-        setRow2(allData.slice(half));
+        // If we have few items, use the same items for both rows to avoid gaps
+        if (allData.length < 8) {
+          setRow1(allData);
+          setRow2(allData);
+        } else {
+          const half = Math.ceil(allData.length / 2);
+          setRow1(allData.slice(0, half));
+          setRow2(allData.slice(half));
+        }
 
       } catch (error) {
         console.error("Error fetching partners:", error);
-        const half = Math.ceil(allClientsDefault.length / 2);
-        setRow1(allClientsDefault.slice(0, half));
-        setRow2(allClientsDefault.slice(half));
+        const fallbackData = allClientsDefault;
+        const half = Math.ceil(fallbackData.length / 2);
+        setRow1(fallbackData.slice(0, half));
+        setRow2(fallbackData.slice(half));
       }
     };
     fetchPartners();
