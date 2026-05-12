@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useAnimation, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
@@ -58,6 +58,112 @@ interface ApiPartner {
   logoScale?: number;
   row?: number;
 }
+
+interface MarqueeRowProps {
+  items: ClientData[];
+  direction: "left" | "right";
+  rowIndex: number;
+  currentIndex: number;
+  isPaused: boolean;
+  setIsPaused: (paused: boolean) => void;
+  prevSlide: () => void;
+  nextSlide: () => void;
+  isAr: boolean;
+}
+
+const MarqueeRow = ({ 
+  items, 
+  direction, 
+  rowIndex, 
+  currentIndex, 
+  isPaused, 
+  setIsPaused, 
+  prevSlide, 
+  nextSlide, 
+  isAr 
+}: MarqueeRowProps) => {
+  const autoX = useMotionValue(0);
+  const manualX = useMotionValue(currentIndex * -20); // Initial position
+  const springManualX = useSpring(manualX, { stiffness: 40, damping: 20 });
+  
+  // Combine auto and manual
+  const combinedX = useTransform(
+    [autoX, springManualX],
+    ([a, b]) => {
+      const valA = a as number;
+      const valB = b as number;
+      return direction === "left" ? `${valA + valB}%` : `${valA - valB}%`;
+    }
+  );
+
+  // Auto-scroll logic
+  useEffect(() => {
+    if (isPaused) return;
+    const speed = rowIndex === 0 ? 0.02 : rowIndex === 1 ? -0.025 : 0.015;
+    const interval = setInterval(() => {
+      autoX.set(autoX.get() - speed);
+      // Reset autoX when it reaches -100% to keep numbers small
+      if (autoX.get() < -100) autoX.set(0);
+      if (autoX.get() > 100) autoX.set(0);
+    }, 16);
+    return () => clearInterval(interval);
+  }, [isPaused, rowIndex, autoX]);
+
+  // Update manualX when currentIndex changes
+  useEffect(() => {
+    manualX.set(currentIndex * -20);
+  }, [currentIndex, manualX]);
+
+  return (
+    <div 
+      className="flex w-max relative select-none"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      <motion.div 
+        style={{ x: combinedX }}
+        className="flex gap-8 py-2"
+        drag="x"
+        dragConstraints={{ left: -100, right: 100 }}
+        onDragEnd={(_, info) => {
+          const threshold = 100;
+          if (info.offset.x > threshold) prevSlide();
+          else if (info.offset.x < -threshold) nextSlide();
+        }}
+      >
+        {/* Quadruple the items for perfect infinite feel */}
+        {[...items, ...items, ...items, ...items].map((client, idx) => (
+          <div 
+            key={`${direction}-${idx}`} 
+            className="flex items-center gap-4 px-8 py-4 glass-card rounded-full border border-[rgba(245,130,32,0.3)] whitespace-nowrap cursor-default transition-all hover:border-[#F58220] hover:shadow-[0_0_20px_rgba(245,130,32,0.4)] hover:scale-105"
+          >
+            {client.logoUrl ? (
+              <div className="w-14 h-14 rounded-full overflow-hidden bg-white flex items-center justify-center border border-(--border) shadow-md shrink-0">
+                <Image 
+                  src={client.logoUrl} 
+                  alt={isAr ? client.ar : client.en} 
+                  width={45} 
+                  height={45} 
+                  className="object-contain" 
+                  style={{ transform: `scale(${client.logoScale || 1})` }}
+                />
+              </div>
+            ) : (
+              <div className="w-14 h-14 rounded-full bg-linear-to-br from-[#F58220] to-[#e1730a] flex items-center justify-center shadow-md shrink-0">
+                <span className="text-white font-bold text-xl">
+                  {(isAr ? client.ar : client.en).charAt(0)}
+                </span>
+              </div>
+            )}
+            <span className={`text-white font-bold text-xl ${isAr ? 'font-cairo' : 'font-manrope'}`}>
+              {isAr ? client.ar : client.en}
+            </span>
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  );
+};
 
 export const ClientsMarquee = () => {
   const { locale } = useLanguage();
@@ -123,85 +229,6 @@ export const ClientsMarquee = () => {
     };
   }, [isPaused, nextSlide]);
 
-  const MarqueeRow = ({ items, direction, rowIndex }: { items: ClientData[], direction: "left" | "right", rowIndex: number }) => {
-    const autoX = useMotionValue(0);
-    const manualX = useMotionValue(currentIndex * -20); // Initial position
-    const springManualX = useSpring(manualX, { stiffness: 40, damping: 20 });
-    
-    // Combine auto and manual
-    const combinedX = useTransform(
-      [autoX, springManualX],
-      ([a, b]) => direction === "left" ? `${a + b}%` : `${a - b}%`
-    );
-
-    // Auto-scroll logic
-    useEffect(() => {
-      if (isPaused) return;
-      const speed = rowIndex === 0 ? 0.02 : rowIndex === 1 ? -0.025 : 0.015;
-      const interval = setInterval(() => {
-        autoX.set(autoX.get() - speed);
-        // Reset autoX when it reaches -100% to keep numbers small
-        if (autoX.get() < -100) autoX.set(0);
-        if (autoX.get() > 100) autoX.set(0);
-      }, 16);
-      return () => clearInterval(interval);
-    }, [isPaused, rowIndex, autoX]);
-
-    // Update manualX when currentIndex changes
-    useEffect(() => {
-      manualX.set(currentIndex * -20);
-    }, [currentIndex, manualX]);
-
-    return (
-      <div 
-        className="flex w-max relative select-none"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-      >
-        <motion.div 
-          style={{ x: combinedX }}
-          className="flex gap-8 py-2"
-          drag="x"
-          dragConstraints={{ left: -100, right: 100 }}
-          onDragEnd={(_, info) => {
-            const threshold = 100;
-            if (info.offset.x > threshold) prevSlide();
-            else if (info.offset.x < -threshold) nextSlide();
-          }}
-        >
-          {/* Quadruple the items for perfect infinite feel */}
-          {[...items, ...items, ...items, ...items].map((client, idx) => (
-            <div 
-              key={`${direction}-${idx}`} 
-              className="flex items-center gap-4 px-8 py-4 glass-card rounded-full border border-[rgba(245,130,32,0.3)] whitespace-nowrap cursor-default transition-all hover:border-[#F58220] hover:shadow-[0_0_20px_rgba(245,130,32,0.4)] hover:scale-105"
-            >
-              {client.logoUrl ? (
-                <div className="w-14 h-14 rounded-full overflow-hidden bg-white flex items-center justify-center border border-(--border) shadow-md shrink-0">
-                  <Image 
-                    src={client.logoUrl} 
-                    alt={isAr ? client.ar : client.en} 
-                    width={45} 
-                    height={45} 
-                    className="object-contain" 
-                    style={{ transform: `scale(${client.logoScale || 1})` }}
-                  />
-                </div>
-              ) : (
-                <div className="w-14 h-14 rounded-full bg-linear-to-br from-[#F58220] to-[#e1730a] flex items-center justify-center shadow-md shrink-0">
-                  <span className="text-white font-bold text-xl">
-                    {(isAr ? client.ar : client.en).charAt(0)}
-                  </span>
-                </div>
-              )}
-              <span className={`text-white font-bold text-xl ${isAr ? 'font-cairo' : 'font-manrope'}`}>
-                {isAr ? client.ar : client.en}
-              </span>
-            </div>
-          ))}
-        </motion.div>
-      </div>
-    );
-  };
 
   return (
     <section id="clients" className="pt-20 pb-32 bg-(--surface) border-y border-(--border) overflow-hidden relative">
@@ -211,15 +238,51 @@ export const ClientsMarquee = () => {
 
       {/* Marquees Container - NOW CONSTRAINED TO 1440px */}
       <div className="max-w-[1440px] mx-auto relative z-10 mb-24 px-6 group/carousel">
-        <div className="flex flex-col gap-10 relative w-full overflow-hidden rounded-[2rem] border border-(--border) bg-black/20 py-16">
+        <div className="flex flex-col gap-10 relative w-full overflow-hidden rounded-4xl border border-(--border) bg-black/20 py-16">
           {/* Row 1 - Moves Right to Left (Left) */}
-          {row1.length > 0 && <MarqueeRow items={row1} direction="left" rowIndex={0} />}
+          {row1.length > 0 && (
+            <MarqueeRow 
+              items={row1} 
+              direction="left" 
+              rowIndex={0} 
+              currentIndex={currentIndex}
+              isPaused={isPaused}
+              setIsPaused={setIsPaused}
+              prevSlide={prevSlide}
+              nextSlide={nextSlide}
+              isAr={isAr}
+            />
+          )}
 
           {/* Row 2 - Moves Left to Right (Right) */}
-          {row2.length > 0 && <MarqueeRow items={row2} direction="right" rowIndex={1} />}
+          {row2.length > 0 && (
+            <MarqueeRow 
+              items={row2} 
+              direction="right" 
+              rowIndex={1} 
+              currentIndex={currentIndex}
+              isPaused={isPaused}
+              setIsPaused={setIsPaused}
+              prevSlide={prevSlide}
+              nextSlide={nextSlide}
+              isAr={isAr}
+            />
+          )}
 
           {/* Row 3 - Moves Right to Left (Left) */}
-          {row3.length > 0 && <MarqueeRow items={row3} direction="left" rowIndex={2} />}
+          {row3.length > 0 && (
+            <MarqueeRow 
+              items={row3} 
+              direction="left" 
+              rowIndex={2} 
+              currentIndex={currentIndex}
+              isPaused={isPaused}
+              setIsPaused={setIsPaused}
+              prevSlide={prevSlide}
+              nextSlide={nextSlide}
+              isAr={isAr}
+            />
+          )}
           
           {/* Left and Right fade edges - Internal to the 1440px frame */}
           <div className="absolute left-0 top-0 z-20 h-full w-[160px] bg-linear-to-r from-[#0d1c2d] via-[#0d1c2d]/80 to-transparent pointer-events-none" />
