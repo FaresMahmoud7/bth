@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable react/forbid-dom-props */
+
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { useState, useEffect, useMemo } from "react";
@@ -51,6 +53,13 @@ interface ClientData {
   logoScale?: number;
 }
 
+interface ApiPartner {
+  nameAr: string;
+  nameEn: string;
+  logoUrl?: string;
+  logoScale?: number;
+}
+
 const MarqueeRow = ({ items, direction }: { items: ClientData[]; direction: "left" | "right" }) => {
   // Ensure enough items for a truly infinite loop without gaps
   const displayItems = useMemo(() => {
@@ -83,7 +92,7 @@ const MarqueeRow = ({ items, direction }: { items: ClientData[]; direction: "lef
         {displayItems.map((client, idx) => (
           <div 
             key={`${direction}-${idx}`} 
-            className="flex items-center gap-6 px-10 py-5 glass-card rounded-full border border-white/10 whitespace-nowrap cursor-default transition-all duration-500 hover:border-[#F58220]/50 hover:shadow-[0_0_40px_rgba(245,130,32,0.3)] hover:scale-105 bg-white/[0.03] backdrop-blur-xl"
+            className="flex items-center gap-6 px-10 py-5 glass-card rounded-full border border-white/10 whitespace-nowrap cursor-default transition-all duration-500 hover:border-[#F58220]/50 hover:shadow-[0_0_40px_rgba(245,130,32,0.3)] hover:scale-105 bg-white/3 backdrop-blur-xl"
           >
             {client.logoUrl ? (
               <div className="w-14 h-14 rounded-full overflow-hidden bg-white flex items-center justify-center border border-white/10 shadow-inner p-2 shrink-0">
@@ -126,7 +135,7 @@ export const ClientsMarquee = () => {
         if (res.ok) {
           const data = await res.json();
           if (data && data.length > 0) {
-            const mapped = data.map((p: any) => ({
+            const mapped = data.map((p: ApiPartner) => ({
               ar: p.nameAr,
               en: p.nameEn,
               logoUrl: p.logoUrl,
@@ -156,19 +165,8 @@ export const ClientsMarquee = () => {
       <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#F58220]/5 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-[#F58220]/5 blur-[150px] rounded-full pointer-events-none" />
 
-      <div className="max-w-[1440px] mx-auto relative z-10 px-6">
-        <div className="flex flex-col gap-12 relative w-full overflow-hidden rounded-[3rem] border border-white/10 bg-white/[0.02] py-24 backdrop-blur-3xl">
-          <MarqueeRow items={row1} direction="left" />
-          <MarqueeRow items={row2} direction="right" />
-          
-          {/* Edge Fades */}
-          <div className="absolute left-0 top-0 z-20 h-full w-[20%] bg-linear-to-r from-[#051424] via-[#051424]/90 to-transparent pointer-events-none" />
-          <div className="absolute right-0 top-0 z-20 h-full w-[20%] bg-linear-to-l from-[#051424] via-[#051424]/90 to-transparent pointer-events-none" />
-        </div>
-      </div>
-
       {/* Title Section */}
-      <div className="container mx-auto px-6 mt-32">
+      <div className="container mx-auto px-6 mb-16 relative z-10">
         <div className="text-center flex flex-col items-center">
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
@@ -180,11 +178,47 @@ export const ClientsMarquee = () => {
           </motion.h2>
           <div className="flex items-center justify-center gap-6">
             <div className="w-16 h-px bg-[#F58220]/50" />
-            <span className="text-[#F58220] text-xl md:text-2xl font-bold uppercase tracking-[0.3em]">
+            <span className="text-[#F58220] text-xl md:text-2xl font-bold uppercase tracking-[0.3em] font-montserrat">
               {isAr ? "نعتز بثقتكم" : "We Value Your Trust"}
             </span>
             <div className="w-16 h-px bg-[#F58220]/50" />
           </div>
+        </div>
+      </div>
+
+      {/* Testimonial Section */}
+      <div className="container mx-auto px-6 mb-24 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="max-w-5xl mx-auto glass-card p-12 md:p-20 border border-white/10 bg-white/3 relative overflow-hidden rounded-[3rem]"
+        >
+          <div className="relative z-10 text-center">
+            <p className="text-white text-2xl md:text-4xl leading-relaxed font-bold font-cairo">
+              {isAr ? (
+                <>
+                  &quot;نحن في بث الخليجية نفخر بشراكتنا مع هذه النخبة من الشركات التي وضعت ثقتها فينا. إن نزاهة التعامل وأصالة الشراكة هي ما يجمعنا بكم، ونعتز بكوننا جزءاً من نجاحاتكم المستمرة. <span className="text-[#F58220]">شراكة تفخر بها الأجيال، وعلاقات بنيت على الصدق والاحترافية.</span>&quot;
+                </>
+              ) : (
+                <>
+                  &quot;At BTH, we take immense pride in our partnership with these distinguished companies that have placed their trust in us. Integrity and authentic partnership are the foundation of our relationships, and we are honored to be part of your ongoing success. <span className="text-[#F58220]">These are partnerships built on honesty, professionalism, and mutual growth.</span>&quot;
+                </>
+              )}
+            </p>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Marquees Container */}
+      <div className="max-w-[1440px] mx-auto relative z-10 px-6">
+        <div className="flex flex-col gap-12 relative w-full overflow-hidden rounded-[3rem] border border-white/10 bg-white/2 py-24 backdrop-blur-3xl">
+          <MarqueeRow items={row1} direction="left" />
+          <MarqueeRow items={row2} direction="right" />
+          
+          {/* Edge Fades */}
+          <div className="absolute left-0 top-0 z-20 h-full w-[20%] bg-linear-to-r from-[#051424] via-[#051424]/90 to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 z-20 h-full w-[20%] bg-linear-to-l from-[#051424] via-[#051424]/90 to-transparent pointer-events-none" />
         </div>
       </div>
     </section>
