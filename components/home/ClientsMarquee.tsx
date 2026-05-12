@@ -68,49 +68,54 @@ const MarqueeRow = ({
   items, 
   direction, 
 }: MarqueeRowProps) => {
-  const [isPaused, setIsPaused] = useState(false);
   const x = useMotionValue(0);
+  const isPausedRef = useRef(false);
   
   // Use useAnimationFrame for perfectly smooth, frame-rate independent movement
   useAnimationFrame((_, delta) => {
-    if (isPaused) return;
+    if (isPausedRef.current) return;
     
-    // Constant slow speed (0.005 pixels per ms approx)
+    // Constant slow speed
     const moveBy = 0.005 * delta; 
     const currentX = x.get();
     
     if (direction === "left") {
       let newX = currentX - moveBy;
-      // Reset at -25% since we have 4 copies of items
-      if (newX <= -25) newX = 0;
+      // Reset at -25% (since we have 4 copies)
+      // We use a small threshold to avoid any pixel-perfect gaps
+      if (newX <= -25) newX += 25;
       x.set(newX);
     } else {
       let newX = currentX + moveBy;
-      // Start at -25% and move to 0 for right direction
-      if (newX >= 0) newX = -25;
+      // Reset at 0%
+      if (newX >= 0) newX -= 25;
       x.set(newX);
     }
   });
 
-  // Initialize right-moving row at -25% so it has room to move right
+  // Initialize right-moving row at -25%
   useEffect(() => {
     if (direction === "right") {
       x.set(-25);
     }
   }, [direction, x]);
 
+  // Reactive transform from number to percentage string
+  const xTransform = useTransform(x, (v) => `${v}%`);
+
   return (
     <div 
-      className="flex w-max relative select-none"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
+      className="relative w-full overflow-hidden select-none"
+      onMouseEnter={() => { isPausedRef.current = true; }}
+      onMouseLeave={() => { isPausedRef.current = false; }}
+      onTouchStart={() => { isPausedRef.current = true; }}
+      onTouchEnd={() => { isPausedRef.current = false; }}
     >
       <motion.div 
-        style={{ x: x.get() + "%" }} // We use % for responsive layout
-        className="flex gap-8 py-2"
+        style={{ x: xTransform }}
+        className="flex w-max gap-8 py-2 px-4"
       >
-        {/* We use % based movement, so we need the container to be wide enough */}
-        {/* Quadruple the items ensures we always have a full screen of logos */}
+        {/* Quadruple items for a perfectly seamless infinite loop */}
         {[...items, ...items, ...items, ...items].map((client, idx) => (
           <div 
             key={`${direction}-${idx}`} 
@@ -120,7 +125,7 @@ const MarqueeRow = ({
               <div className="w-14 h-14 rounded-full overflow-hidden bg-white flex items-center justify-center border border-(--border) shadow-md shrink-0">
                 <Image 
                   src={client.logoUrl} 
-                  alt={idx.toString()} // alt text not critical for logos in marquee
+                  alt={idx.toString()} 
                   width={45} 
                   height={45} 
                   className="object-contain" 
