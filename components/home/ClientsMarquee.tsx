@@ -170,7 +170,6 @@ export const ClientsMarquee = () => {
   const isAr = locale === "ar";
   const [row1, setRow1] = useState<ClientData[]>([]);
   const [row2, setRow2] = useState<ClientData[]>([]);
-  const [row3, setRow3] = useState<ClientData[]>([]);
   
   // Carousel State
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -196,17 +195,15 @@ export const ClientsMarquee = () => {
           }
         }
 
-        const third = Math.ceil(allData.length / 3);
-        setRow1(allData.slice(0, third));
-        setRow2(allData.slice(third, third * 2));
-        setRow3(allData.slice(third * 2));
+        const half = Math.ceil(allData.length / 2);
+        setRow1(allData.slice(0, half));
+        setRow2(allData.slice(half));
 
       } catch (error) {
         console.error("Error fetching partners:", error);
-        const third = Math.ceil(allClientsDefault.length / 3);
-        setRow1(allClientsDefault.slice(0, third));
-        setRow2(allClientsDefault.slice(third, third * 2));
-        setRow3(allClientsDefault.slice(third * 2));
+        const half = Math.ceil(allClientsDefault.length / 2);
+        setRow1(allClientsDefault.slice(0, half));
+        setRow2(allClientsDefault.slice(half));
       }
     };
     fetchPartners();
@@ -236,7 +233,33 @@ export const ClientsMarquee = () => {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
 
-      {/* Marquees Container - NOW CONSTRAINED TO 1440px */}
+      {/* Title Section - Now at the Top */}
+      <div className="container mx-auto px-6 mb-20 relative z-10">
+        <div className="text-center flex flex-col items-center">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-5xl md:text-7xl font-black text-white mb-6"
+          >
+            {isAr ? "شركاؤنا وعملاؤنا" : "Our Trusted Clients"}
+          </motion.h2>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="flex items-center justify-center gap-4"
+          >
+            <div className="w-12 h-px bg-[#F58220]" />
+            <span className={`text-[#F58220] text-lg md:text-xl font-bold uppercase ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>
+              {isAr ? "نعتز بثقتكم" : "We Value Your Trust"}
+            </span>
+            <div className="w-12 h-px bg-[#F58220]" />
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Marquees Container - Now with 2 rows */}
       <div className="max-w-[1440px] mx-auto relative z-10 mb-24 px-6 group/carousel">
         <div className="flex flex-col gap-10 relative w-full overflow-hidden rounded-4xl border border-(--border) bg-black/20 py-16">
           {/* Row 1 - Moves Right to Left (Left) */}
@@ -260,21 +283,6 @@ export const ClientsMarquee = () => {
               items={row2} 
               direction="right" 
               rowIndex={1} 
-              currentIndex={currentIndex}
-              isPaused={isPaused}
-              setIsPaused={setIsPaused}
-              prevSlide={prevSlide}
-              nextSlide={nextSlide}
-              isAr={isAr}
-            />
-          )}
-
-          {/* Row 3 - Moves Right to Left (Left) */}
-          {row3.length > 0 && (
-            <MarqueeRow 
-              items={row3} 
-              direction="left" 
-              rowIndex={2} 
               currentIndex={currentIndex}
               isPaused={isPaused}
               setIsPaused={setIsPaused}
@@ -324,30 +332,6 @@ export const ClientsMarquee = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 mb-20">
-        <div className="text-center flex flex-col items-center">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-5xl md:text-7xl font-black text-white mb-6"
-          >
-            {isAr ? "شركاؤنا وعملاؤنا" : "Our Trusted Clients"}
-          </motion.h2>
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="flex items-center justify-center gap-4"
-          >
-            <div className="w-12 h-px bg-[#F58220]" />
-            <span className={`text-[#F58220] text-lg md:text-xl font-bold uppercase ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>
-              {isAr ? "نعتز بثقتكم" : "We Value Your Trust"}
-            </span>
-            <div className="w-12 h-px bg-[#F58220]" />
-          </motion.div>
-        </div>
-      </div>
 
       <div className="container mx-auto px-6 mt-24">
         <motion.div
