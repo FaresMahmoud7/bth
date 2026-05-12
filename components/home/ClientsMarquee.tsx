@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useAnimationFrame } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
@@ -62,57 +62,42 @@ interface ApiPartner {
 interface MarqueeRowProps {
   items: ClientData[];
   direction: "left" | "right";
-  rowIndex: number;
-  currentIndex: number;
-  isPaused: boolean;
-  setIsPaused: (paused: boolean) => void;
-  prevSlide: () => void;
-  nextSlide: () => void;
-  isAr: boolean;
 }
 
 const MarqueeRow = ({ 
   items, 
   direction, 
-  rowIndex, 
-  currentIndex, 
-  isPaused, 
-  setIsPaused, 
-  prevSlide, 
-  nextSlide, 
-  isAr 
 }: MarqueeRowProps) => {
-  const autoX = useMotionValue(0);
-  const manualX = useMotionValue(currentIndex * -20); // Initial position
-  const springManualX = useSpring(manualX, { stiffness: 40, damping: 20 });
+  const [isPaused, setIsPaused] = useState(false);
+  const x = useMotionValue(0);
   
-  // Combine auto and manual
-  const combinedX = useTransform(
-    [autoX, springManualX],
-    ([a, b]) => {
-      const valA = a as number;
-      const valB = b as number;
-      return direction === "left" ? `${valA + valB}%` : `${valA - valB}%`;
-    }
-  );
-
-  // Auto-scroll logic - SLOWER SPEED
-  useEffect(() => {
+  // Use useAnimationFrame for perfectly smooth, frame-rate independent movement
+  useAnimationFrame((_, delta) => {
     if (isPaused) return;
-    const speed = rowIndex === 0 ? 0.01 : -0.012; // Much slower
-    const interval = setInterval(() => {
-      autoX.set(autoX.get() - speed);
-      // Reset autoX when it reaches -100% to keep numbers small
-      if (autoX.get() < -100) autoX.set(0);
-      if (autoX.get() > 100) autoX.set(0);
-    }, 16);
-    return () => clearInterval(interval);
-  }, [isPaused, rowIndex, autoX]);
+    
+    // Constant slow speed (0.005 pixels per ms approx)
+    const moveBy = 0.005 * delta; 
+    const currentX = x.get();
+    
+    if (direction === "left") {
+      let newX = currentX - moveBy;
+      // Reset at -25% since we have 4 copies of items
+      if (newX <= -25) newX = 0;
+      x.set(newX);
+    } else {
+      let newX = currentX + moveBy;
+      // Start at -25% and move to 0 for right direction
+      if (newX >= 0) newX = -25;
+      x.set(newX);
+    }
+  });
 
-  // Update manualX when currentIndex changes
+  // Initialize right-moving row at -25% so it has room to move right
   useEffect(() => {
-    manualX.set(currentIndex * -20);
-  }, [currentIndex, manualX]);
+    if (direction === "right") {
+      x.set(-25);
+    }
+  }, [direction, x]);
 
   return (
     <div 
@@ -121,17 +106,11 @@ const MarqueeRow = ({
       onMouseLeave={() => setIsPaused(false)}
     >
       <motion.div 
-        style={{ x: combinedX }}
+        style={{ x: x.get() + "%" }} // We use % for responsive layout
         className="flex gap-8 py-2"
-        drag="x"
-        dragConstraints={{ left: -100, right: 100 }}
-        onDragEnd={(_, info) => {
-          const threshold = 100;
-          if (info.offset.x > threshold) prevSlide();
-          else if (info.offset.x < -threshold) nextSlide();
-        }}
       >
-        {/* Quadruple the items for perfect infinite feel */}
+        {/* We use % based movement, so we need the container to be wide enough */}
+        {/* Quadruple the items ensures we always have a full screen of logos */}
         {[...items, ...items, ...items, ...items].map((client, idx) => (
           <div 
             key={`${direction}-${idx}`} 
@@ -141,7 +120,7 @@ const MarqueeRow = ({
               <div className="w-14 h-14 rounded-full overflow-hidden bg-white flex items-center justify-center border border-(--border) shadow-md shrink-0">
                 <Image 
                   src={client.logoUrl} 
-                  alt={isAr ? client.ar : client.en} 
+                  alt={idx.toString()} // alt text not critical for logos in marquee
                   width={45} 
                   height={45} 
                   className="object-contain" 
@@ -151,12 +130,12 @@ const MarqueeRow = ({
             ) : (
               <div className="w-14 h-14 rounded-full bg-linear-to-br from-[#F58220] to-[#e1730a] flex items-center justify-center shadow-md shrink-0">
                 <span className="text-white font-bold text-xl">
-                  {(isAr ? client.ar : client.en).charAt(0)}
+                  {client.ar.charAt(0)}
                 </span>
               </div>
             )}
-            <span className={`text-white font-bold text-xl ${isAr ? 'font-cairo' : 'font-manrope'}`}>
-              {isAr ? client.ar : client.en}
+            <span className="text-white font-bold text-xl font-cairo">
+              {client.ar}
             </span>
           </div>
         ))}
@@ -170,12 +149,6 @@ export const ClientsMarquee = () => {
   const isAr = locale === "ar";
   const [row1, setRow1] = useState<ClientData[]>([]);
   const [row2, setRow2] = useState<ClientData[]>([]);
-  
-  // Carousel State
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const totalPages = 5; // We'll divide the logos into 5 virtual pages
-  const autoplayRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const fetchPartners = async () => {
@@ -209,24 +182,6 @@ export const ClientsMarquee = () => {
     fetchPartners();
   }, []);
 
-  const nextSlide = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % totalPages);
-  }, [totalPages]);
-
-  const prevSlide = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + totalPages) % totalPages);
-  }, [totalPages]);
-
-  useEffect(() => {
-    if (!isPaused) {
-      autoplayRef.current = setInterval(nextSlide, 5000);
-    }
-    return () => {
-      if (autoplayRef.current) clearInterval(autoplayRef.current);
-    };
-  }, [isPaused, nextSlide]);
-
-
   return (
     <section id="clients" className="pt-20 pb-32 bg-(--surface) border-y border-(--border) overflow-hidden relative">
       {/* Decorative Background Elements */}
@@ -234,20 +189,13 @@ export const ClientsMarquee = () => {
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
 
       {/* Marquees Container - NOW ON TOP */}
-      <div className="max-w-[1440px] mx-auto relative z-10 mb-20 px-6 group/carousel">
+      <div className="max-w-[1440px] mx-auto relative z-10 mb-20 px-6">
         <div className="flex flex-col gap-10 relative w-full overflow-hidden rounded-4xl border border-(--border) bg-black/20 py-16">
           {/* Row 1 - Moves Right to Left (Left) */}
           {row1.length > 0 && (
             <MarqueeRow 
               items={row1} 
               direction="left" 
-              rowIndex={0} 
-              currentIndex={currentIndex}
-              isPaused={isPaused}
-              setIsPaused={setIsPaused}
-              prevSlide={prevSlide}
-              nextSlide={nextSlide}
-              isAr={isAr}
             />
           )}
 
@@ -256,53 +204,12 @@ export const ClientsMarquee = () => {
             <MarqueeRow 
               items={row2} 
               direction="right" 
-              rowIndex={1} 
-              currentIndex={currentIndex}
-              isPaused={isPaused}
-              setIsPaused={setIsPaused}
-              prevSlide={prevSlide}
-              nextSlide={nextSlide}
-              isAr={isAr}
             />
           )}
           
           {/* Left and Right fade edges - Internal to the 1440px frame */}
           <div className="absolute left-0 top-0 z-20 h-full w-[160px] bg-linear-to-r from-[#0d1c2d] via-[#0d1c2d]/80 to-transparent pointer-events-none" />
           <div className="absolute right-0 top-0 z-20 h-full w-[160px] bg-linear-to-l from-[#0d1c2d] via-[#0d1c2d]/80 to-transparent pointer-events-none" />
-
-          {/* Navigation Arrows */}
-          <div className="absolute inset-0 flex items-center justify-between px-8 z-30 pointer-events-none opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-500">
-            <button 
-              onClick={isAr ? nextSlide : prevSlide}
-              className="w-14 h-14 rounded-full bg-black/40 backdrop-blur-xl border border-white/10 text-white flex items-center justify-center hover:bg-[#F58220] hover:border-[#F58220] transition-all pointer-events-auto shadow-2xl active:scale-95"
-              title={isAr ? "السابق" : "Previous"}
-            >
-              <ChevronLeft size={28} className={isAr ? "rotate-180" : ""} />
-            </button>
-            <button 
-              onClick={isAr ? prevSlide : nextSlide}
-              className="w-14 h-14 rounded-full bg-black/40 backdrop-blur-xl border border-white/10 text-white flex items-center justify-center hover:bg-[#F58220] hover:border-[#F58220] transition-all pointer-events-auto shadow-2xl active:scale-95"
-              title={isAr ? "التالي" : "Next"}
-            >
-              <ChevronRight size={28} className={isAr ? "rotate-180" : ""} />
-            </button>
-          </div>
-
-          {/* Pagination Dots */}
-          <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-3 z-30">
-            {Array.from({ length: totalPages }).map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentIndex(i)}
-                className={`transition-all duration-500 rounded-full ${
-                  currentIndex === i 
-                    ? "w-10 h-2 bg-[#F58220] shadow-[0_0_15px_rgba(245,130,32,0.6)]" 
-                    : "w-2 h-2 bg-white/20 hover:bg-white/40"
-                }`}
-                title={`Go to page ${i + 1}`}
-              />
-            ))}
-          </div>
         </div>
       </div>
 
