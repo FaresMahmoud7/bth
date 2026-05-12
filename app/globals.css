@@ -20,6 +20,12 @@
   --surface-2: #122131;
   --surface-3: #1c2b3c;
   
+  --primary: #F58220;
+  --primary-hover: #e1730a;
+  --secondary: #ffb786;
+  --on-surface: #d4e4fa;
+  --on-background: #d4e4fa;
+  
   --container-max-width: 1440px;
   
   --border: rgba(255, 255, 255, 0.1);

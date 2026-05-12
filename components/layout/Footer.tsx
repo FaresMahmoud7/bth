@@ -46,7 +46,7 @@ export const Footer = () => {
         {/* Main Branding Slogan */}
         <div className="flex items-center gap-6 mb-20 overflow-hidden">
           <div className="h-px bg-(--primary)/20 flex-1 hidden md:block" />
-          <span className={`text-(--primary) text-4xl md:text-8xl font-black uppercase whitespace-nowrap drop-shadow-2xl py-4 font-lexend ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
+          <span className={`text-shimmer text-4xl md:text-8xl font-black uppercase whitespace-nowrap drop-shadow-2xl py-4 font-lexend ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
             {isAr ? "نصنع التميز" : "Building Legends"}
           </span>
           <div className="h-px bg-(--primary)/20 flex-1" />
