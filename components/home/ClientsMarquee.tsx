@@ -1,11 +1,11 @@
 "use client";
 
-import { motion, useMotionValue, useAnimationFrame } from "framer-motion";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
+// Default client list
 const allClientsDefault = [
   { ar: "الصين لإنشاءات السكك الحديدية (TIEJUN)", en: "China Railway TIEJUN" },
   { ar: "سيبكو 3 (SEPCOIII)", en: "SEPCOIII" },
@@ -56,70 +56,62 @@ interface ApiPartner {
   nameEn: string;
   logoUrl?: string;
   logoScale?: number;
-  row?: number;
 }
 
-interface MarqueeRowProps {
-  items: ClientData[];
-  direction: "left" | "right";
-}
-
-const MarqueeRow = ({ 
-  items, 
-  direction, 
-}: MarqueeRowProps) => {
-  const animationClass = direction === "left" ? "animate-marquee" : "animate-marquee-reverse";
-
-  // Ensure we have enough items to fill the screen and create a seamless loop
+const MarqueeRow = ({ items, direction }: { items: ClientData[]; direction: "left" | "right" }) => {
+  // Ensure enough items for an infinite loop on any screen size
   const displayItems = useMemo(() => {
     if (!items || items.length === 0) return [];
     
-    // Repeat items until we have at least 15 items to cover wide screens
     let list = [...items];
-    while (list.length < 15) {
+    // Keep repeating until we have enough items to fill at least 3x the container width
+    while (list.length < 30) {
       list = [...list, ...items];
     }
     
-    // Double the final list for a perfectly seamless 0% to -50% CSS loop
+    // Double the final list for a perfectly seamless 0% to -50% loop
     return [...list, ...list];
   }, [items]);
 
-  // Calculate duration based on the number of items to maintain a constant speed
-  // (Items in one set * 3.5 seconds per item)
+  // Speed calculation: (Items in one set * constant seconds per item)
   const duration = (displayItems.length / 2) * 3.5;
 
   if (displayItems.length === 0) return null;
 
   return (
-    <div className="relative w-full overflow-hidden select-none">
+    <div className="relative w-full overflow-hidden select-none group py-2">
       <div 
-        className={`flex w-max gap-8 py-4 ${animationClass} hover:[animation-play-state:paused] touch-pan-x`}
-        style={{ animationDuration: `${duration}s` }}
+        className={`flex min-w-max gap-8 px-4 ${direction === "left" ? "animate-marquee" : "animate-marquee-reverse"} group-hover:[animation-play-state:paused]`}
+        style={{ 
+          "--duration": `${duration}s`,
+          animationDuration: `${duration}s`,
+          willChange: "transform"
+        } as React.CSSProperties}
       >
         {displayItems.map((client, idx) => (
           <div 
             key={`${direction}-${idx}`} 
-            className="flex items-center gap-4 px-8 py-4 glass-card rounded-full border border-[rgba(245,130,32,0.3)] whitespace-nowrap cursor-default transition-all hover:border-[#F58220] hover:shadow-[0_0_20px_rgba(245,130,32,0.4)] hover:scale-105"
+            className="flex items-center gap-6 px-10 py-5 glass-card rounded-full border border-white/10 whitespace-nowrap cursor-default transition-all duration-500 hover:border-[#F58220]/50 hover:shadow-[0_0_40px_rgba(245,130,32,0.3)] hover:scale-105 bg-linear-to-br from-white/10 to-white/5 backdrop-blur-xl"
           >
             {client.logoUrl ? (
-              <div className="w-14 h-14 rounded-full overflow-hidden bg-white flex items-center justify-center border border-(--border) shadow-md shrink-0">
+              <div className="w-14 h-14 rounded-full overflow-hidden bg-white/10 flex items-center justify-center border border-white/10 shadow-inner p-2 shrink-0">
                 <Image 
                   src={client.logoUrl} 
-                  alt={idx.toString()} 
-                  width={45} 
-                  height={45} 
+                  alt={client.ar} 
+                  width={40} 
+                  height={40} 
                   className="object-contain" 
                   style={{ transform: `scale(${client.logoScale || 1})` }}
                 />
               </div>
             ) : (
-              <div className="w-14 h-14 rounded-full bg-linear-to-br from-[#F58220] to-[#e1730a] flex items-center justify-center shadow-md shrink-0">
-                <span className="text-white font-bold text-xl">
+              <div className="w-14 h-14 rounded-full bg-linear-to-br from-[#F58220] to-[#e1730a] flex items-center justify-center shadow-lg shrink-0">
+                <span className="text-white font-bold text-2xl uppercase">
                   {client.ar.charAt(0)}
                 </span>
               </div>
             )}
-            <span className="text-white font-bold text-xl font-cairo">
+            <span className="text-white font-bold text-xl font-cairo tracking-wide">
               {client.ar}
             </span>
           </div>
@@ -153,7 +145,7 @@ export const ClientsMarquee = () => {
           }
         }
 
-        // If we have few items, use the same items for both rows to avoid gaps
+        // If few items, use all in both rows to avoid gaps
         if (allData.length < 8) {
           setRow1(allData);
           setRow2(allData);
@@ -165,54 +157,43 @@ export const ClientsMarquee = () => {
 
       } catch (error) {
         console.error("Error fetching partners:", error);
-        const fallbackData = allClientsDefault;
-        const half = Math.ceil(fallbackData.length / 2);
-        setRow1(fallbackData.slice(0, half));
-        setRow2(fallbackData.slice(half));
+        const half = Math.ceil(allClientsDefault.length / 2);
+        setRow1(allClientsDefault.slice(0, half));
+        setRow2(allClientsDefault.slice(half));
       }
     };
     fetchPartners();
   }, []);
 
   return (
-    <section id="clients" className="pt-20 pb-32 bg-(--surface) border-y border-(--border) overflow-hidden relative">
-      {/* Decorative Background Elements */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
+    <section id="clients" className="pt-32 pb-40 bg-[#051424] border-y border-white/5 overflow-hidden relative">
+      {/* Decorative Background Glows */}
+      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#F58220]/5 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-[#F58220]/5 blur-[150px] rounded-full pointer-events-none" />
 
-      {/* Marquees Container - NOW ON TOP */}
-      <div className="max-w-[1440px] mx-auto relative z-10 mb-20 px-6">
-        <div className="flex flex-col gap-10 relative w-full overflow-hidden rounded-4xl border border-(--border) bg-black/20 py-16">
+      {/* Marquees Container */}
+      <div className="max-w-[1440px] mx-auto relative z-10 px-6">
+        <div className="flex flex-col gap-12 relative w-full overflow-hidden rounded-[3rem] border border-white/10 bg-white/[0.02] py-24 backdrop-blur-3xl">
           {/* Row 1 - Moves Right to Left (Left) */}
-          {row1.length > 0 && (
-            <MarqueeRow 
-              items={row1} 
-              direction="left" 
-            />
-          )}
+          {row1.length > 0 && <MarqueeRow items={row1} direction="left" />}
 
           {/* Row 2 - Moves Left to Right (Right) */}
-          {row2.length > 0 && (
-            <MarqueeRow 
-              items={row2} 
-              direction="right" 
-            />
-          )}
+          {row2.length > 0 && <MarqueeRow items={row2} direction="right" />}
           
-          {/* Left and Right fade edges - Internal to the 1440px frame */}
-          <div className="absolute left-0 top-0 z-20 h-full w-[160px] bg-linear-to-r from-[#0d1c2d] via-[#0d1c2d]/80 to-transparent pointer-events-none" />
-          <div className="absolute right-0 top-0 z-20 h-full w-[160px] bg-linear-to-l from-[#0d1c2d] via-[#0d1c2d]/80 to-transparent pointer-events-none" />
+          {/* Edge Fade Masks */}
+          <div className="absolute left-0 top-0 z-20 h-full w-[250px] bg-linear-to-r from-[#051424] via-[#051424]/90 to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 z-20 h-full w-[250px] bg-linear-to-l from-[#051424] via-[#051424]/90 to-transparent pointer-events-none" />
         </div>
       </div>
 
-      {/* Title Section - Now below Marquee */}
-      <div className="container mx-auto px-6 mb-16 relative z-10">
+      {/* Title Section */}
+      <div className="container mx-auto px-6 mt-32">
         <div className="text-center flex flex-col items-center">
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-5xl md:text-7xl font-black text-white mb-6"
+            className="text-6xl md:text-8xl font-black text-white mb-8 tracking-tighter"
           >
             {isAr ? "شركاؤنا وعملاؤنا" : "Our Trusted Clients"}
           </motion.h2>
@@ -220,30 +201,30 @@ export const ClientsMarquee = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="flex items-center justify-center gap-4"
+            className="flex items-center justify-center gap-6"
           >
-            <div className="w-12 h-px bg-[#F58220]" />
-            <span className={`text-[#F58220] text-lg md:text-xl font-bold uppercase ${isAr ? 'tracking-normal' : 'tracking-[0.3em]'}`}>
+            <div className="w-20 h-px bg-[#F58220]/50" />
+            <span className="text-[#F58220] text-xl md:text-3xl font-bold uppercase tracking-[0.2em] font-montserrat">
               {isAr ? "نعتز بثقتكم" : "We Value Your Trust"}
             </span>
-            <div className="w-12 h-px bg-[#F58220]" />
+            <div className="w-20 h-px bg-[#F58220]/50" />
           </motion.div>
         </div>
       </div>
 
-
-      <div className="container mx-auto px-6 mt-24">
+      {/* Testimonial Section */}
+      <div className="container mx-auto px-6 mt-32">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto glass-card p-10 md:p-16 border border-[#F58220]/20 bg-[#F58220]/5 relative overflow-hidden"
+          className="max-w-5xl mx-auto glass-card p-16 md:p-24 border border-white/10 bg-white/[0.03] relative overflow-hidden rounded-[4rem]"
         >
-          <div className="relative z-10">
-            <p className={`text-white text-xl md:text-3xl leading-relaxed font-bold ${isAr ? 'font-cairo text-center' : 'text-center'}`}>
+          <div className="relative z-10 text-center">
+            <p className="text-white text-3xl md:text-5xl leading-tight font-black font-cairo">
               {isAr ? (
                 <>
-                  &quot;نحن في بث الخليجية نفخر بشراكتنا مع هذه النخبة من الشركات التي وضعت ثقتها فينا. إن نزاهة التعامل وأصالة الشراكة هي ما يجمعنا بكم، ونعتز بكوننا جزءاً من نجاحاتكم المستمرة. <span className="text-[#F58220]">شراكة تفخر بها الأجيال، وعلاقات بنيت على الصدق والاحترافية.</span> الله يحييكم ويبقيكم شركاء نجاح دايمين.&quot;
+                  &quot;نحن في بث الخليجية نفخر بشراكتنا مع هذه النخبة من الشركات التي وضعت ثقتها فينا. إن نزاهة التعامل وأصالة الشراكة هي ما يجمعنا بكم، ونعتز بكوننا جزءاً من نجاحاتكم المستمرة. <span className="text-[#F58220]">شراكة تفخر بها الأجيال، وعلاقات بنيت على الصدق والاحترافية.</span>&quot;
                 </>
               ) : (
                 <>
