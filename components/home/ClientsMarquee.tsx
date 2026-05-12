@@ -68,55 +68,15 @@ const MarqueeRow = ({
   items, 
   direction, 
 }: MarqueeRowProps) => {
-  const x = useMotionValue(0);
-  const isPausedRef = useRef(false);
-  
-  // Use useAnimationFrame for perfectly smooth, frame-rate independent movement
-  useAnimationFrame((_, delta) => {
-    if (isPausedRef.current) return;
-    
-    // Constant slow speed
-    const moveBy = 0.005 * delta; 
-    const currentX = x.get();
-    
-    if (direction === "left") {
-      let newX = currentX - moveBy;
-      // Reset at -25% (since we have 4 copies)
-      // We use a small threshold to avoid any pixel-perfect gaps
-      if (newX <= -25) newX += 25;
-      x.set(newX);
-    } else {
-      let newX = currentX + moveBy;
-      // Reset at 0%
-      if (newX >= 0) newX -= 25;
-      x.set(newX);
-    }
-  });
-
-  // Initialize right-moving row at -25%
-  useEffect(() => {
-    if (direction === "right") {
-      x.set(-25);
-    }
-  }, [direction, x]);
-
-  // Reactive transform from number to percentage string
-  const xTransform = useTransform(x, (v) => `${v}%`);
+  const animationClass = direction === "left" ? "animate-marquee" : "animate-marquee-reverse";
 
   return (
-    <div 
-      className="relative w-full overflow-hidden select-none"
-      onMouseEnter={() => { isPausedRef.current = true; }}
-      onMouseLeave={() => { isPausedRef.current = false; }}
-      onTouchStart={() => { isPausedRef.current = true; }}
-      onTouchEnd={() => { isPausedRef.current = false; }}
-    >
-      <motion.div 
-        style={{ x: xTransform }}
-        className="flex w-max gap-8 py-2 px-4"
+    <div className="relative w-full overflow-hidden select-none">
+      <div 
+        className={`flex w-max gap-8 py-4 ${animationClass} hover:[animation-play-state:paused] touch-pan-x`}
       >
-        {/* Quadruple items for a perfectly seamless infinite loop */}
-        {[...items, ...items, ...items, ...items].map((client, idx) => (
+        {/* Double the items for a perfectly seamless 0% to -50% CSS loop */}
+        {[...items, ...items].map((client, idx) => (
           <div 
             key={`${direction}-${idx}`} 
             className="flex items-center gap-4 px-8 py-4 glass-card rounded-full border border-[rgba(245,130,32,0.3)] whitespace-nowrap cursor-default transition-all hover:border-[#F58220] hover:shadow-[0_0_20px_rgba(245,130,32,0.4)] hover:scale-105"
@@ -144,7 +104,7 @@ const MarqueeRow = ({
             </span>
           </div>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 };
