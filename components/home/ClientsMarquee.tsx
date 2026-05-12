@@ -1,9 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useAnimation, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const allClientsDefault = [
   { ar: "الصين لإنشاءات السكك الحديدية (TIEJUN)", en: "China Railway TIEJUN" },
@@ -61,11 +62,15 @@ interface ApiPartner {
 export const ClientsMarquee = () => {
   const { locale } = useLanguage();
   const isAr = locale === "ar";
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const [row1, setRow1] = useState<ClientData[]>([]);
   const [row2, setRow2] = useState<ClientData[]>([]);
   const [row3, setRow3] = useState<ClientData[]>([]);
+  
+  // Carousel State
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const totalPages = 5; // We'll divide the logos into 5 virtual pages
+  const autoplayRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const fetchPartners = async () => {
@@ -85,7 +90,6 @@ export const ClientsMarquee = () => {
           }
         }
 
-        // Split total data into three equal parts
         const third = Math.ceil(allData.length / 3);
         setRow1(allData.slice(0, third));
         setRow2(allData.slice(third, third * 2));
@@ -102,19 +106,71 @@ export const ClientsMarquee = () => {
     fetchPartners();
   }, []);
 
-  // Repeat items to ensure smooth infinite scroll
-  const renderMarqueeRow = (items: ClientData[], direction: "left" | "right") => {
-    if (items.length === 0) return null;
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % totalPages);
+  }, [totalPages]);
+
+  const prevSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + totalPages) % totalPages);
+  }, [totalPages]);
+
+  useEffect(() => {
+    if (!isPaused) {
+      autoplayRef.current = setInterval(nextSlide, 5000);
+    }
+    return () => {
+      if (autoplayRef.current) clearInterval(autoplayRef.current);
+    };
+  }, [isPaused, nextSlide]);
+
+  const MarqueeRow = ({ items, direction, rowIndex }: { items: ClientData[], direction: "left" | "right", rowIndex: number }) => {
+    const autoX = useMotionValue(0);
+    const manualX = useMotionValue(currentIndex * -20); // Initial position
+    const springManualX = useSpring(manualX, { stiffness: 40, damping: 20 });
     
-    // Double the items to ensure the gap is never visible and seamless loop works with -50%
-    const doubledItems = [...items, ...items];
-    
-    const animationClass = direction === "left" ? "animate-marquee" : "animate-marquee-reverse";
+    // Combine auto and manual
+    const combinedX = useTransform(
+      [autoX, springManualX],
+      ([a, b]) => direction === "left" ? `${a + b}%` : `${a - b}%`
+    );
+
+    // Auto-scroll logic
+    useEffect(() => {
+      if (isPaused) return;
+      const speed = rowIndex === 0 ? 0.02 : rowIndex === 1 ? -0.025 : 0.015;
+      const interval = setInterval(() => {
+        autoX.set(autoX.get() - speed);
+        // Reset autoX when it reaches -100% to keep numbers small
+        if (autoX.get() < -100) autoX.set(0);
+        if (autoX.get() > 100) autoX.set(0);
+      }, 16);
+      return () => clearInterval(interval);
+    }, [isPaused, rowIndex, autoX]);
+
+    // Update manualX when currentIndex changes
+    useEffect(() => {
+      manualX.set(currentIndex * -20);
+    }, [currentIndex, manualX]);
 
     return (
-      <div className="flex w-max relative">
-        <div className={`flex ${animationClass} hover:[animation-play-state:paused] gap-8 py-2`}>
-          {doubledItems.map((client, idx) => (
+      <div 
+        className="flex w-max relative select-none"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        <motion.div 
+          style={{ x: combinedX }}
+          className="flex gap-8 py-2"
+          drag="x"
+          dragConstraints={{ left: -100, right: 100 }}
+          onDragEnd={(_, info) => {
+            const threshold = 100;
+            if (info.offset.x > threshold) prevSlide();
+            else if (info.offset.x < -threshold) nextSlide();
+          }}
+        >
+          {/* Quadruple the items for perfect infinite feel */}
+          {[...items, ...items, ...items, ...items].map((client, idx) => (
             <div 
               key={`${direction}-${idx}`} 
               className="flex items-center gap-4 px-8 py-4 glass-card rounded-full border border-[rgba(245,130,32,0.3)] whitespace-nowrap cursor-default transition-all hover:border-[#F58220] hover:shadow-[0_0_20px_rgba(245,130,32,0.4)] hover:scale-105"
@@ -142,32 +198,66 @@ export const ClientsMarquee = () => {
               </span>
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     );
   };
 
   return (
-    <section id="clients" ref={containerRef} className="pt-20 pb-32 bg-(--surface) border-y border-(--border) overflow-hidden relative">
+    <section id="clients" className="pt-20 pb-32 bg-(--surface) border-y border-(--border) overflow-hidden relative">
       {/* Decorative Background Elements */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F58220]/5 blur-[120px] rounded-full pointer-events-none" />
 
       {/* Marquees Container - NOW CONSTRAINED TO 1440px */}
-      <div className="max-w-[1440px] mx-auto relative z-10 mb-24 px-6">
-        <div className="flex flex-col gap-10 relative w-full overflow-hidden rounded-[2rem] border border-(--border) bg-black/20 py-10">
+      <div className="max-w-[1440px] mx-auto relative z-10 mb-24 px-6 group/carousel">
+        <div className="flex flex-col gap-10 relative w-full overflow-hidden rounded-[2rem] border border-(--border) bg-black/20 py-16">
           {/* Row 1 - Moves Right to Left (Left) */}
-          {renderMarqueeRow(row1, "left")}
+          {row1.length > 0 && <MarqueeRow items={row1} direction="left" rowIndex={0} />}
 
           {/* Row 2 - Moves Left to Right (Right) */}
-          {renderMarqueeRow(row2, "right")}
+          {row2.length > 0 && <MarqueeRow items={row2} direction="right" rowIndex={1} />}
 
           {/* Row 3 - Moves Right to Left (Left) */}
-          {renderMarqueeRow(row3, "left")}
+          {row3.length > 0 && <MarqueeRow items={row3} direction="left" rowIndex={2} />}
           
           {/* Left and Right fade edges - Internal to the 1440px frame */}
-          <div className="absolute left-0 top-0 z-20 h-full w-[120px] bg-linear-to-r from-[#0d1c2d] to-transparent pointer-events-none" />
-          <div className="absolute right-0 top-0 z-20 h-full w-[120px] bg-linear-to-l from-[#0d1c2d] to-transparent pointer-events-none" />
+          <div className="absolute left-0 top-0 z-20 h-full w-[160px] bg-linear-to-r from-[#0d1c2d] via-[#0d1c2d]/80 to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 z-20 h-full w-[160px] bg-linear-to-l from-[#0d1c2d] via-[#0d1c2d]/80 to-transparent pointer-events-none" />
+
+          {/* Navigation Arrows */}
+          <div className="absolute inset-0 flex items-center justify-between px-8 z-30 pointer-events-none opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-500">
+            <button 
+              onClick={isAr ? nextSlide : prevSlide}
+              className="w-14 h-14 rounded-full bg-black/40 backdrop-blur-xl border border-white/10 text-white flex items-center justify-center hover:bg-[#F58220] hover:border-[#F58220] transition-all pointer-events-auto shadow-2xl active:scale-95"
+              title={isAr ? "السابق" : "Previous"}
+            >
+              <ChevronLeft size={28} className={isAr ? "rotate-180" : ""} />
+            </button>
+            <button 
+              onClick={isAr ? prevSlide : nextSlide}
+              className="w-14 h-14 rounded-full bg-black/40 backdrop-blur-xl border border-white/10 text-white flex items-center justify-center hover:bg-[#F58220] hover:border-[#F58220] transition-all pointer-events-auto shadow-2xl active:scale-95"
+              title={isAr ? "التالي" : "Next"}
+            >
+              <ChevronRight size={28} className={isAr ? "rotate-180" : ""} />
+            </button>
+          </div>
+
+          {/* Pagination Dots */}
+          <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-3 z-30">
+            {Array.from({ length: totalPages }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentIndex(i)}
+                className={`transition-all duration-500 rounded-full ${
+                  currentIndex === i 
+                    ? "w-10 h-2 bg-[#F58220] shadow-[0_0_15px_rgba(245,130,32,0.6)]" 
+                    : "w-2 h-2 bg-white/20 hover:bg-white/40"
+                }`}
+                title={`Go to page ${i + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
