@@ -65,9 +65,9 @@ const MarqueeBanner = ({ items }: { items: ClientData[] }) => {
   const displayItems = useMemo(() => {
     if (!items || items.length === 0) return [];
     
-    // We repeat the base items multiple times
+    // We repeat the base items multiple times to ensure it fills the screen
     let baseList = [...items];
-    while (baseList.length < 40) {
+    while (baseList.length < 20) {
       baseList = [...baseList, ...items];
     }
     
@@ -75,55 +75,58 @@ const MarqueeBanner = ({ items }: { items: ClientData[] }) => {
     return [...baseList, ...baseList];
   }, [items]);
 
-  const duration = (displayItems.length / 2) * 4;
+  // Adjust duration based on number of items (approx 3.5s per item for smooth reading)
+  const duration = (displayItems.length / 2) * 3.5;
 
   if (displayItems.length === 0) return null;
 
   return (
     <div className="max-w-[1440px] mx-auto relative z-10 px-6 mb-16">
-      <div className="flex flex-col relative w-full overflow-hidden rounded-[3rem] border border-white/10 bg-white/2 py-10 backdrop-blur-3xl">
+      <div className="flex flex-col relative w-full overflow-hidden py-10">
         <div className="relative w-full overflow-hidden select-none">
-          <div 
-            className="flex w-max flex-nowrap gap-8 px-4 animate-marquee hover:[animation-play-state:paused]"
-            style={{ 
-              animationDuration: `${duration}s`,
-              willChange: "transform"
+          <motion.div 
+            className="flex w-max flex-nowrap gap-8 px-4 hover:[animation-play-state:paused]"
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{
+              duration: duration,
+              ease: "linear",
+              repeat: Infinity,
             }}
           >
             {displayItems.map((client, idx) => (
               <div 
                 key={`banner-${idx}`} 
-                className="flex items-center gap-6 px-10 py-5 glass-card rounded-full border border-white/10 whitespace-nowrap cursor-default transition-all duration-500 hover:border-[#F58220]/50 hover:shadow-[0_0_40px_rgba(245,130,32,0.3)] hover:scale-105 bg-white/3 backdrop-blur-xl"
+                className="flex items-center gap-5 px-8 py-4 glass-card rounded-full border border-white/10 whitespace-nowrap cursor-default transition-all duration-500 hover:border-[#F58220]/50 hover:shadow-[0_0_40px_rgba(245,130,32,0.3)] hover:scale-105 bg-white/3 backdrop-blur-xl"
               >
                 {client.logoUrl ? (
-                  <div className="w-16 h-16 rounded-full overflow-hidden bg-white flex items-center justify-center border border-white/10 shadow-inner p-2 shrink-0">
+                  <div className="w-12 h-12 rounded-full overflow-hidden bg-white flex items-center justify-center border border-white/10 shadow-inner p-2 shrink-0">
                     <Image 
                       src={client.logoUrl} 
                       alt={client.ar} 
-                      width={50} 
-                      height={50} 
+                      width={35} 
+                      height={35} 
                       className="object-contain" 
                       style={{ transform: `scale(${client.logoScale || 1})` }}
                     />
                   </div>
                 ) : (
-                  <div className="w-16 h-16 rounded-full bg-linear-to-br from-[#F58220] to-[#e1730a] flex items-center justify-center shadow-lg shrink-0">
-                    <span className="text-white font-bold text-2xl uppercase">
+                  <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#F58220] to-[#e1730a] flex items-center justify-center shadow-lg shrink-0">
+                    <span className="text-white font-bold text-xl uppercase">
                       {client.ar.charAt(0)}
                     </span>
                   </div>
                 )}
-                <span className="text-white font-bold text-2xl font-cairo tracking-wide">
+                <span className="text-white font-bold text-xl font-cairo tracking-wide">
                   {client.ar}
                 </span>
               </div>
             ))}
-          </div>
+          </motion.div>
         </div>
         
         {/* Edge Fades */}
-        <div className="absolute left-0 top-0 z-20 h-full w-[150px] bg-linear-to-r from-[#051424] via-[#051424]/90 to-transparent pointer-events-none" />
-        <div className="absolute right-0 top-0 z-20 h-full w-[150px] bg-linear-to-l from-[#051424] via-[#051424]/90 to-transparent pointer-events-none" />
+        <div className="absolute left-0 top-0 z-20 h-full w-[100px] bg-linear-to-r from-[#051424] to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 z-20 h-full w-[100px] bg-linear-to-l from-[#051424] to-transparent pointer-events-none" />
       </div>
     </div>
   );
