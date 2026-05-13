@@ -52,7 +52,7 @@ export const Hero = () => {
             className="inline-flex items-center gap-6 mb-10"
           >
             <span className="text-[#F58220] text-2xl md:text-5xl font-black uppercase tracking-tight wrap-break-word">
-              {isAr ? "مؤسسة BTH للدعاية والإعلان" : "BTH Advertising EST"}
+              {isAr ? "مؤسسة بث الخليجية للدعاية والإعلان" : "BTH Advertising EST"}
             </span>
           </motion.div>
 

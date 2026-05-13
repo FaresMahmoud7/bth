@@ -140,6 +140,19 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
 
         const waUrl = `https://wa.me/${targetPhone}?text=${waMessage}`;
         window.location.href = waUrl;
+      } else if (commPreference === 'email') {
+        const subject = encodeURIComponent(`New Quote Request: ${selectedCategory?.nameEn} - ${selectedType?.name}`);
+        const body = encodeURIComponent(
+          `New Quote Request from BTH Website\n\n` +
+          `Name: ${userName}\n` +
+          `Phone: ${userPhone}\n` +
+          `Email: ${userEmail}\n` +
+          `Service: ${selectedCategory?.nameEn} / ${selectedCategory?.nameAr}\n` +
+          `Type: ${selectedType?.name}\n` +
+          `Option: ${selectedOption || 'General'}\n\n` +
+          `Sent via BTH Inquiry Wizard`
+        );
+        window.location.href = `mailto:Info@bth.com.sa?subject=${subject}&body=${body}`;
       }
       
       setSuccess(true);

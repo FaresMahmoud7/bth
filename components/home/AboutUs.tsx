@@ -118,11 +118,10 @@ export const AboutUs = () => {
             </div>
 
             {/* Statistics */}
-            <div className="grid grid-cols-3 gap-8 pt-12 border-t border-white/5">
+            <div className="grid grid-cols-2 gap-8 pt-12 border-t border-white/5">
               {[
                 { value: "500+", label: isAr ? "عميل" : "Clients" },
                 { value: "1.2k+", label: isAr ? "مشروع" : "Projects" },
-                { value: "100%", label: isAr ? "رضا" : "Satisfaction" },
               ].map((s, i) => (
                 <div key={i} className="text-start">
                   <div className="text-3xl font-black text-white mb-1">{s.value}</div>

@@ -14,6 +14,7 @@ interface ContactDetail {
   number?: string;
   link?: string;
   isFemale?: boolean;
+  badge?: string;
 }
 
 export const Contact = () => {
@@ -36,6 +37,7 @@ export const Contact = () => {
       icon: Phone,
       type: 'whatsapp',
       number: "966505912477",
+      badge: isAr ? "خدمة العملاء بالعربية" : "Customer Service (AR)",
     },
     {
       title: isAr ? "الجوال (2)" : "Mobile (2)",
@@ -43,6 +45,7 @@ export const Contact = () => {
       icon: Phone,
       type: 'whatsapp',
       number: "966566296262",
+      badge: isAr ? "خدمة العملاء بالإنجليزية" : "Customer Service (EN)",
     },
     {
       title: isAr ? "هاتف المكتب" : "Office Phone",
@@ -129,6 +132,14 @@ export const Contact = () => {
                 </div>
               )}
 
+              {/* Custom Badge */}
+              {detail.badge && (
+                <div className={`absolute top-0 right-0 bg-white/10 backdrop-blur-md px-4 py-1 text-[10px] md:text-xs font-black text-white uppercase flex items-center gap-2 ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
+                  <Sparkles size={10} className="text-[#F58220]" />
+                  {detail.badge}
+                </div>
+              )}
+
               <div className={`border flex items-center justify-center mb-8 transition-all ${
                 detail.title === (isAr ? "رقم الشكاوي" : "Complaints Number")
                   ? 'w-20 h-20 bg-[#F58220]/20 border-[#F58220] text-[#F58220]'
@@ -139,8 +150,10 @@ export const Contact = () => {
                 <detail.icon className={detail.title === (isAr ? "رقم الشكاوي" : "Complaints Number") ? "w-10 h-10" : "w-6 h-6"} />
               </div>
 
-              <h3 className={`text-[10px] font-black uppercase mb-2 ${
-                detail.isFemale ? 'text-[#F58220]' : 'text-white/30'
+              <h3 className={`font-black uppercase mb-2 ${
+                detail.title === (isAr ? "رقم الشكاوي" : "Complaints Number") ? 'text-lg md:text-xl' : 'text-[10px]'
+              } ${
+                detail.isFemale ? 'text-[#F58220]' : (detail.title === (isAr ? "رقم الشكاوي" : "Complaints Number") ? 'text-white' : 'text-white/30')
               } ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>{detail.title}</h3>
               
               <p className={`text-white font-bold mb-8 grow ${detail.title === (isAr ? "رقم الشكاوي" : "Complaints Number") ? "text-3xl md:text-4xl text-[#F58220]" : "text-xl"}`} dir="ltr">{detail.value}</p>
