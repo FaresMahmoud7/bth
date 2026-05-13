@@ -11,7 +11,7 @@ export const content = {
     },
     about: {
       title: "About Us",
-      description_1: "BTH Al-khalejeah Advertising Agency is a Saudi private company established in 1432H, specialized in advertising, branding, printing, signage, acrylic works, promotional gifts, and corporate identity solutions.",
+      description_1: "BTH Al-khalejeah Advertising EST is a Saudi private company established in 1432H, specialized in advertising, branding, printing, signage, acrylic works, promotional gifts, and corporate identity solutions.",
       description_2: "Located in Jubail City, we provide high-quality advertising products and services with a strong commitment to customer satisfaction, quality assurance, and timely delivery.",
     },
     expertise: {
@@ -216,7 +216,7 @@ export const content = {
     },
     about: {
       title: "نبذه عننا",
-      description_1: "بث الخليجية للدعاية والإعلان (BTH Al-khalejeah Advertising Agency)",
+      description_1: "بث الخليجية للدعاية والإعلان (BTH Al-khalejeah Advertising EST)",
       description_2: "تأسست بث الخليجيه للدعايه والإعلان في تاريخ1432 ه وانطلقنا من فكرة تقديم الأفضل Best To Have وإختصارها وتنطق بالعربية (BTH/بث) وتعني الإنتشار وهي إحدى الصفات الضرورية والهامة في مجال صناعة الدعاية والإعلان وهو الإسم التجاري المختصر لمجموعة أنشطتنا السعودية القائمة ضمن القطاع الخاص والمتكاملة مع خدمات الدعاية والإعلان وهذا التكامل أصبح ضروريا اليوم لما وصلت إليه التقنيات الحديثة من تداخل. إن تكامل أنشطة BTH/ بث قد جعلها الخيار الأمثل والمكان الصحيح لتلبية متطلبات العملاء من خدمات ومنتجات الدعاية والإعلان. تقوم BTH/بث بأداء أعمالها اليومية حسب الأنظمة الداخلية والخطط المتبعة لضمان جودة المنتجات والخدمات في إطار زمني محدد يحقق رضا العملاء وبناء علاقة وطيدة معهم. إن من أهداف BTH/بث أن تشارك مع الجهات المعنية في نشر حملات التوعية لمجتمعنا في مجال الصحة والسلامة وحماية البيئة والموارد الطبيعية.",
     },
     expertise: {
