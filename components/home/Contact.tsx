@@ -124,13 +124,6 @@ export const Contact = () => {
                   : 'hover:border-[#F58220]/50'
               }`}
             >
-              {/* Ladies Badge */}
-              {detail.title === (isAr ? "رقم الشكاوي" : "Complaints Number") && (
-                <div className={`absolute top-0 right-0 bg-[#F58220] px-4 py-1 text-[8px] font-black text-white uppercase flex items-center gap-2 ${isAr ? 'tracking-normal' : 'tracking-widest'}`}>
-                  <Sparkles size={10} />
-                  {isAr ? "خدمة العملاء" : "Customer Service"}
-                </div>
-              )}
 
               {/* Custom Badge */}
               {detail.badge && (
@@ -156,7 +149,7 @@ export const Contact = () => {
                 detail.isFemale ? 'text-[#F58220]' : (detail.title === (isAr ? "رقم الشكاوي" : "Complaints Number") ? 'text-white' : 'text-white/30')
               } ${isAr ? 'tracking-normal' : 'tracking-[0.2em]'}`}>{detail.title}</h3>
               
-              <p className={`text-white font-bold mb-8 grow ${detail.title === (isAr ? "رقم الشكاوي" : "Complaints Number") ? "text-3xl md:text-4xl text-[#F58220]" : "text-xl"}`} dir="ltr">{detail.value}</p>
+              <p className={`text-white font-bold mb-8 grow ${detail.title === (isAr ? "رقم الشكاوي" : "Complaints Number") ? "text-3xl md:text-4xl text-[#F58220]" : "text-2xl"}`} dir="ltr">{detail.value}</p>
               
               {detail.type === 'whatsapp' ? (
                 <button 
