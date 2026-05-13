@@ -65,7 +65,7 @@ export const Contact = () => {
       value: t.email,
       icon: Mail,
       type: 'link',
-      link: `mailto:${t.email}`,
+      link: `https://mail.google.com/mail/?view=cm&fs=1&to=${t.email}`,
     },
   ];
 

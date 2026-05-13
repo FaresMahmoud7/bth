@@ -152,7 +152,7 @@ export const ServiceInquiryWizard = ({ isOpen, onClose, categories, initialCateg
           `Option: ${selectedOption || 'General'}\n\n` +
           `Sent via BTH Inquiry Wizard`
         );
-        window.location.href = `mailto:Info@bth.com.sa?subject=${subject}&body=${body}`;
+        window.location.href = `https://mail.google.com/mail/?view=cm&fs=1&to=Info@bth.com.sa&su=${subject}&body=${body}`;
       }
       
       setSuccess(true);
