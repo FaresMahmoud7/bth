@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
+import { GlobalMarquee } from "../layout/GlobalMarquee";
 
 export const ClientsMarquee = () => {
   const { locale } = useLanguage();
@@ -12,6 +13,10 @@ export const ClientsMarquee = () => {
       <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#F58220]/5 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-[#F58220]/5 blur-[150px] rounded-full pointer-events-none" />
 
+      {/* Marquee Banners */}
+      <div className="mb-20 w-full">
+        <GlobalMarquee />
+      </div>
 
       {/* Title Section */}
       <div className="container mx-auto px-6 mb-16 relative z-10">
