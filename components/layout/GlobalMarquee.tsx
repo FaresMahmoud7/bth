@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useId } from "react";
 import Image from "next/image";
 
 const allClientsDefault = [
@@ -56,23 +56,25 @@ interface ApiPartner {
 }
 
 const SimpleMarquee = ({ items, direction = "left" }: { items: ClientData[], direction?: "left" | "right" }) => {
-
+  const uid = useId().replace(/:/g, "");
   const displayItems = useMemo(() => {
     if (!items || items.length === 0) return [];
-    // Just duplicate the items a few times to ensure it covers the screen
-    // We don't need 50 copies, 2-4 copies is more than enough to prevent large off-screen bounds
-    const baseList = [...items];
-    return baseList;
+    return [...items];
   }, [items]);
 
-  // Slow down the animation significantly (4 seconds per item)
-  const duration = displayItems.length * 4;
+  // ~4s per item, minimum so short lists still read smoothly
+  const duration = Math.max(displayItems.length * 4, 24);
 
   if (displayItems.length === 0) return null;
 
-  const renderClient = (client: ClientData, idx: number) => (
+  const kfLeft = `marquee-left-${uid}`;
+  const kfRight = `marquee-right-${uid}`;
+  const clsLeft = `marquee-run-left-${uid}`;
+  const clsRight = `marquee-run-right-${uid}`;
+
+  const renderClient = (client: ClientData, keySuffix: string) => (
     <div
-      key={`banner-${idx}`}
+      key={keySuffix}
       className="flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-white/5 whitespace-nowrap cursor-default bg-white/5 backdrop-blur-md"
     >
       {client.logoUrl ? (
@@ -102,58 +104,45 @@ const SimpleMarquee = ({ items, direction = "left" }: { items: ClientData[], dir
   return (
     <>
       <style>{`
-        @keyframes marquee-left {
-          from {
-            transform: translateX(25vw);
-          }
-          to {
-            transform: translateX(-100vw);
-          }
+        @keyframes ${kfLeft} {
+          from { transform: translate3d(0, 0, 0); }
+          to { transform: translate3d(-50%, 0, 0); }
         }
-
-        @keyframes marquee-right {
-          from {
-            transform: translateX(-25vw);
-          }
-          to {
-            transform: translateX(100vw);
-          }
+        @keyframes ${kfRight} {
+          from { transform: translate3d(-50%, 0, 0); }
+          to { transform: translate3d(0, 0, 0); }
         }
-
-        .marquee-content {
+        .marquee-track {
           display: flex;
           width: max-content;
         }
-
-        .marquee-group {
+        .marquee-strip {
           display: flex;
           gap: .75rem;
+          flex-shrink: 0;
         }
-
-        .animate-marquee-left {
-          animation: marquee-left ${duration}s linear infinite;
+        .${clsLeft} {
+          animation: ${kfLeft} ${duration}s linear infinite;
         }
-
-        .animate-marquee-right {
-          animation: marquee-right ${duration}s linear infinite;
+        .${clsRight} {
+          animation: ${kfRight} ${duration}s linear infinite;
         }
       `}</style>
 
-      <div className="marquee-content">
+      <div className="w-full min-w-0 overflow-hidden">
         <div
-          className={`marquee-group ${direction === "left" ? "animate-marquee-left" : "animate-marquee-right"
-            }`}
+          className={`marquee-track ${direction === "left" ? clsLeft : clsRight}`}
         >
-          {displayItems.map((client, idx) => renderClient(client, idx))}
-        </div>
-
-        <div
-          className={`marquee-group ${direction === "left" ? "animate-marquee-left" : "animate-marquee-right"
-            }`}
-        >
-          {displayItems.map((client, idx) =>
-            renderClient(client, idx + displayItems.length)
-          )}
+          <div className="marquee-strip">
+            {displayItems.map((client, idx) =>
+              renderClient(client, `a-${idx}-${client.ar}`)
+            )}
+          </div>
+          <div className="marquee-strip" aria-hidden="true">
+            {displayItems.map((client, idx) =>
+              renderClient(client, `b-${idx}-${client.ar}`)
+            )}
+          </div>
         </div>
       </div>
     </>
@@ -188,7 +177,10 @@ export const GlobalMarquee = () => {
   }, []);
 
   return (
-    <div className="w-full bg-transparent relative z-40 overflow-hidden">
+    <div
+      className="w-full bg-transparent relative z-40 overflow-hidden"
+      dir="ltr"
+    >
       <div className="flex flex-col gap-[2px] py-[2px]">
         <SimpleMarquee items={allData.slice(0, Math.ceil(allData.length / 2))} direction="left" />
         <SimpleMarquee items={allData.slice(Math.ceil(allData.length / 2))} direction="right" />
